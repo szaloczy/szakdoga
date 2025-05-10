@@ -30,4 +30,14 @@ export default defineConfig([
     },
   },
   eslintPluginPrettierRecomended,
+  {
+    rules: {
+      "prettier/prettier": [
+        "error",
+        {
+          endOfLine: "auto",
+        },
+      ],
+    },
+  },
 ]);

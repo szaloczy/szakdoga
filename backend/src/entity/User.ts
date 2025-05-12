@@ -1,9 +1,16 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
+import { UserRole } from "../types";
 
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
   id: number;
+
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ select: false })
+  password: string;
 
   @Column()
   firstName: string;
@@ -11,6 +18,6 @@ export class User {
   @Column()
   lastName: string;
 
-  @Column()
-  age: number;
+  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
+  role: UserRole;
 }

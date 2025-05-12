@@ -1,0 +1,16 @@
+<div class="custom-dropdown">
+    <button class="dropdown-toggle">
+        <img [src]="languages[currentLangIndex].flag" alt="switchLanguage">
+        {{ languages[currentLangIndex].name }}
+    </button>
+    <div class="dropdown-menu">
+        @for (language of languages; track language.code) {
+            @if(!(language.code === languages[currentLangIndex].code)) {
+        <div class="dropdown-item" (click)="triggerLanguageChange(language.code)">
+            <img [src]="language.flag" alt="{{language.name}} flag" class="dropdown-image">
+            <span class="dropdown-text">{{ language.name }}</span>
+        </div>
+        }
+        }
+    </div>
+</div>

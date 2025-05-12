@@ -2,9 +2,11 @@ import { AppDataSource } from "./data-source";
 import { port } from "./config";
 import app from "./app";
 
-AppDataSource.initialize()
-  .then(async () => {
-    app.listen(port);
-    console.log(`Express server has started on port ${port}.`);
-  })
-  .catch((error) => console.log(error));
+async function main() {
+  await AppDataSource.initialize();
+
+  app.listen(port);
+  console.log(`Express server has started on port ${port}.`);
+}
+
+main();

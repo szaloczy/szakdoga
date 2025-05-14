@@ -1,5 +1,7 @@
 import { body, param } from "express-validator";
 import { UserController } from "./controller/UserController";
+import { Controller } from "./controller/base.controller";
+import { User } from "./entity/User";
 
 export const Routes = [
   {
@@ -35,5 +37,16 @@ export const Routes = [
     controller: UserController,
     action: "remove",
     validation: [param("id").isInt()],
+  },
+  {
+    method: "post",
+    route: "/user/register",
+    controller: UserController,
+    action: "register",
+    validation: [
+      body("firstName").isString(),
+      body("lastName").isString(),
+      body("email").isEmail,
+    ],
   },
 ];

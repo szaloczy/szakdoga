@@ -7,8 +7,11 @@ export const en: NestedI18n = {
                 text: 'create an account'
             },
              placeholder: {
-                name: {
-                    text: 'Kovács András'
+                firstname: {
+                    text: 'Jhon'
+                },
+                lastname: {
+                    text: 'Doe'
                 },
                 email: {
                     text: 'Your Email'

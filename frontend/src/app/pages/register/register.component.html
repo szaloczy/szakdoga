@@ -4,7 +4,11 @@
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.name' | translate }}" formControlName="name">
+        <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.firstname' | translate }}" formControlName="firstname">
+      </div>
+
+      <div class="mb-3">
+        <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.lastname' | translate }}" formControlName="lastname">
       </div>
 
       <div class="mb-3">
@@ -13,10 +17,6 @@
 
       <div class="mb-3">
         <input type="password" class="form-control" placeholder="{{ 'register.form.placeholder.password' | translate }}" formControlName="password">
-      </div>
-
-      <div class="mb-3">
-        <input type="password" class="form-control" placeholder="{{ 'register.form.placeholder.confirmPassword' | translate }}" formControlName="confirmPassword">
       </div>
 
       <div class="form-check mb-3">

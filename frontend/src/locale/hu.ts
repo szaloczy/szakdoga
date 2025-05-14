@@ -7,8 +7,11 @@ export const hu: NestedI18n = {
                 text: 'fiók létrehozása'
             },
             placeholder: {
-                name: {
-                    text: 'Kovács András'
+                firstname: {
+                    text: 'András'
+                },
+                lastname: {
+                    text: 'Kovács'
                 },
                 email: {
                     text: 'Email cím'

@@ -1,50 +1,63 @@
+import { Repository } from "typeorm";
+import { Controller } from "./base.controller";
 import { AppDataSource } from "../data-source";
-import { NextFunction, Request, Response } from "express";
 import { User } from "../entity/User";
+import { secretKey } from "../config";
+import jwt from "jsonwebtoken";
+import bcrypt from "bcrypt";
 
-export class UserController {
-  private userRepository = AppDataSource.getRepository(User);
+export class UserController extends Controller {
+  repository = AppDataSource.getRepository(User);
 
-  async all(request: Request, response: Response, next: NextFunction) {
-    return this.userRepository.find();
-  }
+  register = async (req, res) => {
+    try {
+      const userToCreate = this.repository.create(req.body as User);
+      delete userToCreate.id;
 
-  async one(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id);
+      const createdUser = await this.repository.save(userToCreate);
 
-    const user = await this.userRepository.findOne({
-      where: { id },
-    });
+      userToCreate.password = await bcrypt.hash(createdUser.password, 12);
 
-    if (!user) {
-      return "unregistered user";
+      await this.repository.save(createdUser);
+
+      res.json(createdUser);
+    } catch (error) {
+      this.handleError(res, error);
     }
-    return user;
-  }
+  };
 
-  async save(request: Request, response: Response, next: NextFunction) {
-    const { firstName, lastName, age } = request.body;
+  login = async (req, res) => {
+    try {
+      const user = await this.repository.findOne({
+        where: { email: req.nody.email },
+        select: ["id", "password", "role", "firstname", "lastname"],
+      });
 
-    const user = Object.assign(new User(), {
-      firstName,
-      lastName,
-      age,
-    });
+      if (!user) {
+        return this.handleError(res, null, 401, "Incorrect email or password");
+      }
 
-    return this.userRepository.save(user);
-  }
+      const passwordMatches = await bcrypt.compare(
+        req.body.password,
+        user.password,
+      );
 
-  async remove(request: Request, response: Response, next: NextFunction) {
-    const id = parseInt(request.params.id);
+      if (!passwordMatches) {
+        return this.handleError(res, null, 401, "Incorrect email or password");
+      }
 
-    const userToRemove = await this.userRepository.findOneBy({ id });
+      const token = jwt.sign(
+        {
+          id: user.id,
+          firstname: user.firstname,
+          lastname: user.lastname,
+          role: user.role,
+        },
+        secretKey,
+        { expiresIn: "1d" },
+      );
 
-    if (!userToRemove) {
-      throw Error("user does not exists");
-    }
-
-    await this.userRepository.remove(userToRemove);
-
-    return "user has been removed";
-  }
+      res.json({ accessToken: token });
+    } catch (error) {}
+  };
 }

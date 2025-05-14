@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, ValidatorFn, Validators } from '@angular/forms';
 import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
@@ -22,16 +22,12 @@ export class RegisterComponent implements OnInit {
 
   ngOnInit(): void {
     this.registerForm = this.fb.group({
-      name: ['', [Validators.required]],
+      firstname: ['', [Validators.required]],
+      lastname: ['', [Validators.required]],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      confirmPassword: ['', Validators.required],
       terms: false
     });
-  }
-
-  get f() {
-    return this.registerForm.controls;
   }
 
   onSubmit() {
@@ -39,4 +35,5 @@ export class RegisterComponent implements OnInit {
       
     }
   }
+  
 }

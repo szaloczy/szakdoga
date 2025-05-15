@@ -21,7 +21,7 @@ export default defineConfig([
     ...jest.configs["flat/recommended"],
     rules: {
       ...jest.configs["flat/recommended"].rules,
-      "jest/prefer.expect-assertions": "off",
+      "jest/prefer-expect-assertions": "off",
     },
   },
   {
@@ -36,6 +36,14 @@ export default defineConfig([
         "error",
         {
           endOfLine: "auto",
+          printWidth: 80,
+          tabWidth: 2,
+          useTabs: false,
+          semi: true,
+          singleQuote: false,
+          trailingComma: "es5",
+          bracketSpacing: true,
+          arrowParens: "always",
         },
       ],
     },

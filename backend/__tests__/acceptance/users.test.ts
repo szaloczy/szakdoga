@@ -1,14 +1,15 @@
-import { AppDataSource } from "../../src/data-source";
-import app from "../../src/app";
-import { port } from "../../src/config";
 import request from "supertest";
+import { AppDataSource } from "../../src/data-source";
+import { app } from "../../src/app";
+import { port } from "../../src/config";
 
 let connection, server;
 
 const testUser = {
-  firstName: "John",
-  lastName: "Doe",
-  age: 1,
+  firstname: "Jhon",
+  lastname: "Doe",
+  email: "doe@gmail.com",
+  password: "test123",
 };
 
 beforeEach(async () => {
@@ -22,48 +23,27 @@ afterEach(async () => {
   server.close();
 });
 
-it("should be no users initially", async () => {
-  const response = await request(app).get("/users");
+it("Should be no user initially", async () => {
+  const response = await request(app).get("/api/user");
   expect(response.statusCode).toBe(200);
   expect(response.body).toEqual([]);
 });
 
 it("should create a user", async () => {
-  const response = await request(app).post("/users").send(testUser);
+  const response = await request(app).post("/api/user/register").send(testUser);
+
   expect(response.statusCode).toBe(200);
-  expect(response.body).toEqual({ ...testUser, id: 1 });
-});
 
-it("should not create a user if no first name is given", async () => {
-  const response = await request(app)
-    .post("/users")
-    .send({ lastName: "Doe", age: 21 });
-  expect(response.statusCode).toBe(400);
-  expect(response.body.errors).not.toBeNull();
-  expect(response.body.errors.length).toBe(1);
-  expect(response.body.errors[0]).toEqual({
-    type: "field",
-    msg: "Invalid value",
-    path: "firstName",
-    location: "body",
+  expect(response.body).toEqual({
+    id: expect.any(Number),
+    firstname: expect.any(String),
+    lastname: expect.any(String),
+    email: expect.any(String),
+    password: expect.any(String),
+    role: expect.stringMatching(/user|admin/),
   });
-});
 
-it("should not create a user if age is less than 0", async () => {
-  const response = await request(app).post("/users").send({
-    firstName: "John",
-    lastName: "Doe",
-    age: -2,
-  });
-  expect(response.statusCode).toBe(400);
-  expect(response.body.errors).not.toBeNull();
-  expect(response.body.errors.length).toBe(1);
-  expect(response.body.errors[0]).toEqual({
-    type: "field",
-    msg: "Age must be a positive integer",
-    path: "age",
-    value: -2,
-    location: "body",
-  });
-  console.log(response.body.errors);
+  expect(response.body.firstname).toBe(testUser.firstname);
+  expect(response.body.lastname).toBe(testUser.lastname);
+  expect(response.body.email).toBe(testUser.email);
 });

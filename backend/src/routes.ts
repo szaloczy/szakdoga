@@ -1,52 +1,10 @@
-import { body, param } from "express-validator";
+import express from "express";
 import { UserController } from "./controller/UserController";
-import { Controller } from "./controller/base.controller";
-import { User } from "./entity/User";
 
-export const Routes = [
-  {
-    method: "get",
-    route: "/users",
-    controller: UserController,
-    action: "all",
-    validation: [],
-  },
-  {
-    method: "get",
-    route: "/users/:id",
-    controller: UserController,
-    action: "one",
-    validation: [param("id").isInt()],
-  },
-  {
-    method: "post",
-    route: "/users",
-    controller: UserController,
-    action: "save",
-    validation: [
-      body("firstName").isString(),
-      body("lastName").isString(),
-      body("age")
-        .isInt({ min: 0 })
-        .withMessage("Age must be a positive integer"),
-    ],
-  },
-  {
-    method: "delete",
-    route: "/users/:id",
-    controller: UserController,
-    action: "remove",
-    validation: [param("id").isInt()],
-  },
-  {
-    method: "post",
-    route: "/user/register",
-    controller: UserController,
-    action: "register",
-    validation: [
-      body("firstName").isString(),
-      body("lastName").isString(),
-      body("email").isEmail,
-    ],
-  },
-];
+export const router = express.Router();
+
+const userController = new UserController();
+
+router.get("/user", userController.getAll);
+router.post("/user/register", userController.register);
+router.post("/user/login", userController.login);

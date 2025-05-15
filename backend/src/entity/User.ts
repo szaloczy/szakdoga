@@ -1,5 +1,13 @@
-import { Entity, PrimaryGeneratedColumn, Column, Unique } from "typeorm";
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  Unique,
+  OneToMany,
+} from "typeorm";
 import { UserRole } from "../types";
+import { Practice } from "./Practice";
+import { Feedback } from "./Feedback";
 
 @Entity()
 export class User {
@@ -20,4 +28,10 @@ export class User {
 
   @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
   role: UserRole;
+
+  @OneToMany(() => Practice, (practice) => practice.student, { cascade: true })
+  practices: Practice[];
+
+  @OneToMany(() => Feedback, (feedback) => feedback.mentor)
+  feedbacksGiven: Feedback[];
 }

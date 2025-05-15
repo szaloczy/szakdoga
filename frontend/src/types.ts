@@ -13,3 +13,19 @@ export enum Language {
     EN = 'en',
     HU = 'hu'
 }
+
+export interface LoginDTO {
+    email: string;
+    password: string;
+}
+
+export interface AccessTokenDTO {
+    accessToken: string;
+}
+
+export interface RegisterDTO {
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+}

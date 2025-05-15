@@ -43,5 +43,31 @@ export const hu: NestedI18n = {
                 }
             }
         }
+    },
+    login: {
+        form: {
+            title: {
+                text: 'Bejelentkezés'
+            },
+            placeholder: {
+                email: {
+                    text: 'Email cím'
+                },
+                password: {
+                    text: 'Jelszó'
+                },
+            },
+            button: {
+                text: "Belépés"
+            },
+            registered: {
+                question: {
+                    text: 'Nincs még fiókod?'
+                },
+                link: {
+                    text: 'Regisztráció'
+                }
+            }
+        }
     }
 }

@@ -1,1 +1,44 @@
-<p>login works!</p>
+<div class="d-flex justify-content-center align-items-center vh-100 bg-light login-background">
+  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
+    <h3 class="text-center fw-bold mb-4">{{ "login.form.title" | translate }}</h3>
+
+    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <div class="mb-3">
+        <input
+          type="email"
+          class="form-control"
+          placeholder="{{'login.form.placeholder.email' | translate }}"
+          formControlName="email"
+        />
+      </div>
+
+      <div class="mb-3 position-relative">
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          class="form-control"
+          placeholder="{{ 'login.form.placeholder.password' | translate }}"
+          formControlName="password"
+        />
+        <button
+          type="button"
+          class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+          (click)="togglePasswordVisibility()"
+        >
+          <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
+        </button>
+      </div>
+
+      <div class="d-grid mt-4">
+        <button class="btn text-white fw-semibold" type="submit" [disabled]="loginForm.invalid"
+          style="background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)">
+          {{ 'login.form.button' | translate }}
+        </button>
+      </div>
+    </form>
+
+    <p class="text-center mt-3">
+      {{ 'login.form.registered.question' | translate }}
+      <a routerLink="/register" class="text-decoration-none fw-semibold">{{ 'login.form.registered.link' | translate }}</a>
+    </p>
+  </div>
+</div>

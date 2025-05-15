@@ -6,7 +6,7 @@ export const en: NestedI18n = {
             title: {
                 text: 'create an account'
             },
-             placeholder: {
+            placeholder: {
                 firstname: {
                     text: 'Jhon'
                 },
@@ -40,6 +40,32 @@ export const en: NestedI18n = {
                 },
                 link: {
                     text: 'Login here'
+                }
+            }
+        }
+    },
+    login: {
+        form: {
+            title: {
+                text: 'Login'
+            },
+            placeholder: {
+                email: {
+                    text: 'Email'
+                },
+                password: {
+                    text: 'Password'
+                },
+            },
+            button: {
+                text: "Login"
+            },
+            registered: {
+                question: {
+                    text: 'Dont have an account?'
+                },
+                link: {
+                    text: 'Register here'
                 }
             }
         }

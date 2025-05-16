@@ -1,4 +1,3 @@
-import { Repository } from "typeorm";
 import { Controller } from "./base.controller";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
@@ -29,7 +28,7 @@ export class UserController extends Controller {
   login = async (req, res) => {
     try {
       const user = await this.repository.findOne({
-        where: { email: req.nody.email },
+        where: { email: req.body.email },
         select: ["id", "password", "role", "firstname", "lastname"],
       });
 
@@ -39,7 +38,7 @@ export class UserController extends Controller {
 
       const passwordMatches = await bcrypt.compare(
         req.body.password,
-        user.password,
+        user.password
       );
 
       if (!passwordMatches) {
@@ -54,7 +53,7 @@ export class UserController extends Controller {
           role: user.role,
         },
         secretKey,
-        { expiresIn: "1d" },
+        { expiresIn: "1d" }
       );
 
       res.json({ accessToken: token });

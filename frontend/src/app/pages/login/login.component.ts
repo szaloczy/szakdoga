@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterLink } from '@angular/router';
+import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { NgClass } from '@angular/common';
 import { I18nService } from '../../shared/i18n.pipe';
@@ -19,8 +19,9 @@ import { I18nService } from '../../shared/i18n.pipe';
 export class LoginComponent implements OnInit{
 
   i18nService = inject(I18nService);
-  fb = inject(FormBuilder);
   userService = inject(UserService);
+  router = inject(Router);
+  fb = inject(FormBuilder);
   loginForm!: FormGroup;
   showPassword = false;
 
@@ -37,7 +38,15 @@ export class LoginComponent implements OnInit{
 
   onSubmit() {
     if(this.loginForm.valid) {
-
+      this.userService.login(this.loginForm.value).subscribe({
+        next: () => {
+          console.log("Sikeres bejelentkezés");
+          this.router.navigateByUrl("");
+        },
+        error: (err) => {
+          console.error("Hiba: " + err);
+        }
+      })
     }
   }
 }

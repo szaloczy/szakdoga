@@ -10,7 +10,7 @@ export class UserService {
   http = inject(HttpClient);
 
   login(loginData: LoginDTO) {
-    return this.http.post<AccessTokenDTO>(`/api/user/login`, loginData);
+    return this.http.post<AccessTokenDTO>(`api/user/login`, loginData);
   }
 
   register(registerData: RegisterDTO) {

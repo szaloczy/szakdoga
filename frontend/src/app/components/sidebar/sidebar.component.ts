@@ -1,5 +1,7 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Router, RouterLink } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-sidebar',
@@ -12,5 +14,13 @@ import { RouterLink } from '@angular/router';
 export class SidebarComponent {
   @Input() isCollapsed = false;
 
-  logout() {}
+  authService = inject(AuthService);
+  toastService = inject(ToastService);
+  router = inject(Router);
+
+  logout() {
+    this.authService.removeToken();
+    this.router.navigateByUrl('/login');
+    this.toastService.showSuccess('Sikeres kijelentkezés')
+  }
 }

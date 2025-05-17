@@ -1,12 +1,14 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
+import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
-    RouterLink
+    RouterLink,
+    I18nService
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
@@ -21,6 +23,6 @@ export class SidebarComponent {
   logout() {
     this.authService.removeToken();
     this.router.navigateByUrl('/login');
-    this.toastService.showSuccess('Sikeres kijelentkezés')
+    this.toastService.showSuccess('Sikeres kijelentkezés');
   }
 }

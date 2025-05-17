@@ -4,6 +4,8 @@ import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { NgClass } from '@angular/common';
 import { I18nService } from '../../shared/i18n.pipe';
+import { ToastService } from '../../services/toast.service';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
@@ -20,6 +22,8 @@ export class LoginComponent implements OnInit{
 
   i18nService = inject(I18nService);
   userService = inject(UserService);
+  authService = inject(AuthService);
+  toastService = inject(ToastService);
   router = inject(Router);
   fb = inject(FormBuilder);
   loginForm!: FormGroup;
@@ -39,8 +43,10 @@ export class LoginComponent implements OnInit{
   onSubmit() {
     if(this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
-        next: () => {
+        next: (response) => {
           console.log("Sikeres bejelentkezés");
+          this.toastService.showSuccess("Sikeres bejelentkezés");
+          this.authService.setToken(response.accessToken);
           this.router.navigateByUrl("");
         },
         error: (err) => {

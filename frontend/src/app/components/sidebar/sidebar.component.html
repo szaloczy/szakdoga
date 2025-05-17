@@ -1,31 +1,49 @@
 <nav [class.collapsed]="isCollapsed" class="sidebar">
 
+  <div class="profile-section">
+    <img src="/avatar.png" alt="Profile" class="profile-pic">
+    @if(!isCollapsed && authService.isLoggedIn()) {
+      <div class="profile-info">
+        <div class="username">{{ authService.getUserName() }}</div>
+        <div class="role">{{ authService.getUserRole() }}</div>
+      </div>
+    }
+  </div>
+
   <ul class="menu">
     <li class="menu-item">
       <i class="bi bi-house"></i>
       @if (!isCollapsed) {
-      <span class="label">Dashboard</span>
+      <span class="label">{{ 'sidenav.items.dashboard' | translate }}</span>
       }
     </li>
      <li class="menu-item">
       <i class="bi bi-hourglass"></i>
       @if (!isCollapsed) {
-      <span class="label" routerLink="/Dashboard">Completed Hours</span>
+      <span class="label" routerLink="/Dashboard">{{ 'sidenav.items.completed_hours' | translate }}</span>
       }
     </li>
      <li class="menu-item">
       <i class="bi bi-file-earmark-text"></i>
       @if (!isCollapsed) {
-      <span class="label">Documents</span>
+      <span class="label">{{ 'sidenav.items.documents' | translate }}</span>
       }
     </li>
      <li class="menu-item">
       <i class="bi bi-bar-chart"></i>
       @if (!isCollapsed) {
-      <span class="label">Statistics</span>
+      <span class="label">{{ 'sidenav.items.statistics' | translate }}</span>
       }
     </li>
   </ul>
-  <button class="logout-button" (click)="logout()">Kijelentkezés</button>
+   <div class="bottom-section">
+    
+    <button class="logout-button" (click)="logout()">
+      <i class="bi bi-box-arrow-left"></i>
+      @if (!isCollapsed) {
+      {{ 'sidenav.logout_button' | translate }}
+      }
+    </button>
+  </div>
   <button></button>
 </nav>

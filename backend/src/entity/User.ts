@@ -26,7 +26,7 @@ export class User {
   @Column()
   lastname: string;
 
-  @Column({ type: "enum", enum: UserRole, default: UserRole.USER })
+  @Column({ type: "enum", enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
   @OneToMany(() => Practice, (practice) => practice.student, { cascade: true })

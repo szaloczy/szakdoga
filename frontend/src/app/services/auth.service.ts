@@ -23,4 +23,41 @@ export class AuthService {
   isLoggedIn(): boolean {
     return !!this.getToken();
   }
+
+  preventGuestAccess(): boolean {
+    const isLoggedIn = this.isLoggedIn();
+
+    if(!isLoggedIn) {
+      this.router.navigateByUrl("/login");
+    }
+    return isLoggedIn;
+  }
+
+  decodeToken(): any {
+    const token = this.getToken();
+    if(!token) {
+      return null;
+    }
+    
+    try {
+      return JSON.parse(atob(token.split('.')[1]));
+    } catch (error) {
+      return null;
+    }
+  }
+
+  getUserName(): string {
+    const token = this.getToken();
+    return this.decodeToken()?.name || 'Ismeretlen';
+  }
+  
+  getUserRole(): string {
+    const token = this.getToken();
+    switch (this.decodeToken()?.role) {
+      case 'admin': return 'Adminisztrátor';
+      case 'student': return 'Hallgató';
+      case 'mentor' : return 'Mentor';
+      default: return 'Ismeretlen';
+    }
+  }
 }

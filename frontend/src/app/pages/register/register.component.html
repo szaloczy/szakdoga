@@ -5,18 +5,38 @@
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.firstname' | translate }}" formControlName="firstname">
+        @if(registerForm.get("firstname")?.invalid && (registerForm.get("firstname")?.touched || registerForm.get("firstname")?.dirty)) {
+          @if(registerForm.get("firstname")?.errors?.["required"]) {
+            <small class="error-message">{{ 'error_message.firstname_required' | translate }}</small>
+          }
+        }
       </div>
 
       <div class="mb-3">
         <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.lastname' | translate }}" formControlName="lastname">
+         @if(registerForm.get("lastname")?.invalid && (registerForm.get("lastname")?.touched || registerForm.get("lastname")?.dirty)) {
+          @if(registerForm.get("lastname")?.errors?.["required"]) {
+            <small class="error-message">{{ 'error_message.lastname_required' | translate }}</small>
+          }
+        }
       </div>
 
       <div class="mb-3">
         <input type="email" class="form-control" placeholder="{{ 'register.form.placeholder.email' | translate }}" formControlName="email">
+        @if(registerForm.get("email")?.invalid && (registerForm.get("email")?.touched || registerForm.get("email")?.dirty)) {
+          @if(registerForm.get("email")?.errors?.["required"]) {
+            <small class="error-message">{{ 'error_message.email_required' | translate }}</small>
+          }
+        }
       </div>
 
       <div class="mb-3">
         <input type="password" class="form-control" placeholder="{{ 'register.form.placeholder.password' | translate }}" formControlName="password">
+        @if(registerForm.get("password")?.invalid && (registerForm.get("password")?.touched || registerForm.get("password")?.dirty)) {
+          @if(registerForm.get("password")?.errors?.["required"]) {
+            <small class="error-message">{{ 'error_message.password_required' | translate }}</small>
+          }
+        }
       </div>
 
       <div class="form-check mb-3">

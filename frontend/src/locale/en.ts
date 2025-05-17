@@ -1,45 +1,45 @@
-import { NestedI18n } from '../types';
+import { NestedI18n } from "../types";
 
 export const en: NestedI18n = {
     register: {
         form: {
             title: {
-                text: 'create an account'
+                text: "create an account"
             },
             placeholder: {
                 firstname: {
-                    text: 'Jhon'
+                    text: "Jhon"
                 },
                 lastname: {
-                    text: 'Doe'
+                    text: "Doe"
                 },
                 email: {
-                    text: 'Your Email'
+                    text: "Your Email"
                 },
                 password: {
-                    text: 'Password'
+                    text: "Password"
                 },
                 confirmPassword: {
-                    text: 'Confirm Password'
+                    text: "Confirm Password"
                 }
             },
             terms: {
                 statements: {
-                    text: 'I agree all statements in'
+                    text: "I agree all statements in"
                 },
                 link: {
-                    text: 'Terms of service'
+                    text: "Terms of service"
                 }
             },
             button: {
-                text: 'Sign up'
+                text: "Sign up"
             },
             registered: {
                 question: {
-                    text: 'Have already an account?'
+                    text: "Have already an account?"
                 },
                 link: {
-                    text: 'Login here'
+                    text: "Login here"
                 }
             }
         }
@@ -47,14 +47,14 @@ export const en: NestedI18n = {
     login: {
         form: {
             title: {
-                text: 'Login'
+                text: "Login"
             },
             placeholder: {
                 email: {
-                    text: 'Email'
+                    text: "Email"
                 },
                 password: {
-                    text: 'Password'
+                    text: "Password"
                 },
             },
             button: {
@@ -62,12 +62,56 @@ export const en: NestedI18n = {
             },
             registered: {
                 question: {
-                    text: 'Dont have an account?'
+                    text: "Dont have an account?"
                 },
                 link: {
-                    text: 'Register here'
+                    text: "Register here"
                 }
             }
+        }
+    },
+    error_message: {
+        firstname_required: {
+            text: "*Firstname field is required"
+        },
+        lastname_required: {
+            text: "*Lastname field is required"
+        },
+        email_required: {
+            text: "*Email field is required"
+        },
+        password_required: {
+            text: "*Password field is required"
+        },
+        terms_required: {
+            text: "*Trems must be accepted"
+        }
+    },
+    navbar: {
+        title: {
+            text: "Internship tracker"
+        },
+        search: {
+            text: "Search"
+        }
+    },
+    sidenav: {
+        items: {
+            dashboard: {
+                text: "Dashboard"
+            },
+            completed_hours: {
+                text: "Completed Hours"
+            },
+            documents: {
+                text: "Documents"
+            },
+            statistics: {
+                text: "Statistics"
+            }
+        },
+        logout_button: {
+            text: "Exit"
         }
     }
 }

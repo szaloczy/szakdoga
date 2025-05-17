@@ -1,10 +1,13 @@
 <nav class="navbar">
   
-  <div class="brand">Gyakorlat Nyílvántartó</div>
+  <div class="brand">{{ 'navbar.title' | translate }}</div>
   <span (click)="onToggleSidebar()" class="hamburger">
   <i class="bi bi-list"></i>
 </span>
-  <input type="text" placeholder="Search..." />
+  <input type="text" placeholder="{{ 'navbar.search' | translate }}" />
   <button><i class="bi bi-list"></i></button>
   <i class="fas fa-user-circle profile-icon"></i>
+   <div class="right-section">
+    <app-language-selector></app-language-selector>
+  </div>
 </nav>

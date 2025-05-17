@@ -1,16 +1,16 @@
-import { NgClass } from '@angular/common';
 import { Component } from '@angular/core';
-import { RouterLink, RouterOutlet } from '@angular/router';
+import { RouterOutlet } from '@angular/router';
 import { SidebarComponent } from '../../components/sidebar/sidebar.component';
 import { NavbarComponent } from '../../components/navbar/navbar.component';
+import { LanguageSelectorComponent } from "../../shared/language-selector/language-selector.component";
 
 @Component({
   selector: 'app-main-layout',
   imports: [
     SidebarComponent,
     NavbarComponent,
-    RouterOutlet
-  ],
+    RouterOutlet,
+],
   templateUrl: './main-layout.component.html',
   styleUrl: './main-layout.component.scss'
 })

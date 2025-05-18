@@ -3,6 +3,7 @@ import { UserController } from "./controller/user.controller";
 import { PracticeController } from "./controller/practice.controller";
 import { DocumentController } from "./controller/document.controller";
 import { FeedbackController } from "./controller/feedback.controller";
+import { StudentController } from "./controller/student.controller";
 
 export const router = express.Router();
 
@@ -14,6 +15,14 @@ router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
 router.put("/user/:id", userController.update);
 router.delete("/user/:id", userController.delete);
+
+const studentController = new StudentController();
+
+router.get("/student", studentController.getAll);
+router.get("/student/:id", studentController.getOne);
+router.post("/student", studentController.create);
+router.put("/student/:id", studentController.update);
+router.delete("/student/:id", studentController.delete);
 
 const practiceController = new PracticeController();
 

@@ -4,10 +4,13 @@ import {
   Column,
   Unique,
   OneToMany,
+  OneToOne,
 } from "typeorm";
 import { UserRole } from "../types";
 import { Practice } from "./Practice";
 import { Feedback } from "./Feedback";
+import { Student } from "./Student";
+import { Mentor } from "./Mentor";
 
 @Entity()
 export class User {
@@ -29,9 +32,9 @@ export class User {
   @Column({ type: "enum", enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
-  @OneToMany(() => Practice, (practice) => practice.student, { cascade: true })
-  practices: Practice[];
+  @OneToOne(() => Student, (student) => student.user)
+  studentProfile: Student;
 
-  @OneToMany(() => Feedback, (feedback) => feedback.mentor)
-  feedbacksGiven: Feedback[];
+  @OneToOne(() => Mentor, (mentor) => mentor.user)
+  mentorProfile: Mentor;
 }

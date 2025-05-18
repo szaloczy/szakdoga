@@ -8,14 +8,23 @@ import {
 import { User } from "./User";
 import { Feedback } from "./Feedback";
 import { Document } from "./Document";
+import { Student } from "./Student";
+import { Mentor } from "./Mentor";
+import { Company } from "./Company";
 
 @Entity()
 export class Practice {
   @PrimaryGeneratedColumn()
-  id: number;
+  id: string;
 
-  @Column()
-  companyName: string;
+  @ManyToOne(() => Student, (student) => student.practices)
+  student: Student;
+
+  @ManyToOne(() => Mentor, (mentor) => mentor.practices)
+  mentor: Mentor;
+
+  @ManyToOne(() => Company, (company) => company.practices)
+  company: Company;
 
   @Column()
   startDate: Date;
@@ -23,21 +32,9 @@ export class Practice {
   @Column()
   endDate: Date;
 
-  @Column()
-  hours: number;
+  @Column({ type: "int" })
+  hoursRequired: number;
 
-  @ManyToOne(() => User, (user) => user.practices, { eager: true })
-  student: User;
-
-  @ManyToOne(() => User, { eager: true })
-  mentor: User;
-
-  @OneToMany(() => Document, (doc) => doc.practice, { cascade: true })
-  documents: Document[];
-
-  @OneToMany(() => Feedback, (feedback) => feedback.practice, { cascade: true })
-  feedbacks: Feedback[];
-
-  @Column({ default: false })
-  approvedByAdmin: boolean;
+  @Column({ type: "int", default: 0 })
+  hoursCompleted: number;
 }

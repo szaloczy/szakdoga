@@ -3,6 +3,7 @@ import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { StudentProfileComponent } from './pages/student-profile/student-profile.component';
 
 export const routes: Routes = [
     {
@@ -16,7 +17,8 @@ export const routes: Routes = [
         component: MainLayoutComponent,
         children: [
             { path: 'dashboard', component: DashboardComponent },
-            { path: '', redirectTo: 'dashboard', pathMatch:'full'}
+            { path: 'profile', component: StudentProfileComponent },
+            { path: '', redirectTo: 'dashboard', pathMatch:'full' }
         ]
     },
     {

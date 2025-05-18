@@ -47,8 +47,10 @@ export class AuthService {
   }
 
   getUserName(): string {
-    const token = this.getToken();
-    return this.decodeToken()?.name || 'Ismeretlen';
+    const firstname = this.decodeToken()?.firstname || 'Ismeretlen';
+    const lastname = this.decodeToken()?.lastname || '';
+
+    return firstname + " " + lastname;
   }
   
   getUserRole(): string {

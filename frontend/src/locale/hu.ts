@@ -97,6 +97,9 @@ export const hu: NestedI18n = {
             dashboard: {
                 text: "Kezdőlap"
             },
+            profile: {
+                text: "Profil"
+            },
             completed_hours: {
                 text: "Teljesített órák"
             },
@@ -109,6 +112,11 @@ export const hu: NestedI18n = {
         },
         logout_button: {
             text: "Kijelentkezés"
+        }
+    },
+    dashboard: {
+        title: {
+            text: "Üdvözlünk, "
         }
     }
 }

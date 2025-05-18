@@ -100,6 +100,9 @@ export const en: NestedI18n = {
             dashboard: {
                 text: "Dashboard"
             },
+            profile: {
+                text: "Profile"
+            },
             completed_hours: {
                 text: "Completed Hours"
             },
@@ -112,6 +115,11 @@ export const en: NestedI18n = {
         },
         logout_button: {
             text: "Exit"
+        }
+    },
+    dashboard: {
+        title: {
+            text: "Welcome, "
         }
     }
 }

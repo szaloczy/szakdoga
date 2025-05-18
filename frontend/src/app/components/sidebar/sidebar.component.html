@@ -12,12 +12,18 @@
 
   <ul class="menu">
     <li class="menu-item">
-      <i class="bi bi-house"></i>
+      <i routerLink="/dashboard" class="bi bi-house"></i>
       @if (!isCollapsed) {
-      <span class="label">{{ 'sidenav.items.dashboard' | translate }}</span>
+      <span routerLink="/dashboard" class="label">{{ 'sidenav.items.dashboard' | translate }}</span>
       }
     </li>
-     <li class="menu-item">
+    <li class="menu-item">
+      <i routerLink="/profile" class="bi bi-person"></i>
+      @if (!isCollapsed) {
+      <span class="label" routerLink="/profile">{{ 'sidenav.items.profile' | translate }}</span>
+      }
+    </li>
+    <li class="menu-item">
       <i class="bi bi-hourglass"></i>
       @if (!isCollapsed) {
       <span class="label" routerLink="/Dashboard">{{ 'sidenav.items.completed_hours' | translate }}</span>

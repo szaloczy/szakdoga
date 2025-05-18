@@ -57,6 +57,8 @@ export class UserController extends Controller {
       );
 
       res.json({ accessToken: token });
-    } catch (error) {}
+    } catch (error) {
+      this.handleError(res, error);
+    }
   };
 }

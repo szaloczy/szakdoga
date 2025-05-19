@@ -4,8 +4,8 @@
     <img src="/avatar.png" alt="Profile" class="profile-pic">
     @if(!isCollapsed && authService.isLoggedIn()) {
       <div class="profile-info">
-        <div class="username">{{ authService.getUserName() }}</div>
-        <div class="role">{{ authService.getUserRole() }}</div>
+        <div class="username">{{ user.firstname }} {{ user.lastname }}</div>
+        <div class="role">{{ user.role }}</div>
       </div>
     }
   </div>

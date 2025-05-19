@@ -62,14 +62,11 @@ export class UserController extends Controller {
         return this.handleError(res, null, 401, "Incorrect email or password");
       }
 
-      const firstname = Buffer.from(user.firstname, "latin1").toString("utf8");
-      const lastname = Buffer.from(user.lastname, "latin1").toString("utf8");
-
       const token = jwt.sign(
         {
           id: user.id,
-          firstname: firstname,
-          lastname: lastname,
+          firstname: user.firstname,
+          lastname: user.lastname,
           role: user.role,
         },
         secretKey,

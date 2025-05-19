@@ -1,7 +1,9 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { I18nService } from '../../shared/i18n.pipe';
+import { UserDTO, UserRole } from '../../../types';
+import { UserService } from '../../services/user.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,13 +14,17 @@ import { I18nService } from '../../shared/i18n.pipe';
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
-export class DashboardComponent {
+export class DashboardComponent implements OnInit{
 
+  userService = inject(UserService);
   authService = inject(AuthService);
 
-  user = {
-    name: 'Kiss Anna'
-  };
+  user: UserDTO = {
+      id: 0,
+      firstname: '',
+      lastname: '',
+      role: UserRole.STUDENT,
+    }
 
   summaryCards = [
     { title: 'Gyakorlat állapota', value: 'Elfogadva', bg: 'bg-success' },
@@ -31,4 +37,15 @@ export class DashboardComponent {
     label: 'Szakmai beszámoló',
     date: '2025. május 20.'
   };
+
+  ngOnInit(): void {
+     this.userService.getOne(this.authService.getUserId()).subscribe({
+      next: (userData) => {
+        this.user = userData;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
 }

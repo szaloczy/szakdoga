@@ -23,6 +23,13 @@ export interface AccessTokenDTO {
     accessToken: string;
 }
 
+export interface UserDTO {
+    id: number;
+    firstname: string;
+    lastname: string;
+    role: string;
+}
+
 export interface RegisterDTO {
     firstname: string;
     lastname: string;

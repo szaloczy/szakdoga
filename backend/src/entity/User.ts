@@ -1,16 +1,7 @@
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  Unique,
-  OneToMany,
-  OneToOne,
-} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { UserRole } from "../types";
-import { Practice } from "./Practice";
-import { Feedback } from "./Feedback";
+import { Internship } from "./Internship";
 import { Student } from "./Student";
-import { Mentor } from "./Mentor";
 
 @Entity()
 export class User {
@@ -33,8 +24,5 @@ export class User {
   role: UserRole;
 
   @OneToOne(() => Student, (student) => student.user)
-  studentProfile: Student;
-
-  @OneToOne(() => Mentor, (mentor) => mentor.user)
-  mentorProfile: Mentor;
+  student: Student;
 }

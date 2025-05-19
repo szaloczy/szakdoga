@@ -29,3 +29,26 @@ export interface RegisterDTO {
     email: string;
     password: string;
 }
+
+export interface StudentDTO {
+    id: number;
+    phone: number;
+    neptun: string;
+    major: string;
+    university: string;
+}
+
+export interface ProfileDTO {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    role: UserRole;
+    student: StudentDTO | undefined;
+}
+
+export enum UserRole {
+    STUDENT = "student",
+    ADMIN = "admin",
+    MENTOR = "mentor",
+}

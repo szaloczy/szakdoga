@@ -49,17 +49,20 @@ export class AuthService {
   getUserName(): string {
     const firstname = this.decodeToken()?.firstname || 'Ismeretlen';
     const lastname = this.decodeToken()?.lastname || '';
-
+    console.log(firstname);
     return firstname + " " + lastname;
   }
   
   getUserRole(): string {
-    const token = this.getToken();
     switch (this.decodeToken()?.role) {
       case 'admin': return 'Adminisztrátor';
       case 'student': return 'Hallgató';
       case 'mentor' : return 'Mentor';
       default: return 'Ismeretlen';
     }
+  }
+
+  getUserId(): number {
+    return this.decodeToken()?.id;
   }
 }

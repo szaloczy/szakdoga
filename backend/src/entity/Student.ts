@@ -8,30 +8,29 @@ import {
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { User } from "./User";
-import { Company } from "./Company";
-import { Practice } from "./Practice";
+import { Internship } from "./Internship";
 
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @OneToOne(() => User, (user) => user.studentProfile)
+  @Column({ nullable: true })
+  phone: number;
+
+  @Column({ nullable: true })
+  neptun: string;
+
+  @Column({ nullable: true })
+  major: string;
+
+  @Column({ nullable: true })
+  university: string;
+
+  @OneToOne(() => User, (user) => user.student, { cascade: true })
   @JoinColumn()
   user: User;
 
-  @Column()
-  fullName: string;
-
-  @Column()
-  neptun: string;
-
-  @Column()
-  major: string;
-
-  @Column()
-  university: string;
-
-  @OneToMany(() => Practice, (practice) => practice.student)
-  practices: Practice[];
+  @OneToMany(() => Internship, (practice) => practice.student)
+  practices: Internship[];
 }

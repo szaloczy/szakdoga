@@ -1,4 +1,3 @@
-// src/seeds/create-admin.ts
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
 import bcrypt from "bcrypt";

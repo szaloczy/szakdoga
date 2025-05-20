@@ -36,4 +36,8 @@ Steps to run this project:
 
 In frontend folder:
 1. Run `npm i` command
-3. Run `ng serve`
+2. Run `ng serve`
+
+## ADMIN PAGE
+email: `admin@gmail.com`
+password: `admin`

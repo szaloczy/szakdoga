@@ -31,6 +31,6 @@ export class Student {
   @JoinColumn()
   user: User;
 
-  @OneToMany(() => Internship, (practice) => practice.student)
-  practices: Internship[];
+  @OneToOne(() => Internship, (practice) => practice.student)
+  internship: Internship;
 }

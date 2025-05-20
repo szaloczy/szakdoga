@@ -1,23 +1,36 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import {
+  Column,
+  Entity,
+  ManyToOne,
+  OneToOne,
+  PrimaryGeneratedColumn,
+} from "typeorm";
 import { Student } from "./Student";
+import { Company } from "./Company";
+import { Mentor } from "./Mentor";
 
 @Entity()
 export class Internship {
   @PrimaryGeneratedColumn()
   id: string;
 
-  @Column()
+  @Column({ type: "date" })
   startDate: Date;
 
-  @Column()
+  @Column({ type: "date" })
   endDate: Date;
 
-  @Column({ type: "int" })
-  hoursRequired: number;
+  @Column({ default: false })
+  isApproved: boolean;
 
-  @Column({ type: "int", default: 0 })
-  hoursCompleted: number;
-
-  @ManyToOne(() => Student, (student) => student.practices)
+  @OneToOne(() => Student, (student) => student.internship)
   student: Student;
+
+  @OneToOne(() => Mentor, (mentor) => mentor.internship)
+  mentor: Mentor;
+
+  @ManyToOne(() => Company, (company) => company.internships, {
+    onDelete: "SET NULL",
+  })
+  company: Company;
 }

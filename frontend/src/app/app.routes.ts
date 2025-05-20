@@ -4,6 +4,9 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { StudentProfileComponent } from './pages/student-profile/student-profile.component';
+import { AuthService } from './services/auth.service';
+import { inject } from '@angular/core';
+import { AdminComponent } from './admin/admin.component';
 
 export const routes: Routes = [
     {
@@ -13,8 +16,12 @@ export const routes: Routes = [
         path: 'login', component: LoginComponent
     },
     {
+        path: 'admin', component: AdminComponent, canActivate: [() => inject(AuthService).adminAccess()]
+    },
+    {
         path: '',
         component: MainLayoutComponent,
+        canActivate: [() => inject(AuthService).preventGuestAccess()],
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'profile', component: StudentProfileComponent },

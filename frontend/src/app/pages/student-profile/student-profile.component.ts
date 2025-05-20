@@ -96,6 +96,17 @@ export class StudentProfileComponent implements OnInit{
     }
   }
 
+  resetProfile() {
+    this.profile = {
+      id: 0,
+      email: '',
+      firstname: '',
+      lastname: '',
+      role: UserRole.STUDENT,
+      student: undefined
+    }
+  }
+
   onSubmit() {}
 
   onFileSelected(name: any) {}

@@ -31,7 +31,7 @@
         </div>
 
         <button type="submit" class="btn btn-success me-2" [disabled]="profileForm.invalid">✅ Save</button>
-        <button type="reset" class="btn btn-secondary">🔄 Reset</button>
+        <button type="reset" class="btn btn-secondary" (click)="resetProfile()">🔄 Reset</button>
       </form>
 
       <form class="mt-5" [formGroup]="companyForm" (ngSubmit)="onSubmit()">

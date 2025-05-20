@@ -47,7 +47,11 @@ export class LoginComponent implements OnInit{
           console.log("Sikeres bejelentkezés");
           this.toastService.showSuccess("Sikeres bejelentkezés");
           this.authService.setToken(response.accessToken);
-          this.router.navigateByUrl("");
+          if (this.authService.decodeToken()?.role == "admin") {
+            this.router.navigateByUrl("/admin")
+          } else {
+            this.router.navigateByUrl("");
+          }
         },
         error: (err) => {
           console.error("Hiba: " + err);

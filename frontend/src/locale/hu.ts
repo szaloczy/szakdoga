@@ -1,6 +1,17 @@
 import { NestedI18n } from "../types";
 
 export const hu: NestedI18n = {
+    role: {
+        student: {
+            text: 'Hallgató'
+        },
+        mentor: {
+            text: 'mentor'
+        },
+        admin: {
+            text : 'Adminisztrátor'
+        }
+    },
     register: {
         form: {
             title: {

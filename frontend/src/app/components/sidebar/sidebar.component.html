@@ -5,7 +5,7 @@
     @if(!isCollapsed && authService.isLoggedIn()) {
       <div class="profile-info">
         <div class="username">{{ user.firstname }} {{ user.lastname }}</div>
-        <div class="role">{{ user.role }}</div>
+        <div class="role">{{ authService.getUserRole() }}</div>
       </div>
     }
   </div>

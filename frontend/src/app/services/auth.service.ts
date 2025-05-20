@@ -1,10 +1,15 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { UserRole } from '../../types';
+import { I18nService } from '../shared/i18n.pipe';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+
+  i18nService = inject(I18nService);
+
   private TOKEN_KEY = 'accessToken';
   router = inject(Router);
 
@@ -22,6 +27,17 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     return !!this.getToken();
+  }
+
+  adminAccess(): boolean {
+    const isLoggedIn = this.isLoggedIn();
+
+    if(!isLoggedIn) {
+      this.router.navigateByUrl("/login");
+    } else if (this.decodeToken()?.role != "admin") {
+      this.router.navigateByUrl("");
+    }
+    return isLoggedIn;
   }
 
   preventGuestAccess(): boolean {
@@ -46,6 +62,7 @@ export class AuthService {
     }
   }
 
+
   getUserName(): string {
     const firstname = this.decodeToken()?.firstname || 'Ismeretlen';
     const lastname = this.decodeToken()?.lastname || '';
@@ -55,9 +72,9 @@ export class AuthService {
   
   getUserRole(): string {
     switch (this.decodeToken()?.role) {
-      case 'admin': return 'Adminisztrátor';
-      case 'student': return 'Hallgató';
-      case 'mentor' : return 'Mentor';
+      case 'admin': return this.i18nService.transform('role.admin');
+      case 'student': return this.i18nService.transform('role.student');
+      case 'mentor' : return this.i18nService.transform('role.mentor');
       default: return 'Ismeretlen';
     }
   }

@@ -17,6 +17,8 @@ export class UserService {
     return this.http.post<string>(`/api/user/register`, registerData);
   }
 
+  getAll() { return this.http.get<UserDTO[]>(`/api/user`)};
+
   getOne(id: number) { return this.http.get<UserDTO>(`/api/user/` + id)};
 
   getProfile(id: number) { return this.http.get<ProfileDTO>(`/api/profile/` + id)};

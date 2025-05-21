@@ -27,6 +27,8 @@ export interface UserDTO {
     id: number;
     firstname: string;
     lastname: string;
+    email: string;
+    active: boolean;
     role: string;
 }
 

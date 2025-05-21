@@ -12,7 +12,7 @@ import { Mentor } from "./Mentor";
 @Entity()
 export class Internship {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ type: "date" })
   startDate: Date;

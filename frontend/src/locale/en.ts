@@ -132,5 +132,32 @@ export const en: NestedI18n = {
         title: {
             text: "Welcome, "
         }
+    },
+    admin_panel: {
+        dashboard: {
+            title: {
+                text: "Admin panel"
+            },
+            cards: {
+                users: {
+                    text: "Users"
+                },
+                mentors: {
+                    text: "Mentors"
+                },
+                companies: {
+                    text: "Companies"
+                },
+                statistics: {
+                    text: "Statistics"
+                },
+                button: {
+                    text: "Manage"
+                },
+            }
+        },
+        user_management: {
+
+        }
     }
 }

@@ -23,6 +23,8 @@ export class DashboardComponent implements OnInit{
       id: 0,
       firstname: '',
       lastname: '',
+      email: '',
+      active: true,
       role: UserRole.STUDENT,
     }
 

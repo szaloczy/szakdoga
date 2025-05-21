@@ -129,5 +129,32 @@ export const hu: NestedI18n = {
         title: {
             text: "Üdvözlünk, "
         }
+    },
+    admin_panel: {
+        dashboard: {
+            title: {
+                text: "Admin panel"
+            },
+            cards: {
+                users: {
+                    text: "Felhasználók"
+                },
+                mentors: {
+                    text: "Mentorok"
+                },
+                Companies: {
+                    text: "Cégek"
+                },
+                statistics: {
+                    text: "Statisztikák"
+                },
+                button: {
+                    text: "Kezelés"
+                },
+            }
+        },
+        user_management: {
+
+        }
     }
 }

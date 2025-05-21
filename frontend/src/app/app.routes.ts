@@ -6,7 +6,8 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { StudentProfileComponent } from './pages/student-profile/student-profile.component';
 import { AuthService } from './services/auth.service';
 import { inject } from '@angular/core';
-import { AdminComponent } from './admin/admin.component';
+import { AdminComponent } from './admin-panel/admin/admin.component';
+import { UserManagementComponent } from './admin-panel/user-management/user-management.component';
 
 export const routes: Routes = [
     {
@@ -16,8 +17,9 @@ export const routes: Routes = [
         path: 'login', component: LoginComponent
     },
     {
-        path: 'admin', component: AdminComponent, canActivate: [() => inject(AuthService).adminAccess()]
+        path: 'admin', component: AdminComponent, canActivate: [() => inject(AuthService).adminAccess()],
     },
+    { path: 'user-management', component: UserManagementComponent },
     {
         path: '',
         component: MainLayoutComponent,

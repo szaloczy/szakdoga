@@ -20,6 +20,9 @@ export class User {
   @Column()
   lastname: string;
 
+  @Column({ default: true })
+  active: boolean;
+
   @Column({ type: "enum", enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 

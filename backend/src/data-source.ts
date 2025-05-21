@@ -3,6 +3,8 @@ import { DataSource } from "typeorm";
 import { User } from "./entity/User";
 import { Internship } from "./entity/Internship";
 import { Student } from "./entity/Student";
+import { Company } from "./entity/Company";
+import { Mentor } from "./entity/Mentor";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -13,7 +15,7 @@ export const AppDataSource = new DataSource({
   database: "internship_management",
   synchronize: true,
   logging: false,
-  entities: [User, Internship, Student],
+  entities: [User, Internship, Student, Company, Mentor],
   migrations: [],
   subscribers: [],
 });

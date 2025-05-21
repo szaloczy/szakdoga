@@ -8,6 +8,7 @@ import { AuthService } from './services/auth.service';
 import { inject } from '@angular/core';
 import { AdminComponent } from './admin-panel/admin/admin.component';
 import { UserManagementComponent } from './admin-panel/user-management/user-management.component';
+import { CompanyManagementComponent } from './admin-panel/company-management/company-management.component';
 
 export const routes: Routes = [
     {
@@ -19,7 +20,12 @@ export const routes: Routes = [
     {
         path: 'admin', component: AdminComponent, canActivate: [() => inject(AuthService).adminAccess()],
     },
-    { path: 'user-management', component: UserManagementComponent },
+    { 
+        path: 'users', component: UserManagementComponent, canActivate: [() => inject(AuthService).adminAccess()],
+    },
+    {
+        path: 'companies', component: CompanyManagementComponent, canActivate: [() => inject(AuthService).adminAccess()],
+    },
     {
         path: '',
         component: MainLayoutComponent,

@@ -142,9 +142,6 @@ export const en: NestedI18n = {
                 users: {
                     text: "Users"
                 },
-                mentors: {
-                    text: "Mentors"
-                },
                 companies: {
                     text: "Companies"
                 },

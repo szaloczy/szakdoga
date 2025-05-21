@@ -56,6 +56,33 @@ export interface ProfileDTO {
     student: StudentDTO | undefined;
 }
 
+export interface MentorDTO {
+    id: number;
+    firstname: string;
+    lastname: string;
+    position: string;
+    internship: InternshipDTO;
+}
+
+export interface InternshipDTO {
+    id: number;
+    startDate: Date;
+    endDate: Date;
+    isApproved: boolean;
+    student: StudentDTO;
+    mentor: MentorDTO;
+    company: CompanyDTO;
+}
+
+export interface CompanyDTO {
+    id: number;
+    name: string;
+    city: string;
+    address: string;
+    mentors: MentorDTO[];
+    internships: InternshipDTO;
+}
+
 export enum UserRole {
     STUDENT = "student",
     ADMIN = "admin",

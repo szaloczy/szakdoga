@@ -1,22 +1,14 @@
 <div class="admin-panel container mt-4">
   <h2 class="mb-4">{{ 'admin_panel.dashboard.title' | translate }}</h2>
 
-  <button (click)="logout()" class="btn btn-outline-secondary">Exit</button>
+  <button (click)="logout()" class="btn btn-outline-secondary mb-2">Exit</button>
 
   <div class="row g-4">
     <div class="col-md-4">
       <div class="admin-card p-3 shadow-sm rounded">
         <h5 class="mb-2">{{ 'admin_panel.dashboard.cards.users' | translate }}</h5>
         <p class="text-muted">Regisztrált felhasználók kezelése</p>
-        <button routerLink="/user-management" class="btn btn-outline-primary w-100">{{ 'admin_panel.dashboard.cards.button' | translate }}</button>
-      </div>
-    </div>
-
-    <div class="col-md-4">
-      <div class="admin-card p-3 shadow-sm rounded">
-        <h5 class="mb-2">{{ 'admin_panel.dashboard.cards.mentors' | translate }}</h5>
-        <p class="text-muted">Mentor profilok hozzáadása és szerkesztése</p>
-        <button class="btn btn-outline-success w-100">{{ 'admin_panel.dashboard.cards.button' | translate }}</button>
+        <button routerLink="/users" class="btn btn-outline-primary w-100">{{ 'admin_panel.dashboard.cards.button' | translate }}</button>
       </div>
     </div>
 
@@ -24,7 +16,7 @@
       <div class="admin-card p-3 shadow-sm rounded">
         <h5 class="mb-2">{{ 'admin_panel.dashboard.cards.companies' | translate }}</h5>
         <p class="text-muted">Cégek hozzáadása és szerkesztése</p>
-        <button class="btn btn-outline-success w-100">{{ 'admin_panel.dashboard.cards.button' | translate }}</button>
+        <button routerLink="/companies" class="btn btn-outline-success w-100">{{ 'admin_panel.dashboard.cards.button' | translate }}</button>
       </div>
     </div>
 

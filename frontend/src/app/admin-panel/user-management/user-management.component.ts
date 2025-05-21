@@ -14,6 +14,22 @@ export class UserManagementComponent implements OnInit{
   userService = inject(UserService);
   users: UserDTO[] = [];
 
+  companyDialogFields = [
+  { name: 'firstname', label: 'Company name', type: 'text', required: true },
+  { name: 'lastname', label: 'City', type: 'text', required: true },
+  { name: 'email', label: 'Address', type: 'email', required: true },
+  {
+    name: 'role',
+    label: 'Role',
+    type: 'select',
+    options: [
+      { value: 'student', label: 'Student' },
+      { value: 'mentor', label: 'Mentor' },
+      { value: 'admin', label: 'Admin' },
+    ],
+  },
+];
+
   ngOnInit(): void {
     this.userService.getAll().subscribe({
       next: (users) => {

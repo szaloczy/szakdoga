@@ -11,9 +11,15 @@
 
   @if(showDialog) {
     <app-edit-dialog
-      [title]="'Edit Company'"
-      [fields]="companyDialogFields"
-      (close)="closeDialog()"
+      [(showDialog)]="showDialog"
+      [title]="'Add Company'"
+      [message]="'Please fill out the company details below:'"
+      [fields]="fields"
+      [formData]="formData"
+      [confirmButtonText]="'Save'"
+      [cancelButtonText]="'Cancel'"
+      (confirmed)="onDialogConfirmed($event)"
+      (canceled)="closeDialog()"
     >
     </app-edit-dialog>
   }
@@ -27,13 +33,6 @@
       />
       <!-- [(ngModel)]="searchText"
         (input)="applyFilters()" -->
-    </div>
-    <div class="col-md-3">
-        <!-- [(ngModel)]="selectedRole" (change)="applyFilters() -->
-      <select class="form-select">
-        <option value="">All Roles</option>
-        <option *ngFor="let role of roles" [value]="role">role</option>
-      </select>
     </div>
   </div>
 

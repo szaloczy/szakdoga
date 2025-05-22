@@ -1,6 +1,7 @@
 import { NgClass } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { DialogField } from '../../../types';
 
 @Component({
   selector: 'app-edit-dialog',
@@ -11,24 +12,49 @@ import { FormsModule } from '@angular/forms';
   styleUrl: './edit-dialog.component.scss'
 })
 export class EditDialogComponent {
-  @Input() title = 'Edit Entity';
-  @Input() fields: any[] = []; // array of form field configs
-  @Input() data: any = {}; // optional initial data
+  @Input() title = 'Enter information';
+  @Input() message = 'Please enter the required information:';
+  @Input() fields: DialogField[] = [];
+  @Input() formData: Record<string, any> = {};
+  @Input() defaultValue = '';
+  @Input() placeholder = '';
+  @Input() confirmButtonText = 'OK';
+  @Input() cancelButtonText = 'Cancel';
+  @Input() showDialog = false;
 
-  @Output() save = new EventEmitter<any>();
-  @Output() close = new EventEmitter<void>();
+  @Output() confirmed = new EventEmitter<Record<string, any>>();
+  @Output() canceled = new EventEmitter<void>();
+  @Output() showDialogChange = new EventEmitter<boolean>();
 
-  formData: any = {};
+  inputValue = '';
 
-  ngOnInit() {
-    this.formData = { ...this.data };
+  ngOnChanges() {
+    if (this.showDialog) {
+      this.inputValue = this.defaultValue;
+
+      setTimeout(() => {
+        const inputElement = document.querySelector('input[type="text"]') as HTMLInputElement;
+        if (inputElement) {
+          inputElement.focus();
+          inputElement.select();
+        }
+      }, 0);
+    }
   }
 
-  onSubmit() {
-    this.save.emit(this.formData);
+  onConfirm() {
+    this.confirmed.emit(this.formData);
+    this.closeDialog();
   }
 
-  onClose() {
-    this.close.emit();
+  onCancel() {
+    this.canceled.emit();
+    this.closeDialog();
   }
+
+  closeDialog() {
+    this.showDialog = false;
+    this.showDialogChange.emit(this.showDialog);
+  }
+  
 }

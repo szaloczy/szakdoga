@@ -11,6 +11,12 @@ export class Company {
   name: string;
 
   @Column()
+  email: string;
+
+  @Column()
+  phone: string;
+
+  @Column()
   city: string;
 
   @Column()

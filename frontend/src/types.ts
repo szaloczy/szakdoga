@@ -78,9 +78,20 @@ export interface CompanyDTO {
     id: number;
     name: string;
     city: string;
+    email: string;
+    phone: string;
     address: string;
     mentors: MentorDTO[];
     internships: InternshipDTO;
+}
+
+export interface DialogField {
+name: string;
+  label: string;
+  type: 'text' | 'number' | 'select' | 'textarea';
+  required?: boolean;
+  options?: { value: string; label: string }[];
+  placeholder?: string;
 }
 
 export enum UserRole {

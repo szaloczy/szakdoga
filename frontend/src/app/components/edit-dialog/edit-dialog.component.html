@@ -1,55 +1,58 @@
-<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background: rgba(0, 0, 0, 0.5)">
-  <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">{{ title }}</h5>
-        <button type="button" class="btn-close" (click)="onClose()"></button>
+@if (showDialog) {
+  <div class="dialog-overlay">
+    <div class="dialog-dialog" [class.show]="showDialog">
+      <div class="dialog-header">
+        <h2 class="dialog-title">{{ title }}</h2>
+        <button class="close-button" (click)="onCancel()">×</button>
       </div>
-      <div class="modal-body">
-        <form (ngSubmit)="onSubmit()" #formRef="ngForm">
-          <div class="row">
-            @for(field of fields; track field) {
-            <div class="mb-3 col-md-6">
-              <label [for]="field.name" class="form-label">{{ field.label }}</label>
 
-              <input
-                *ngIf="field.type === 'text' || field.type === 'email' || field.type === 'number'"
-                class="form-control"
-                [type]="field.type"
-                [id]="field.name"
-                [name]="field.name"
-                [(ngModel)]="formData[field.name]"
-                [required]="field.required"
-              />
+      <div class="dialog-body">
+        <p class="dialog-message">{{ message }}</p>
 
-              <select
-                *ngIf="field.type === 'select'"
-                class="form-select"
-                [id]="field.name"
-                [name]="field.name"
-                [(ngModel)]="formData[field.name]"
-              >
-                <option *ngFor="let opt of field.options" [value]="opt.value">{{ opt.label }}</option>
-              </select>
+        @for(field of fields; track field) {
+        <div class="dialog-form">
+          <label [for]="field.name">{{ field.label }}</label>
+          
+          @if(field.type === 'text' || field.type === 'number') {
+            <input
+            [type]="field.type"
+            class="dialog.input"
+            [(ngModel)]="formData[field.name]"
+            [id]="field.name"
+            [placeholder]="field.placeholder"
+            />
+          }
 
-              <textarea
-                *ngIf="field.type === 'textarea'"
-                class="form-control"
-                [id]="field.name"
-                [name]="field.name"
-                rows="3"
-                [(ngModel)]="formData[field.name]"
-              ></textarea>
-            </div>
-            }
-          </div>
+          @if (field.type === 'textarea') {
+            <textarea 
+            class="dialog.input"
+            [(ngModel)] = "formData[field.name]"
+            [id]="field.name"
+            [placeholder]="field.placeholder"
+            >
+          </textarea>
+          }
 
-          <div class="text-end">
-            <button type="button" class="btn btn-secondary me-2" (click)="onClose()">Cancel</button>
-            <button type="submit" class="btn btn-primary" [disabled]="formRef.invalid">Save</button>
-          </div>
-        </form>
+          @if (field.type === 'select') {
+            <select
+            class="dialog.input"
+            [(ngModel)]="formData[field.name]"
+            [id]="field.name"
+            >
+              @for (opt of field.options; track opt) {
+                <option [value]="opt.value">
+                  {{ opt.label }}
+                </option>
+              }
+            </select>
+          }
+        </div>
+        }
+      </div>
+      <div class="dialog-footer">
+        <button class="cancel-button" (click)="onCancel()">{{ cancelButtonText }}</button>
+        <button class="confirm-button" (click)="onConfirm()">{{ confirmButtonText }}</button>
       </div>
     </div>
   </div>
-</div>
+}

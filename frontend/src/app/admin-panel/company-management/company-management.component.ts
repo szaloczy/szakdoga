@@ -1,5 +1,4 @@
 import { Component, inject } from '@angular/core';
-import { UserService } from '../../services/user.service';
 import { CompanyDTO, DialogField } from '../../../types';
 import { CompanyService } from '../../services/company.service';
 import { EditDialogComponent } from '../../components/edit-dialog/edit-dialog.component';

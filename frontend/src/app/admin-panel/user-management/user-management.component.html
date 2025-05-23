@@ -9,6 +9,36 @@
     </button>
   </div>
 
+   @if(showDialog) {
+    <app-edit-dialog
+      [(showDialog)]="showDialog"
+      [title]="'Add User'"
+      [message]="'Please fill out the user details below:'"
+      [fields]="fields"
+      [formData]="formData"
+      [confirmButtonText]="'Save'"
+      [cancelButtonText]="'Cancel'"
+      (confirmed)="onCreateDialogConfirmed($event)"
+      (canceled)="closeDialog()"
+    >
+    </app-edit-dialog>
+  }
+
+  @if(showEditDialog) {
+    <app-edit-dialog
+      [(showDialog)]="showEditDialog"
+      [title]="'Edit User'"
+      [message]="'Please fill out the user details below:'"
+      [fields]="editUserFields"
+      [formData]="formData"
+      [confirmButtonText]="'Save'"
+      [cancelButtonText]="'Cancel'"
+      (confirmed)="onEditDialogConfirmed($event)"
+      (canceled)="closeDialog()"
+    >
+    </app-edit-dialog>
+  }
+
   <div class="row mb-3 gy-2">
     <div class="col-md-6">
       <input
@@ -24,7 +54,9 @@
         <!-- [(ngModel)]="selectedRole" (change)="applyFilters() -->
       <select class="form-select">
         <option value="">All Roles</option>
-        <option *ngFor="let role of roles" [value]="role">role</option>
+        @for(role of roles; track role) {
+        <option>role</option>
+        }
       </select>
     </div>
   </div>

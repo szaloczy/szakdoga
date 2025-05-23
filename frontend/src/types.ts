@@ -90,7 +90,7 @@ name: string;
   label: string;
   type: 'text' | 'number' | 'select' | 'textarea';
   required?: boolean;
-  options?: { value: string; label: string }[];
+  options?: { value: string | boolean; label: string }[];
   placeholder?: string;
 }
 

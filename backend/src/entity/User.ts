@@ -26,6 +26,9 @@ export class User {
   @Column({ type: "enum", enum: UserRole, default: UserRole.STUDENT })
   role: UserRole;
 
-  @OneToOne(() => Student, (student) => student.user)
+  @OneToOne(() => Student, (student) => student.user, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   student: Student;
 }

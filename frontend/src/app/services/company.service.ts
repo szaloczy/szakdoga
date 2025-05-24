@@ -16,7 +16,7 @@ export class CompanyService {
 
   create(company: CompanyDTO) { return this.http.post<string> (`/api/company`, company)};
 
-  update(company: CompanyDTO, id: number) { return this.http.put<string> (`/api/company/${id}`, company)};
+  update(id: number, company: CompanyDTO) { return this.http.put<string> (`/api/company/${id}`, company)};
 
-  delete(company: CompanyDTO, id: number) { return this.http.delete<string> (`/api/company/${id}`)};
+  delete(id: number) { return this.http.delete<string> (`/api/company/${id}`)};
 }

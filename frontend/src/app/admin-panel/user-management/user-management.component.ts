@@ -39,7 +39,6 @@ export class UserManagementComponent implements OnInit{
   { name: 'email', label: 'Email', type: 'text', placeholder: 'Email' },
   { name: 'firstname', label: 'firstname', type: 'text', placeholder: 'Firstname' },
   { name: 'lastname', label: 'lastname', type: 'text', placeholder: 'Lastname' },
-  { name: 'email', label: 'Email', type: 'text', placeholder: 'Email' },
   { name: 'active', label: 'Active', type: 'select', options: [
       {label: 'Active', value: true},
       {label: 'Inactive', value: false}

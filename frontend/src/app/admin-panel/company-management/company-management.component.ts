@@ -3,6 +3,7 @@ import { CompanyDTO, DialogField } from '../../../types';
 import { CompanyService } from '../../services/company.service';
 import { EditDialogComponent } from '../../components/edit-dialog/edit-dialog.component';
 import { RouterLink } from '@angular/router';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-company-management',
@@ -16,9 +17,11 @@ import { RouterLink } from '@angular/router';
 export class CompanyManagementComponent {
 
   companyService = inject(CompanyService);
+  toastService = inject(ToastService);
   companies: CompanyDTO[] = [];
-
   showDialog = false;
+  isEdit = false;
+  companyId = 0;
 
   fields: DialogField[] = [
     { name: 'name', label: 'Company Name', type: 'text', required: true },
@@ -40,9 +43,25 @@ export class CompanyManagementComponent {
     this.loadCompanies();
   }
 
-  editCompany(company: CompanyDTO) {}
+  editCompany(company: CompanyDTO) {
+    this.showDialog = !this.showDialog;
+    this.formData = company;
+    this.companyId = company.id;
+    this.isEdit = true;
+  }
 
-  deleteCompany(id: number) {}
+  deleteCompany(id: number) {
+    this.companyService.delete(id).subscribe({
+      next: (response) => {
+        console.log("Company deleted sucessfully");
+        this.loadCompanies();
+        this.toastService.showSuccess("Company deleted sucessfully");
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
+  }
 
   addCompany() {
     this.showDialog = !this.showDialog;
@@ -53,16 +72,26 @@ export class CompanyManagementComponent {
   }
 
   onDialogConfirmed(data: any) {
-    this.companyService.create(data).subscribe({
+    if(this.isEdit) {
+      this.companyService.update(this.companyId, data).subscribe({
+      next: (response) => {
+        console.log("Company updated succefully");
+      },
+      error: (err) => {
+        console.log(err);
+      }
+    });
+    } else {
+      this.companyService.create(data).subscribe({
       next: (msg) => {
         console.log("Company saved successfully: ", msg)
-        this.loadCompanies();
       },
       error: (err) => {
         console.error(err);
       }
-    })
-
+    });
+    }
+    this.loadCompanies();
     this.showDialog = !this.showDialog;
   }
 

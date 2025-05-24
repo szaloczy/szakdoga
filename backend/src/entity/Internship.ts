@@ -23,10 +23,18 @@ export class Internship {
   @Column({ default: false })
   isApproved: boolean;
 
-  @OneToOne(() => Student, (student) => student.internship)
+  @OneToOne(() => Student, (student) => student.internship, {
+    onDelete: "CASCADE",
+    cascade: false,
+    nullable: true,
+  })
   student: Student;
 
-  @OneToOne(() => Mentor, (mentor) => mentor.internship)
+  @OneToOne(() => Mentor, (mentor) => mentor.internship, {
+    onDelete: "SET NULL",
+    cascade: false,
+    nullable: true,
+  })
   mentor: Mentor;
 
   @ManyToOne(() => Company, (company) => company.internships, {

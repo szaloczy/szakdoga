@@ -1,6 +1,7 @@
 import {
   Column,
   Entity,
+  JoinColumn,
   ManyToOne,
   OneToOne,
   PrimaryGeneratedColumn,
@@ -27,14 +28,18 @@ export class Internship {
     onDelete: "CASCADE",
     cascade: false,
     nullable: true,
+    eager: true,
   })
+  @JoinColumn()
   student: Student;
 
   @OneToOne(() => Mentor, (mentor) => mentor.internship, {
     onDelete: "SET NULL",
     cascade: false,
     nullable: true,
+    eager: true,
   })
+  @JoinColumn()
   mentor: Mentor;
 
   @ManyToOne(() => Company, (company) => company.internships, {

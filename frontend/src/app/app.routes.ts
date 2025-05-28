@@ -9,6 +9,7 @@ import { inject } from '@angular/core';
 import { AdminComponent } from './admin-panel/admin/admin.component';
 import { UserManagementComponent } from './admin-panel/user-management/user-management.component';
 import { CompanyManagementComponent } from './admin-panel/company-management/company-management.component';
+import { InternshipManagementComponent } from './admin-panel/internship-management/internship-management.component';
 
 export const routes: Routes = [
     {
@@ -25,6 +26,9 @@ export const routes: Routes = [
     },
     {
         path: 'companies', component: CompanyManagementComponent, canActivate: [() => inject(AuthService).adminAccess()],
+    },
+    {
+        path: 'internships', component: InternshipManagementComponent, canActivate: [() => inject(AuthService).adminAccess()]
     },
     {
         path: '',

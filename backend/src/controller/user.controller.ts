@@ -6,13 +6,13 @@ import { Student } from "../entity/Student";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { profileDTO, UserRole } from "../types";
+import { Mentor } from "../entity/Mentor";
 
 export class UserController extends Controller {
   repository = AppDataSource.getRepository(User);
 
   getAll = async (req, res) => {
     const users = await this.repository.find({
-      where: { role: UserRole.STUDENT },
       relations: ["student"],
     });
 
@@ -30,11 +30,19 @@ export class UserController extends Controller {
 
       await this.repository.save(createdUser);
 
-      const student = AppDataSource.getRepository(Student).create({
-        user: createdUser,
-      });
+      if (userToCreate.role === "student") {
+        const student = AppDataSource.getRepository(Student).create({
+          user: createdUser,
+        });
 
-      await AppDataSource.getRepository(Student).save(student);
+        await AppDataSource.getRepository(Student).save(student);
+      } else if (userToCreate.role === "mentor") {
+        const mentor = AppDataSource.getRepository(Mentor).create({
+          user: createdUser,
+        });
+
+        await AppDataSource.getRepository(Mentor).save(mentor);
+      }
 
       res.json(createdUser);
     } catch (error) {

@@ -142,8 +142,8 @@ export const hu: NestedI18n = {
                 Companies: {
                     text: "Cégek"
                 },
-                statistics: {
-                    text: "Statisztikák"
+                internships: {
+                    text: "Gyakorlatok"
                 },
                 button: {
                     text: "Kezelés"

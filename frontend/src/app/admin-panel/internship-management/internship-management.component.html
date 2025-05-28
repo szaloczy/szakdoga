@@ -1,0 +1,58 @@
+<div class="company-management container mt-5">
+   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+    <h2 class="m-0">Intrenship Management</h2>
+    <button class="btn btn-primary" (click)="addInternship()">
+      <i class="bi bi-plus-lg me-1"></i> Add Company
+    </button>
+    <button class="btn btn-secondary" routerLink="/admin">
+      <i class="bi bi-arrow"></i> Back to Dashboard
+    </button>
+  </div>
+
+  <div class="row mb-3 gy-2">
+    <div class="col-md-6">
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Search by name or email..."
+        
+      />
+      <!-- [(ngModel)]="searchText"
+        (input)="applyFilters()" -->
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped table-bordered align-middle">
+      <thead class="table-dark">
+        <tr>
+          <th>Student neptun</th>
+          <th>Company</th>
+          <th>Mentor</th>
+          <th>Mentors</th>
+          <th>Internships</th>
+          <th class="text-center">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (intern of internships; track intern) {
+        <tr>
+          <td>{{ intern.student.neptun }}</td>
+          <td>{{ intern.company.name }}</td>
+          <td>{{ intern.mentor }}</td>
+          <!-- <td>{{ company.mentors }}</td>
+          <td>{{ company.internships }}</td> -->
+          <td class="text-center">
+            <button class="btn btn-sm btn-outline-primary me-1" (click)="editInternship(intern)">
+              <i class="bi bi-pencil"></i>
+            </button>
+            <button class="btn btn-sm btn-outline-danger" (click)="deleteInternship(intern.id)">
+              <i class="bi bi-trash"></i>
+            </button>
+          </td>
+        </tr>
+        }
+      </tbody>
+    </table>
+  </div>
+</div>

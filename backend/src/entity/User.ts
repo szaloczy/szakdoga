@@ -2,6 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { UserRole } from "../types";
 import { Internship } from "./Internship";
 import { Student } from "./Student";
+import { Mentor } from "./Mentor";
 
 @Entity()
 export class User {
@@ -30,5 +31,11 @@ export class User {
     cascade: true,
     onDelete: "CASCADE",
   })
-  student: Student;
+  student?: Student;
+
+  @OneToOne(() => Mentor, (mentor) => mentor.user, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
+  mentor?: Mentor;
 }

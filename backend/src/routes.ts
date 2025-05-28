@@ -6,6 +6,7 @@ import { FeedbackController } from "./controller/feedback.controller"; */
 import { StudentController } from "./controller/student.controller";
 import { CompanyController } from "./controller/company.controller";
 import { InternshipController } from "./controller/internship.controller";
+import { MentorController } from "./controller/mentor.controller";
 
 export const router = express.Router();
 
@@ -44,6 +45,14 @@ router.get("/internship/:id", internshipController.getOne);
 router.post("/internship", internshipController.create);
 router.put("/internship/:id", internshipController.update);
 router.delete("/internship/:id", internshipController.delete);
+
+const mentorController = new MentorController();
+
+router.get("/mentor", mentorController.getAll);
+router.get("/mentor/:id", mentorController.getOne);
+router.post("/mentor", mentorController.create);
+router.put("/mentor/:id", mentorController.update);
+router.delete("/mentor/:id", mentorController.delete);
 
 /* const practiceController = new PracticeController();
 

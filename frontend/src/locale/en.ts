@@ -145,8 +145,8 @@ export const en: NestedI18n = {
                 companies: {
                     text: "Companies"
                 },
-                statistics: {
-                    text: "Statistics"
+                internships: {
+                    text: "Internships"
                 },
                 button: {
                     text: "Manage"

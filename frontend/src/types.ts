@@ -86,12 +86,12 @@ export interface CompanyDTO {
 }
 
 export interface DialogField {
-name: string;
-  label: string;
-  type: 'text' | 'number' | 'select' | 'textarea';
-  required?: boolean;
-  options?: { value: string | boolean; label: string }[];
-  placeholder?: string;
+    name: string;
+    label: string;
+    type: 'text' | 'number' | 'select' | 'textarea';
+    required?: boolean;
+    options?: { value: string | boolean; label: string }[];
+    placeholder?: string;
 }
 
 export enum UserRole {

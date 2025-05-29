@@ -3,126 +3,85 @@ import { DialogField, UserDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { RouterLink } from '@angular/router';
 import { EditDialogComponent } from '../../components/edit-dialog/edit-dialog.component';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-user-management',
-  imports: [RouterLink, EditDialogComponent],
+  imports: [RouterLink, EditDialogComponent, FormsModule],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss'
 })
 export class UserManagementComponent implements OnInit{
 
   userService = inject(UserService);
+
+  showStudentForm = false;
+  showMentorForm = false;
+
   users: UserDTO[] = [];
-  showDialog = false;
-  showEditDialog = false;
-  roles = [{}, {}];
-  userId = 0;
 
-  fields: DialogField[] = [
-    { name: 'firstname', label: 'Firstname', type: 'text', required: true },
-    { name: 'lastname', label: 'Lastname', type: 'text' },
-    { name: 'email', label: 'Email', type: 'text' },
-    { name: 'password', label: 'Password', type: 'text' },
-    { name: 'active', label: 'Active', type: 'select', options: [
-      {label: 'Active', value: true},
-      {label: 'Inactive', value: false}
-    ] },
-    { name: 'role', label: 'Role', type: 'select', placeholder:'Role', options: [
-      {label: 'Student', value: UserRole.STUDENT},
-      {label: 'Mentor', value: UserRole.MENTOR},
-      {label: 'Admin', value: UserRole.ADMIN}
-    ] },
-  ];
-
-  editUserFields: DialogField[] = [
-  { name: 'email', label: 'Email', type: 'text', placeholder: 'Email' },
-  { name: 'firstname', label: 'firstname', type: 'text', placeholder: 'Firstname' },
-  { name: 'lastname', label: 'lastname', type: 'text', placeholder: 'Lastname' },
-  { name: 'active', label: 'Active', type: 'select', options: [
-      {label: 'Active', value: true},
-      {label: 'Inactive', value: false}
-    ] },
-  { name: 'role', label: 'Role', type: 'select', placeholder:'Role', options: [
-      {label: 'Student', value: UserRole.STUDENT},
-      {label: 'Mentor', value: UserRole.MENTOR},
-      {label: 'Admin', value: UserRole.ADMIN}
-    ] },
-  ];
-
-  formData: Record<string, any> = {
+  student = {
     firstname: '',
     lastname: '',
     email: '',
-    password:'',
-    role: '',
+    password: ''
   };
+
+  mentor = {
+    firstname: '',
+    lastname: '',
+    email: '',
+    password: '',
+    companyId: '',
+    active: true
+  };
+
+  companies = []; // feltöltés onInit-ban pl. backendről
 
   ngOnInit(): void {
     this.loadUsers();
   }
 
-  editUser(user: UserDTO) {
-    this.showEditDialog = !this.showEditDialog;
-    this.formData = user;
-    this.userId = user.id;
+  toggleForm(role: 'student' | 'mentor') {
+    this.showStudentForm = role === 'student';
+    this.showMentorForm = role === 'mentor';
   }
 
-  deleteUser(id: number) {
-    this.userService.delete(id).subscribe({
-      next: (response) => {
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    });
+  createStudent() {
+    // Küldd be a student adatokat backendre
+    console.log('Creating student:', this.student);
+    // Reset + elrejtés
+    this.student = { firstname: '', lastname: '', email: '', password: '' };
+    this.showStudentForm = false;
   }
 
-  addUser() {
-    this.showDialog = !this.showDialog;
+  createMentor() {
+    // Küldd be a mentor adatokat backendre
+    console.log('Creating mentor:', this.mentor);
+    // Reset + elrejtés
+    this.mentor = {
+      firstname: '',
+      lastname: '',
+      email: '',
+      password: '',
+      companyId: '',
+      active: true
+    };
+    this.showMentorForm = false;
   }
 
-  closeDialog() {
-    this.showDialog = false;
-  }
+    loadUsers() {
+      this.userService.getAll().subscribe({
+        next: (users) => {
+          this.users = users;
+        },
+        error: (err) => {
+          console.error(err);
+        }
+      })
+    }
 
-  onCreateDialogConfirmed(data: any) {
-    this.userService.create(data).subscribe({
-      next: (msg) => {
-        console.log("User saved successfully: ", msg)
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
+    editUser(user: UserDTO) {}
 
-    this.showDialog = !this.showDialog;
-  }
-
-  onEditDialogConfirmed(data: any) {
-    this.userService.update(this.userId, data).subscribe({
-      next: (msg) => {
-        console.log("User saved successfully: ", msg)
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-
-    this.showEditDialog = !this.showEditDialog;
-  }
-
-  loadUsers() {
-    this.userService.getAll().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-  }
+    deleteUser(id: number) {}
 }

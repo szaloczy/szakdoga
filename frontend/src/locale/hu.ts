@@ -139,7 +139,7 @@ export const hu: NestedI18n = {
                 users: {
                     text: "Felhasználók"
                 },
-                Companies: {
+                companies: {
                     text: "Cégek"
                 },
                 internships: {

@@ -1,66 +1,99 @@
 <div class="user-management container mt-5">
-   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
+  <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h2 class="m-0">User Management</h2>
-    <button class="btn btn-primary" (click)="addUser()">
-      <i class="bi bi-plus-lg me-1"></i> Add User
-    </button>
+
+    <div class="btn-group">
+      <button class="btn btn-primary" (click)="toggleForm('student')">
+        <i class="bi bi-plus-lg me-1"></i> Add Student
+      </button>
+      <button class="btn btn-primary" (click)="toggleForm('mentor')">
+        <i class="bi bi-plus-lg me-1"></i> Add Mentor
+      </button>
+    </div>
+
     <button class="btn btn-secondary" routerLink="/admin">
       <i class="bi bi-arrow"></i> Back to Dashboard
     </button>
   </div>
 
-   @if(showDialog) {
-    <app-edit-dialog
-      [(showDialog)]="showDialog"
-      [title]="'Add User'"
-      [message]="'Please fill out the user details below:'"
-      [fields]="fields"
-      [formData]="formData"
-      [confirmButtonText]="'Save'"
-      [cancelButtonText]="'Cancel'"
-      (confirmed)="onCreateDialogConfirmed($event)"
-      (canceled)="closeDialog()"
-    >
-    </app-edit-dialog>
+  <!-- ========== STUDENT FORM ========== -->
+  @if(showStudentForm) {
+    <form (ngSubmit)="createStudent()" #studentForm="ngForm" class="card p-3 mb-4">
+      <h5>Add Student</h5>
+      <div class="row g-2">
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="student.firstname" required />
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="student.lastname" required />
+        </div>
+        <div class="col-md-6">
+          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="student.email" required />
+        </div>
+        <div class="col-md-6">
+          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="student.password" required />
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success mt-2">Save Student</button>
+        </div>
+      </div>
+    </form>
   }
 
-  @if(showEditDialog) {
-    <app-edit-dialog
-      [(showDialog)]="showEditDialog"
-      [title]="'Edit User'"
-      [message]="'Please fill out the user details below:'"
-      [fields]="editUserFields"
-      [formData]="formData"
-      [confirmButtonText]="'Save'"
-      [cancelButtonText]="'Cancel'"
-      (confirmed)="onEditDialogConfirmed($event)"
-      (canceled)="closeDialog()"
-    >
-    </app-edit-dialog>
+  <!-- ========== MENTOR FORM ========== -->
+  @if(showMentorForm) {
+    <form (ngSubmit)="createMentor()" #mentorForm="ngForm" class="card p-3 mb-4">
+      <h5>Add Mentor</h5>
+      <div class="row g-2">
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="mentor.firstname" required />
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="mentor.lastname" required />
+        </div>
+        <div class="col-md-6">
+          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="mentor.email" required />
+        </div>
+        <div class="col-md-6">
+          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="mentor.password" required />
+        </div>
+        <div class="col-md-6">
+          <select class="form-select" [(ngModel)]="mentor.companyId" name="companyId" required>
+            <option value="">Select Company</option>
+            <!-- @for (company of companies; track company) {
+              <option [value]="company.id">{{ company.name }}</option>
+            } -->
+          </select>
+        </div>
+        <div class="col-md-6">
+          <select class="form-select" [(ngModel)]="mentor.active" name="active" required>
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success mt-2">Save Mentor</button>
+        </div>
+      </div>
+    </form>
   }
 
+  <!-- ========== SEARCH & FILTER ========== -->
   <div class="row mb-3 gy-2">
     <div class="col-md-6">
-      <input
-        type="text"
-        class="form-control"
-        placeholder="Search by name or email..."
-        
-      />
-      <!-- [(ngModel)]="searchText"
-        (input)="applyFilters()" -->
+      <input type="text" class="form-control" placeholder="Search by name or email..." />
     </div>
     <div class="col-md-3">
-        <!-- [(ngModel)]="selectedRole" (change)="applyFilters() -->
       <select class="form-select">
         <option value="">All Roles</option>
-        @for(role of roles; track role) {
-        <option>role</option>
-        }
+       <!--  @for(role of roles; track role) {
+          <option>{{ role }}</option>
+        } -->
       </select>
     </div>
   </div>
 
+  <!-- ========== USER TABLE ========== -->
   <div class="table-responsive">
     <table class="table table-striped table-bordered align-middle">
       <thead class="table-dark">
@@ -74,24 +107,20 @@
       </thead>
       <tbody>
         @for (user of users; track user) {
-        <tr>
-          <td>{{ user.firstname }} {{ user.lastname }}</td>
-          <td>{{ user.email }}</td>
-          <td>
-            <span class="badge bg-secondary text-capitalize">{{ user.role }}</span>
-          </td>
-          <td>
-          <span> {{ user.active ? 'Active' : 'Inactive' }}</span> 
-          </td>
-          <td class="text-center">
-            <button class="btn btn-sm btn-outline-primary me-1" (click)="editUser(user)">
-              <i class="bi bi-pencil"></i>
-            </button>
-            <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
-              <i class="bi bi-trash"></i>
-            </button>
-          </td>
-        </tr>
+          <tr>
+            <td>{{ user.firstname }} {{ user.lastname }}</td>
+            <td>{{ user.email }}</td>
+            <td><span class="badge bg-secondary text-capitalize">{{ user.role }}</span></td>
+            <td><span>{{ user.active ? 'Active' : 'Inactive' }}</span></td>
+            <td class="text-center">
+              <button class="btn btn-sm btn-outline-primary me-1" (click)="editUser(user)">
+                <i class="bi bi-pencil"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="deleteUser(user.id)">
+                <i class="bi bi-trash"></i>
+              </button>
+            </td>
+          </tr>
         }
       </tbody>
     </table>

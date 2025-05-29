@@ -43,6 +43,17 @@ export class EditDialogComponent {
   }
 
   onConfirm() {
+     for (let field of this.fields) {
+    if (field.type === 'select' && (field.name === 'active' || field.name === 'isApproved')) {
+      const val = this.formData[field.name];
+      if (val === 'true') {
+        this.formData[field.name] = true;
+      } else if (val === 'false') {
+        this.formData[field.name] = false;
+      }
+    }
+  }
+
     this.confirmed.emit(this.formData);
     this.closeDialog();
   }

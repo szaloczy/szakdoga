@@ -61,6 +61,7 @@ export interface MentorDTO {
     firstname: string;
     lastname: string;
     position: string;
+    company: number;
     internship: InternshipDTO;
 }
 

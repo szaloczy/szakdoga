@@ -18,20 +18,20 @@
 
   <!-- ========== STUDENT FORM ========== -->
   @if(showStudentForm) {
-    <form (ngSubmit)="createStudent()" #studentForm="ngForm" class="card p-3 mb-4">
+    <form [formGroup]="studentForm" (ngSubmit)="createStudent()" class="card p-3 mb-4">
       <h5>Add Student</h5>
       <div class="row g-2">
         <div class="col-md-6">
-          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="student.firstname" required />
+          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="student.firstname" formControlName="firstname" required />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="student.lastname" required />
+          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="student.lastname" formControlName="lastname" required />
         </div>
         <div class="col-md-6">
-          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="student.email" required />
+          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="student.email" formControlName="email" required />
         </div>
         <div class="col-md-6">
-          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="student.password" required />
+          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="student.password" formControlName="password" required />
         </div>
         <div class="col-12">
           <button type="submit" class="btn btn-success mt-2">Save Student</button>
@@ -42,27 +42,30 @@
 
   <!-- ========== MENTOR FORM ========== -->
   @if(showMentorForm) {
-    <form (ngSubmit)="createMentor()" #mentorForm="ngForm" class="card p-3 mb-4">
+    <form [formGroup]="mentorForm" (ngSubmit)="createMentor()" class="card p-3 mb-4">
       <h5>Add Mentor</h5>
       <div class="row g-2">
         <div class="col-md-6">
-          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="mentor.firstname" required />
+          <input type="text" class="form-control" name="firstname" placeholder="First Name" [(ngModel)]="mentor.firstname" formControlName="firstname" required />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="mentor.lastname" required />
+          <input type="text" class="form-control" name="lastname" placeholder="Last Name" [(ngModel)]="mentor.lastname" formControlName="lastname" required />
         </div>
         <div class="col-md-6">
-          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="mentor.email" required />
+          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="mentor.email" formControlName="email" required />
         </div>
         <div class="col-md-6">
-          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="mentor.password" required />
+          <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="mentor.password" formControlName="password" required />
         </div>
         <div class="col-md-6">
-          <select class="form-select" [(ngModel)]="mentor.companyId" name="companyId" required>
+          <input type="text" class="form-control" name="position" placeholder="Position" [(ngModel)]="mentor.position" formControlName="position" required />
+        </div>
+        <div class="col-md-6">
+          <select class="form-select" [(ngModel)]="mentor.companyId" name="companyId" formControlName="company" required>
             <option value="">Select Company</option>
-            <!-- @for (company of companies; track company) {
+            @for (company of companies; track company) {
               <option [value]="company.id">{{ company.name }}</option>
-            } -->
+            }
           </select>
         </div>
         <div class="col-md-6">
@@ -72,7 +75,7 @@
           </select>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-success mt-2">Save Mentor</button>
+          <button type="submit" class="btn btn-success mt-2" (click)="createMentor()">Save Mentor</button>
         </div>
       </div>
     </form>

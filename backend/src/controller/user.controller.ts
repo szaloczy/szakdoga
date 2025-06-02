@@ -13,7 +13,7 @@ export class UserController extends Controller {
 
   getAll = async (req, res) => {
     const users = await this.repository.find({
-      relations: ["student"],
+      relations: ["student", "mentor", "mentor.company"],
     });
 
     res.json(users);
@@ -39,6 +39,8 @@ export class UserController extends Controller {
       } else if (userToCreate.role === "mentor") {
         const mentor = AppDataSource.getRepository(Mentor).create({
           user: createdUser,
+          position: req.body.position,
+          company: req.body.company,
         });
 
         await AppDataSource.getRepository(Mentor).save(mentor);

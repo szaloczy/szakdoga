@@ -12,4 +12,6 @@ export class InternshipService {
   getAll() { return this.http.get<InternshipDTO[]>(`/api/internship`) }
 
   getOne(id: number) { return this.http.get<InternshipDTO>(`/api/internship/${id}`)}
+
+  delete(id: number) { return this.http.delete<String>(`/api/internship/${id}`)}
 }

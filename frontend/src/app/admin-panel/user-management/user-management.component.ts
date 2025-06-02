@@ -29,7 +29,8 @@ export class UserManagementComponent implements OnInit{
     firstname: '',
     lastname: '',
     email: '',
-    password: ''
+    password: '',
+    active: true,
   };
 
   mentor = {
@@ -46,6 +47,7 @@ export class UserManagementComponent implements OnInit{
     this.studentForm = this.fb.group({
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
+      active: ['', Validators.required],
       email: ['', [Validators.required]],
       password: ['', [Validators.required]]
     });
@@ -56,6 +58,7 @@ export class UserManagementComponent implements OnInit{
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       position: ['', Validators.required],
+      active: ['', [Validators.required]],
       company: ['', [Validators.required]]
     });
 
@@ -69,7 +72,13 @@ export class UserManagementComponent implements OnInit{
   }
 
   createStudent() {
-    this.userService.create(this.studentForm.value).subscribe({
+
+    const studentData = {
+      ...this.studentForm.value,
+      role: UserRole.STUDENT
+    }
+
+    this.userService.create(studentData).subscribe({
       next: (res) => {
         console.log(res);
         this.loadUsers();
@@ -79,11 +88,26 @@ export class UserManagementComponent implements OnInit{
       }
     })
 
-    this.student = { firstname: '', lastname: '', email: '', password: '' };
+    this.student = { firstname: '', lastname: '', email: '', password: '', active: true };
     this.showStudentForm = false;
+    this.studentForm.reset();
   }
 
   createMentor() {
+    const mentorData = {
+      ...this.mentorForm.value,
+      role: UserRole.MENTOR
+    }
+
+    this.userService.create(mentorData).subscribe({
+      next: (response) => {
+        console.log("Mentor created sucessfully: " + response)
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
+
     this.mentor = {
       firstname: '',
       lastname: '',
@@ -94,6 +118,7 @@ export class UserManagementComponent implements OnInit{
       active: true
     };
     this.showMentorForm = false;
+    this.mentorForm.reset();
   }
 
     loadUsers() {

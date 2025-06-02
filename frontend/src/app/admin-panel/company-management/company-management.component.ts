@@ -4,12 +4,13 @@ import { CompanyService } from '../../services/company.service';
 import { EditDialogComponent } from '../../components/edit-dialog/edit-dialog.component';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-company-management',
   imports: [
-    EditDialogComponent,
-    RouterLink
+    RouterLink,
+    ReactiveFormsModule
   ],
   templateUrl: './company-management.component.html',
   styleUrl: './company-management.component.scss'
@@ -18,36 +19,43 @@ export class CompanyManagementComponent {
 
   companyService = inject(CompanyService);
   toastService = inject(ToastService);
+  fb = inject(FormBuilder);
+
+
   companies: CompanyDTO[] = [];
-  showDialog = false;
+  showCompanyForm = false;
+  companyForm!: FormGroup;
   isEdit = false;
   companyId = 0;
 
-  fields: DialogField[] = [
-    { name: 'name', label: 'Company Name', type: 'text', required: true },
-    { name: 'city', label: 'City', type: 'text' },
-    { name: 'address', label: 'Address', type: 'text' },
-    { name: 'phone', label: 'Phone', type: 'text' },
-    { name: 'email', label: 'Email', type: 'text' },
-  ];
-
-  formData: Record<string, any> = {
+  company: CompanyDTO = {
+    id: 0,
     name: '',
     city: '',
+    email: '',
+    phone: '',
     address: '',
-    mentorName: '',
-    internshipStudent: 'yes'
-  };
+    active: true,
+    mentors: [],
+    internships: null
+  }
+
 
   ngOnInit(): void {
     this.loadCompanies();
+
+    this.companyForm = this.fb.group({
+      name: ['', [Validators.required]],
+      city: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      phone: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      active: ['true', [Validators.required]],
+    })
   }
 
   editCompany(company: CompanyDTO) {
-    this.showDialog = !this.showDialog;
-    this.formData = company;
-    this.companyId = company.id;
-    this.isEdit = true;
+   
   }
 
   deleteCompany(id: number) {
@@ -64,35 +72,24 @@ export class CompanyManagementComponent {
   }
 
   addCompany() {
-    this.showDialog = !this.showDialog;
-  }
-
-  closeDialog() {
-    this.showDialog = false;
-  }
-
-  onDialogConfirmed(data: any) {
-    if(this.isEdit) {
-      this.companyService.update(this.companyId, data).subscribe({
+    if(this.companyForm.valid) {
+    this.companyService.create(this.companyForm.value).subscribe({
       next: (response) => {
-        console.log("Company updated succefully");
-      },
-      error: (err) => {
-        console.log(err);
-      }
-    });
-    } else {
-      this.companyService.create(data).subscribe({
-      next: (msg) => {
-        console.log("Company saved successfully: ", msg)
+        console.log("Company created suceesully: " + response);
+        this.loadCompanies();
       },
       error: (err) => {
         console.error(err);
       }
     });
     }
-    this.loadCompanies();
-    this.showDialog = !this.showDialog;
+
+    this.showCompanyForm = !this.showCompanyForm;
+    this.companyForm.reset();
+  }
+
+  closeDialog() {
+    this.showCompanyForm = false;
   }
 
   loadCompanies() {

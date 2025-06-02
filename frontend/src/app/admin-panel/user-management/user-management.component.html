@@ -33,6 +33,12 @@
         <div class="col-md-6">
           <input type="password" class="form-control" name="password" placeholder="Password" [(ngModel)]="student.password" formControlName="password" required />
         </div>
+        <div class="col-md-6">
+          <select class="form-select" [(ngModel)]="student.active" name="active" required>
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
         <div class="col-12">
           <button type="submit" class="btn btn-success mt-2">Save Student</button>
         </div>
@@ -69,13 +75,13 @@
           </select>
         </div>
         <div class="col-md-6">
-          <select class="form-select" [(ngModel)]="mentor.active" name="active" required>
+          <select class="form-select" [(ngModel)]="mentor.active" name="active" required formControlName="active">
             <option [ngValue]="true">Active</option>
             <option [ngValue]="false">Inactive</option>
           </select>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-success mt-2" (click)="createMentor()">Save Mentor</button>
+          <button type="submit" class="btn btn-success mt-2">Save Mentor</button>
         </div>
       </div>
     </form>

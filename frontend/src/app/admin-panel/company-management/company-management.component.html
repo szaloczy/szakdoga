@@ -9,19 +9,37 @@
     </button>
   </div>
 
-  @if(showDialog) {
-    <app-edit-dialog
-      [(showDialog)]="showDialog"
-      [title]="'Add Company'"
-      [message]="'Please fill out the company details below:'"
-      [fields]="fields"
-      [formData]="formData"
-      [confirmButtonText]="'Save'"
-      [cancelButtonText]="'Cancel'"
-      (confirmed)="onDialogConfirmed($event)"
-      (canceled)="closeDialog()"
-    >
-    </app-edit-dialog>
+   <!-- ========== COMPANY FORM ========== -->
+  @if(showCompanyForm) {
+    <form [formGroup]="companyForm" (ngSubmit)="addCompany()" class="card p-3 mb-4">
+      <h5>Add Company</h5>
+      <div class="row g-2">
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="name" placeholder="Name" [(ngModel)]="company.name" formControlName="name" required />
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="city" placeholder="city" [(ngModel)]="company.city" formControlName="city" required />
+        </div>
+        <div class="col-md-6">
+          <input type="email" class="form-control" name="email" placeholder="Email" [(ngModel)]="company.email" formControlName="email" required />
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="address" placeholder="address" [(ngModel)]="company.address" formControlName="address" required />
+        </div>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="phone" placeholder="phone" [(ngModel)]="company.phone" formControlName="phone" required />
+        </div>
+        <div class="col-md-6">
+          <select class="form-select" [(ngModel)]="company.active" name="active" required formControlName="active">
+            <option [ngValue]="true">Active</option>
+            <option [ngValue]="false">Inactive</option>
+          </select>
+        </div>
+        <div class="col-12">
+          <button type="submit" class="btn btn-success mt-2">Save Mentor</button>
+        </div>
+      </div>
+    </form>
   }
 
   <div class="row mb-3 gy-2">
@@ -44,8 +62,6 @@
           <th>Company Name</th>
           <th>City</th>
           <th>Address</th>
-          <th>Mentors</th>
-          <th>Internships</th>
           <th class="text-center">Actions</th>
         </tr>
       </thead>
@@ -55,8 +71,6 @@
           <td>{{ company.name }}</td>
           <td>{{ company.city }}</td>
           <td>{{ company.address }}</td>
-          <td>{{ company.mentors }}</td>
-          <td>{{ company.internships }}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary me-1" (click)="editCompany(company)">
               <i class="bi bi-pencil"></i>

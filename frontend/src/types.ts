@@ -82,8 +82,9 @@ export interface CompanyDTO {
     email: string;
     phone: string;
     address: string;
+    active: boolean;
     mentors: MentorDTO[];
-    internships: InternshipDTO;
+    internships: InternshipDTO | null;
 }
 
 export interface DialogField {

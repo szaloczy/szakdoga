@@ -22,6 +22,9 @@ export class Company {
   @Column()
   address: string;
 
+  @Column({ nullable: true })
+  active: boolean;
+
   @OneToMany(() => Mentor, (mentor) => mentor.company)
   mentors: Mentor[];
 

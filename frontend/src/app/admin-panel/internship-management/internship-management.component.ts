@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CompanyDTO, InternshipDTO, MentorDTO, StudentDTO } from '../../../types';
+import { CompanyDTO, InternshipDTO, InternshipListDTO, MentorDTO, StudentDTO } from '../../../types';
 import { InternshipService } from '../../services/internship.service';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -24,7 +24,7 @@ export class InternshipManagementComponent implements OnInit{
   mentorService = inject(MentorService);
   fb = inject(FormBuilder);
 
-  internships: InternshipDTO[] = []
+  internships: InternshipListDTO[] = []
   students: StudentDTO[] = [];
   companies: CompanyDTO[] = [];
   mentors: MentorDTO[] = [];
@@ -34,17 +34,17 @@ export class InternshipManagementComponent implements OnInit{
 
   ngOnInit(): void {
     this.loadStudents();
+    this.loadMentors();
     this.loadCompanies();
     this.loadInternships();
     this.internshipForm = this.fb.group({
-      studentName: ['', [Validators.required]],
+      student: ['', [Validators.required]],
       mentor: ['', [Validators.required]],
       company: ['', [Validators.required]],
       startDate: ['', [Validators.required]],
-      active: ['', [Validators.required]],
+      endDate: ['', [Validators.required]],
+      isApproved: ['true', [Validators.required]],
     });
-
-    
   }
 
   loadInternships() {
@@ -74,7 +74,19 @@ export class InternshipManagementComponent implements OnInit{
     this.showInternshipForm = !this.showInternshipForm;
   }
 
-  createInternship() {}
+  createInternship() {
+    this.internshipService.create(this.internshipForm.value).subscribe({
+      next: (response) => {
+        console.log("Internship created successfully: ", response);
+        this.loadInternships();
+        this.showInternshipForm = false;
+        this.internshipForm.reset();
+      },
+      error: (err) => {
+        console.error("Error creating internship: ", err);
+      },
+    });
+  }
 
   deleteInternship(id: number) {
     this.internshipService.delete(id).subscribe({
@@ -88,5 +100,5 @@ export class InternshipManagementComponent implements OnInit{
     })
   }
 
-  editInternship(internship: InternshipDTO) {}
+  editInternship(internship: InternshipListDTO) {}
 }

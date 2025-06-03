@@ -18,10 +18,10 @@
       <!-- Student -->
       <div class="col-md-6">
         <label for="student" class="form-label">Select Student</label>
-        <select class="form-select" formControlName="studentId" required>
+        <select class="form-select" formControlName="student" required>
           <option value="">Select Student</option>
           @for (student of students; track student) {
-            <option [value]="student.id">{{ student.university }}</option>
+            <option [value]="student.id">{{ student.user?.firstname }}  {{ student.user?.lastname }}</option>
           }
         </select>
       </div>
@@ -29,10 +29,10 @@
       <!-- Mentor -->
       <div class="col-md-6">
         <label for="mentor" class="form-label">Select Mentor</label>
-        <select class="form-select" formControlName="mentorId">
+        <select class="form-select" formControlName="mentor">
           <option value="">Select Mentor</option>
           @for (mentor of mentors; track mentor) {
-            <option [value]="mentor.id">{{ mentor.position }} </option>
+            <option [value]="mentor.id">{{ mentor.user?.firstname }}  {{ mentor.user?.lastname }}</option>
           }
         </select>
       </div>
@@ -40,7 +40,7 @@
       <!-- Company -->
       <div class="col-md-6">
         <label for="company" class="form-label">Select Company</label>
-        <select class="form-select" formControlName="companyId" required>
+        <select class="form-select" formControlName="company" required>
           <option value="">Select Company</option>
           @for (company of companies; track company) {
             <option [value]="company.id">{{ company.name }}</option>
@@ -63,7 +63,7 @@
       <!-- isApproved -->
       <div class="col-md-6">
         <label for="isApproved" class="form-label">Approval Status</label>
-        <select class="form-select" formControlName="isApproved">
+        <select class="form-select" formControlName="isApproved" required>
           <option [value]="true">Approved</option>
           <option [value]="false">Not Approved</option>
         </select>
@@ -103,9 +103,9 @@
       <tbody>
         @for (intern of internships; track intern) {
         <tr>
-          <td>{{ intern.student.neptun }}</td>
-          <td>{{ intern.company.name }}</td>
-          <td>{{ intern.mentor }}</td>
+          <td>{{ intern.studentName }}</td>
+          <td>{{ intern.mentorName}}</td>
+          <td>{{ intern.companyName }}</td>
           <td>{{ intern.startDate }}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary me-1" (click)="editInternship(intern)">

@@ -101,7 +101,8 @@ export class UserManagementComponent implements OnInit{
 
     this.userService.create(mentorData).subscribe({
       next: (response) => {
-        console.log("Mentor created sucessfully: " + response)
+        console.log("Mentor created sucessfully: " + response);
+        this.loadUsers();
       },
       error: (err) => {
         console.error(err);

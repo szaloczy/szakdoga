@@ -5,6 +5,14 @@ import { Controller } from "./base.controller";
 export class StudentController extends Controller {
   repository = AppDataSource.getRepository(Student);
 
+  getAll = async (req, res) => {
+    const students = await this.repository.find({
+      relations: ["user"],
+    });
+
+    res.json(students);
+  };
+
   getProfile = async (req, res) => {
     try {
       const fullUser = await this.repository.findOne({
@@ -21,8 +29,4 @@ export class StudentController extends Controller {
       this.handleError(res, error);
     }
   };
-
-  /*   updateStudentWithUser = async (req, res) => {
-    const student = await this.repository.findOne
-  } */
 }

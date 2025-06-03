@@ -45,6 +45,7 @@ export interface StudentDTO {
     neptun: string;
     major: string;
     university: string;
+    user: UserDTO | null;
 }
 
 export interface ProfileDTO {
@@ -63,6 +64,7 @@ export interface MentorDTO {
     position: string;
     company: number;
     internship: InternshipDTO;
+    user: UserDTO | null;
 }
 
 export interface InternshipDTO {
@@ -73,6 +75,17 @@ export interface InternshipDTO {
     student: StudentDTO;
     mentor: MentorDTO;
     company: CompanyDTO;
+}
+
+export interface InternshipListDTO {
+    id: number;
+    startDate: Date;
+    endDate: Date;
+    isApproved: boolean;
+    studentName: string;
+    studentNeptun: string;
+    mentorName: string;
+    companyName: string;
 }
 
 export interface CompanyDTO {

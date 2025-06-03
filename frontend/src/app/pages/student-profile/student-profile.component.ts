@@ -81,6 +81,7 @@ export class StudentProfileComponent implements OnInit{
         neptun: this.profile.student?.neptun ?? '',
         university: formValue.university,
         major: formValue.major,
+        user: null
       },
     }
 

@@ -1,18 +1,26 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CompanyDTO, DialogField, UserDTO, UserRole } from '../../../types';
+import {
+  CompanyDTO,
+  UserResponseDto,
+  UserRole,
+} from '../../../types';
 import { UserService } from '../../services/user.service';
 import { RouterLink } from '@angular/router';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
 
 @Component({
   selector: 'app-user-management',
-  imports: [RouterLink, FormsModule, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule],
   templateUrl: './user-management.component.html',
-  styleUrl: './user-management.component.scss'
+  styleUrl: './user-management.component.scss',
 })
-export class UserManagementComponent implements OnInit{
-
+export class UserManagementComponent implements OnInit {
   userService = inject(UserService);
   companyService = inject(CompanyService);
   fb = inject(FormBuilder);
@@ -20,36 +28,21 @@ export class UserManagementComponent implements OnInit{
   showStudentForm = false;
   showMentorForm = false;
 
-  users: UserDTO[] = [];
+  users: UserResponseDto[] = [];
   companies: CompanyDTO[] = [];
   studentForm!: FormGroup;
   mentorForm!: FormGroup;
 
-  student = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
-    active: true,
-  };
-
-  mentor = {
-    firstname: '',
-    lastname: '',
-    email: '',
-    password: '',
-    position: '',
-    companyId: '',
-    active: true
-  };
+  editingUser: UserResponseDto | null = null;
+  isEditMode = false;
 
   ngOnInit(): void {
     this.studentForm = this.fb.group({
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
-      active: ['', Validators.required],
+      active: [true, Validators.required],
       email: ['', [Validators.required]],
-      password: ['', [Validators.required]]
+      password: ['', [Validators.required]],
     });
 
     this.mentorForm = this.fb.group({
@@ -58,12 +51,14 @@ export class UserManagementComponent implements OnInit{
       email: ['', [Validators.required]],
       password: ['', [Validators.required]],
       position: ['', Validators.required],
-      active: ['', [Validators.required]],
-      company: ['', [Validators.required]]
+      active: [true, [Validators.required]],
+      companyId: ['', [Validators.required]],
     });
 
     this.loadUsers();
-    this.companyService.getAll().subscribe( companies => { this.companies = companies });
+    this.companyService.getAll().subscribe((companies) => {
+      this.companies = companies;
+    });
   }
 
   toggleForm(role: 'student' | 'mentor') {
@@ -71,79 +66,106 @@ export class UserManagementComponent implements OnInit{
     this.showMentorForm = role === 'mentor';
   }
 
-  createStudent() {
+  startCreateStudent() {
+    this.studentForm.reset({ active: true });
+    this.isEditMode = false;
+    this.editingUser = null;
+    this.toggleForm('student');
+  }
 
+startCreateMentor() {
+    this.mentorForm.reset({ active: true });
+    this.isEditMode = false;
+    this.editingUser = null;
+    this.toggleForm('mentor');
+  }
+
+  createStudent() {
     const studentData = {
       ...this.studentForm.value,
-      role: UserRole.STUDENT
-    }
+      role: UserRole.STUDENT,
+    };
 
-    this.userService.create(studentData).subscribe({
-      next: (res) => {
-        console.log(res);
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
+    const action$ = this.isEditMode && this.editingUser
+      ? this.userService.update(this.editingUser.id, studentData)
+      : this.userService.create(studentData);
 
-    this.student = { firstname: '', lastname: '', email: '', password: '', active: true };
+    action$.subscribe({
+      next: () => this.loadUsers(),
+      error: (err) => console.error(err),
+    });
+
     this.showStudentForm = false;
     this.studentForm.reset();
+    this.isEditMode = false;
+    this.editingUser = null;
   }
 
   createMentor() {
     const mentorData = {
       ...this.mentorForm.value,
-      role: UserRole.MENTOR
-    }
-
-    this.userService.create(mentorData).subscribe({
-      next: (response) => {
-        console.log("Mentor created sucessfully: " + response);
-        this.loadUsers();
-      },
-      error: (err) => {
-        console.error(err);
-      }
-    })
-
-    this.mentor = {
-      firstname: '',
-      lastname: '',
-      email: '',
-      password: '',
-      position: '',
-      companyId: '',
-      active: true
+      role: UserRole.MENTOR,
     };
-    this.showMentorForm = false;
-    this.mentorForm.reset();
+
+    if(this.isEditMode && this.editingUser) {
+      mentorData.id = this.editingUser.id;
+      this.userService.update(this.editingUser.id, mentorData).subscribe({
+        next: () => this.loadUsers(),
+        error: (err) => console.error(err),
+      });
+      this.isEditMode = false;
+      this.editingUser = null;
+
+    } else {
+    
+    this.userService.create(mentorData).subscribe({
+      next: () => {
+        this.loadUsers();
+        this.showMentorForm = false;
+      },
+      error: (err) => console.error(err),
+    });
+    }
   }
 
-    loadUsers() {
-      this.userService.getAll().subscribe({
-        next: (users) => {
-          this.users = users;
-        },
-        error: (err) => {
-          console.error(err);
-        }
-      })
-    }
+  loadUsers() {
+    this.userService.getAll().subscribe({
+      next: (users) => (this.users = users),
+      error: (err) => console.error(err),
+    });
+  }
 
-    editUser(user: UserDTO) {}
+  editUser(user: UserResponseDto) {
+    this.editingUser = user;
+    this.isEditMode = true;
 
-    deleteUser(id: number) {
-      this.userService.delete(id).subscribe({
-        next: () => {
-          console.log("Deleted successfully");
-          this.loadUsers();
-        },
-        error: (err) => {
-          console.error(err);
-        }
+    if (user.role === UserRole.STUDENT) {
+      this.toggleForm('student');
+      this.studentForm.patchValue({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        password: '',
+        active: user.active,
+      });
+    } else if (user.role === UserRole.MENTOR) {
+      this.toggleForm('mentor');
+      this.mentorForm.patchValue({
+        firstname: user.firstname,
+        lastname: user.lastname,
+        email: user.email,
+        password: '',
+        position: user.mentor?.position ?? '',
+        active: user.active,
+        companyId: user.mentor?.companyId ?? '',
       });
     }
+  }
+
+  deleteUser(id: number) {
+    this.userService.delete(id).subscribe({
+      next: () => this.loadUsers(),
+      error: (err) => console.error(err),
+    });
+  }
 }

@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { AccessTokenDTO, LoginDTO, ProfileDTO, RegisterDTO, StudentDTO, UserDTO } from '../../types';
+import { AccessTokenDTO, LoginDTO, ProfileDTO, RegisterDTO, StudentDTO, UserDTO, UserResponseDto } from '../../types';
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +17,7 @@ export class UserService {
     return this.http.post<string>(`/api/user/register`, registerData);
   }
 
-  getAll() { return this.http.get<UserDTO[]>(`/api/user`)};
+  getAll() { return this.http.get<UserResponseDto[]>(`/api/user`)};
 
   getOne(id: number) { return this.http.get<UserDTO>(`/api/user/` + id)};
 

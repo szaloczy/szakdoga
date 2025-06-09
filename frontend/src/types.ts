@@ -32,6 +32,19 @@ export interface UserDTO {
     role: string;
 }
 
+export type UserResponseDto = {
+  id: number;
+  email: string;
+  firstname: string;
+  lastname: string;
+  active: boolean;
+  password: string;
+  role: "admin" | "mentor" | "student";
+  mentor?: MentorDTO | null;
+  student?: StudentDTO | null;
+};
+
+
 export interface RegisterDTO {
     firstname: string;
     lastname: string;
@@ -62,7 +75,7 @@ export interface MentorDTO {
     firstname: string;
     lastname: string;
     position: string;
-    company: number;
+    companyId: number;
     internship: InternshipDTO;
     user: UserDTO | null;
 }

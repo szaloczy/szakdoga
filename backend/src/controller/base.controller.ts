@@ -43,18 +43,17 @@ export abstract class Controller {
 
   update = async (req, res) => {
     try {
-      const entityToUpdate = this.repository.create(req.body);
+      const id = Number(req.params.id);
+      const data = { ...req.body, id };
 
-      const currentEntity = await this.repository.findOneBy({
-        id: entityToUpdate.id,
-      });
-      if (!currentEntity) {
-        res.status(404).json({ message: "The given id does not exist." });
-        return;
+      const entityToUpdate = await this.repository.preload(data);
+
+      if (!entityToUpdate) {
+        return res.status(404).json({ message: "Entity not found." });
       }
 
-      const entityUpdated = await this.repository.save(entityToUpdate);
-      res.json(entityUpdated);
+      const updated = await this.repository.save(entityToUpdate);
+      res.json(updated);
     } catch (err) {
       this.handleError(res, err);
     }

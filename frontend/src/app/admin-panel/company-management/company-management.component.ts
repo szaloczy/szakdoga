@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { CompanyDTO, DialogField } from '../../../types';
+import { CompanyDTO } from '../../../types';
 import { CompanyService } from '../../services/company.service';
-import { EditDialogComponent } from '../../components/edit-dialog/edit-dialog.component';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -21,25 +20,12 @@ export class CompanyManagementComponent {
   toastService = inject(ToastService);
   fb = inject(FormBuilder);
 
-
   companies: CompanyDTO[] = [];
+  editingCompany: CompanyDTO | null = null;
   showCompanyForm = false;
   companyForm!: FormGroup;
   isEdit = false;
   companyId = 0;
-
-  company: CompanyDTO = {
-    id: 0,
-    name: '',
-    city: '',
-    email: '',
-    phone: '',
-    address: '',
-    active: true,
-    mentors: [],
-    internships: null
-  }
-
 
   ngOnInit(): void {
     this.loadCompanies();
@@ -55,7 +41,18 @@ export class CompanyManagementComponent {
   }
 
   editCompany(company: CompanyDTO) {
-   
+   this.editingCompany = company;
+   this.isEdit = true;
+   this.showCompanyForm = true;
+
+   this.companyForm.patchValue({
+     name: company.name,
+     city: company.city,
+     email: company.email,
+     phone: company.phone,
+     address: company.address,
+     active: company.active
+    });
   }
 
   deleteCompany(id: number) {
@@ -69,6 +66,11 @@ export class CompanyManagementComponent {
         console.error(err);
       }
     });
+  }
+
+  toggleCompanyForm() {
+    this.showCompanyForm = !this.showCompanyForm;
+    this.isEdit = false;
   }
 
   addCompany() {

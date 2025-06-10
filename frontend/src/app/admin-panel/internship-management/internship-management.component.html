@@ -11,8 +11,8 @@
 
   <!-- ========== INTERNSHIP FORM ========== -->
   @if(showInternshipForm) {
-  <form [formGroup]="internshipForm" (ngSubmit)="createInternship()" class="card p-3 mb-4">
-    <h5>Add Internship</h5>
+  <form [formGroup]="internshipForm" (ngSubmit)="saveInternship()" class="card p-3 mb-4">
+    <h5>{{ isEdit ? "Edit Internship": "Add Internship" }}</h5>
     <div class="row g-2">
 
       <!-- Student -->
@@ -96,6 +96,7 @@
           <th>Student</th>
           <th>Mentor</th>
           <th>Company</th>
+          <th>Approved</th>
           <th>Start Date</th>
           <th class="text-center">Actions</th>
         </tr>
@@ -106,6 +107,7 @@
           <td>{{ intern.studentName }}</td>
           <td>{{ intern.mentorName}}</td>
           <td>{{ intern.companyName }}</td>
+          <td>{{ intern.isApproved ? 'Yes' : 'No' }}</td>
           <td>{{ intern.startDate }}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary me-1" (click)="editInternship(intern)">

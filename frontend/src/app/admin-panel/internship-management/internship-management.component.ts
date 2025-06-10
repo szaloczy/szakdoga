@@ -28,6 +28,8 @@ export class InternshipManagementComponent implements OnInit{
   students: StudentDTO[] = [];
   companies: CompanyDTO[] = [];
   mentors: MentorDTO[] = [];
+  editingInternship: InternshipListDTO | null = null;
+  isEdit = false;
 
   showInternshipForm = false;
   internshipForm!: FormGroup;
@@ -71,21 +73,41 @@ export class InternshipManagementComponent implements OnInit{
   }
 
   addInternship() {
+    this.isEdit = false;
     this.showInternshipForm = !this.showInternshipForm;
   }
 
-  createInternship() {
-    this.internshipService.create(this.internshipForm.value).subscribe({
-      next: (response) => {
-        console.log("Internship created successfully: ", response);
-        this.loadInternships();
-        this.showInternshipForm = false;
-        this.internshipForm.reset();
-      },
-      error: (err) => {
-        console.error("Error creating internship: ", err);
-      },
-    });
+  saveInternship() {
+    if(this.isEdit) {
+      if (this.editingInternship && this.editingInternship.id !== undefined) {
+        this.internshipService.update(this.editingInternship.id, this.internshipForm.value).subscribe({
+          next: (response) => {
+            console.log("Internship updated successfully: ", response);
+            this.loadInternships();
+            this.showInternshipForm = false;
+            this.internshipForm.reset();
+            this.isEdit = false;
+          },
+          error: (err) => {
+            console.error("Error updating internship: ", err);
+          },
+        });
+      } else {
+        console.error("No internship selected for editing or missing id.");
+      }
+    } else {
+      this.internshipService.create(this.internshipForm.value).subscribe({
+        next: (response) => {
+          console.log("Internship created successfully: ", response);
+          this.loadInternships();
+          this.showInternshipForm = false;
+          this.internshipForm.reset();
+        },
+        error: (err) => {
+          console.error("Error creating internship: ", err);
+        },
+      });
+    }
   }
 
   deleteInternship(id: number) {
@@ -100,5 +122,16 @@ export class InternshipManagementComponent implements OnInit{
     })
   }
 
-  editInternship(internship: InternshipListDTO) {}
+  editInternship(internship: InternshipListDTO) {
+    this.isEdit = true;
+    this.showInternshipForm = true;
+    this.internshipForm.patchValue({
+      student: internship.studentName,
+      mentor: internship.mentorName,
+      company: internship.companyName,
+      startDate: internship.startDate,
+      endDate: internship.endDate,
+      isApproved: internship.isApproved
+    });
+  }
 }

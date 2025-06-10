@@ -11,7 +11,7 @@
 
    <!-- ========== COMPANY FORM ========== -->
   @if(showCompanyForm) {
-    <form [formGroup]="companyForm" (ngSubmit)="addCompany()" class="card p-3 mb-4">
+    <form [formGroup]="companyForm" (ngSubmit)="saveCompany()" class="card p-3 mb-4">
       <h5>{{ isEdit? "Edit Company" : "Add Company" }}</h5>
       <div class="row g-2">
         <div class="col-md-6">

@@ -73,17 +73,34 @@ export class CompanyManagementComponent {
     this.isEdit = false;
   }
 
-  addCompany() {
+  saveCompany() {
     if(this.companyForm.valid) {
-    this.companyService.create(this.companyForm.value).subscribe({
-      next: (response) => {
-        console.log("Company created suceesully: " + response);
-        this.loadCompanies();
-      },
-      error: (err) => {
-        console.error(err);
+      if(this.isEdit) {
+        if (this.editingCompany && this.editingCompany.id !== undefined) {
+          this.companyService.update(this.editingCompany.id, this.companyForm.value).subscribe({
+            next: (response) => {
+              console.log("Company updated successfully: " + response);
+              this.loadCompanies();
+              this.toastService.showSuccess("Company updated successfully");
+            },
+            error: (err) => {
+              console.error(err);
+            }
+          });
+        } else {
+          console.error("Editing company or its id is undefined.");
+        }
+      } else {
+        this.companyService.create(this.companyForm.value).subscribe({
+          next: (response) => {
+            console.log("Company created suceesully: " + response);
+            this.loadCompanies();
+          },
+          error: (err) => {
+            console.error(err);
+          }
+      });
       }
-    });
     }
 
     this.showCompanyForm = !this.showCompanyForm;

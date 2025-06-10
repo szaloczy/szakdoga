@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CompanyDTO, InternshipDTO, InternshipListDTO, MentorDTO, StudentDTO } from '../../../types';
+import { CompanyDTO, InternshipListDTO, MentorDTO, StudentDTO } from '../../../types';
 import { InternshipService } from '../../services/internship.service';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -45,7 +45,7 @@ export class InternshipManagementComponent implements OnInit{
       company: ['', [Validators.required]],
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
-      isApproved: ['true', [Validators.required]],
+      isApproved: [true, [Validators.required]],
     });
   }
 
@@ -125,10 +125,22 @@ export class InternshipManagementComponent implements OnInit{
   editInternship(internship: InternshipListDTO) {
     this.isEdit = true;
     this.showInternshipForm = true;
+    this.editingInternship = internship;
+    
+    const student = this.students.find(s => 
+      s.user?.firstname + ' ' + s.user?.lastname === internship.studentName
+    );
+    
+    const mentor = this.mentors.find(m => 
+      m.user?.firstname + ' ' + m.user?.lastname === internship.mentorName
+    );
+    
+    const company = this.companies.find(c => c.name === internship.companyName);
+
     this.internshipForm.patchValue({
-      student: internship.studentName,
-      mentor: internship.mentorName,
-      company: internship.companyName,
+      student: student?.id || '',
+      mentor: mentor?.id || '',
+      company: company?.id || '',
       startDate: internship.startDate,
       endDate: internship.endDate,
       isApproved: internship.isApproved

@@ -36,7 +36,7 @@ export class CompanyManagementComponent {
       email: ['', [Validators.required]],
       phone: ['', [Validators.required]],
       address: ['', [Validators.required]],
-      active: ['true', [Validators.required]],
+      active: [true, [Validators.required]],
     })
   }
 

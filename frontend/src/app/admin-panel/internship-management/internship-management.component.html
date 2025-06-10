@@ -64,13 +64,13 @@
       <div class="col-md-6">
         <label for="isApproved" class="form-label">Approval Status</label>
         <select class="form-select" formControlName="isApproved" required>
-          <option [value]="true">Approved</option>
-          <option [value]="false">Not Approved</option>
+          <option [ngValue]="true">Approved</option>
+          <option [ngValue]="false">Not Approved</option>
         </select>
       </div>
 
       <div class="col-12">
-        <button type="submit" class="btn btn-success mt-2">Save Internship</button>
+        <button type="submit" class="btn btn-success mt-2">Save</button>
       </div>
     </div>
   </form>
@@ -84,8 +84,6 @@
         placeholder="Search by name or email..."
         
       />
-      <!-- [(ngModel)]="searchText"
-        (input)="applyFilters()" -->
     </div>
   </div>
 

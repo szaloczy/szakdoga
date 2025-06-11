@@ -1,8 +1,9 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { ProfileDTO, StudentDTO, UserRole } from '../../../types';
+import { InternshipDTO, ProfileDTO, StudentDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
+import { InternshipService } from '../../services/internship.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -14,6 +15,8 @@ export class StudentProfileComponent implements OnInit{
 
   userService = inject(UserService);
   authService = inject(AuthService);
+  internshipService = inject(InternshipService);
+  
   fb = inject(FormBuilder);
   profileForm!: FormGroup;
   companyForm!: FormGroup;
@@ -27,23 +30,17 @@ export class StudentProfileComponent implements OnInit{
     student: undefined
   }
 
+  internship: InternshipDTO | null = null;
+
   ngOnInit(): void {
     this.profileForm = this.fb.group({
-      firstname: [, []],
+      firstname: ['', []],
       lastname: ['', []],
       phone: ['', []],
       email: ['', []],
       university: ['', []],
       major: ['', []],
-    });
-
-    this.companyForm = this.fb.group({
-      company: ['', []],
-      mentor: ['', []],
-      phone: ['', []],
-      email: ['',[]],
-      city: ['', []],
-      address: ['', []]
+      neptun: ['', []]
     });
 
     this.userService.getProfile(this.authService.getUserId()).subscribe({
@@ -57,13 +54,16 @@ export class StudentProfileComponent implements OnInit{
           student: this.profile.student,
           university: this.profile.student?.university,
           phone: this.profile.student?.phone,
-          major: this.profile.student?.major
+          major: this.profile.student?.major,
+          neptun: this.profile.student?.neptun
         })
       },
       error: (err) => {
         console.error(err);
       }
     });
+
+  
   }
 
   onSubmitProfile() {
@@ -78,7 +78,7 @@ export class StudentProfileComponent implements OnInit{
       student: {
         id: this.profile.student?.id ?? 0,
         phone: formValue.phone,
-        neptun: this.profile.student?.neptun ?? '',
+        neptun: formValue.neptun,
         university: formValue.university,
         major: formValue.major,
         user: null
@@ -88,7 +88,7 @@ export class StudentProfileComponent implements OnInit{
     if(this.profileForm.valid) {
       this.userService.updateProfile(this.profile.id, profileData).subscribe({
         next: (msg) => {
-          alert(msg);
+          alert("User updeted successfully!");
         },
         error: (err) => {
           console.error(err);
@@ -108,7 +108,7 @@ export class StudentProfileComponent implements OnInit{
     }
   }
 
-  onSubmit() {}
+  onSubmitCompanyForm() {}
 
   onFileSelected(name: any) {}
 }

@@ -127,9 +127,10 @@ export class UserController extends Controller {
       user.lastname = profile.lastname;
 
       if (user.student) {
-        user.student.phone = profile.student.phone;
+        user.student.phone = String(profile.student.phone);
         user.student.major = profile.student.major;
         user.student.university = profile.student.university;
+        user.student.neptun = profile.student.neptun;
 
         await AppDataSource.getRepository(Student).save(user.student);
       }

@@ -2,8 +2,6 @@ import {
   Column,
   Entity,
   JoinColumn,
-  ManyToOne,
-  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
@@ -13,10 +11,10 @@ import { Internship } from "./Internship";
 @Entity()
 export class Student {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column({ nullable: true })
-  phone: number;
+  phone: string;
 
   @Column({ nullable: true })
   neptun: string;

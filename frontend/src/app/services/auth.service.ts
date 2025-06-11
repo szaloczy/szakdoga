@@ -45,6 +45,8 @@ export class AuthService {
 
     if(!isLoggedIn) {
       this.router.navigateByUrl("/login");
+    } else if (this.decodeToken()?.role == "admin") {
+      this.router.navigateByUrl("/admin");
     }
     return isLoggedIn;
   }

@@ -1,5 +1,5 @@
 import { Internship } from "../../entity/Internship";
-import { InternshipDTO } from "../../types";
+import { InternshipDTO, profileInternshipDTO } from "../../types";
 
 export function mapInternshipToDTO(internship: Internship): InternshipDTO {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -27,3 +27,21 @@ export function mapInternshipToDTO(internship: Internship): InternshipDTO {
     companyName: internship.company?.name ?? "N/A",
   };
 }
+
+export const mapProfileInternshipToDTO = (
+  internship: Internship
+): profileInternshipDTO => ({
+  id: internship.id,
+  startDate: new Date(internship.startDate).toISOString().split("T")[0],
+  endDate: new Date(internship.endDate).toISOString().split("T")[0],
+  isApproved: internship.isApproved,
+  mentorName:
+    internship.mentor?.user?.firstname +
+    " " +
+    internship.mentor?.user?.lastname,
+  mentorEmail: internship.mentor?.user?.email,
+  companyName: internship.company?.name,
+  companyEmail: internship.company?.email,
+  companyAddress: internship.company?.address,
+  companyCity: internship.company?.city,
+});

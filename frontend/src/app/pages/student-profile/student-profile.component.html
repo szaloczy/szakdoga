@@ -89,105 +89,42 @@
           🔄 Reset
         </button>
       </form>
-
-      <form
-        class="mt-5"
-        [formGroup]="companyForm"
-        (ngSubmit)="onSubmitCompanyForm()"
-      >
-        <h2>Gyakorlati adatok</h2>
-        <hr />
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="company"
-              placeholder="Company"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="mentor"
-              placeholder="Mentor"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="phone"
-              placeholder="Phone"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="email"
-              placeholder="Email"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="city"
-              placeholder="City"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="address"
-              placeholder="Address"
-              class="form-control"
-            />
-          </div>
-        </div>
-
-        <button
-          type="submit"
-          class="btn btn-success me-2"
-          [disabled]="profileForm.invalid"
-        >
-          ✅ Save
-        </button>
-        <button type="reset" class="btn btn-secondary">🔄 Reset</button>
-      </form>
     </div>
 
     <div class="mt-5">
       <h2>Gyakorlati adatok</h2>
       <hr />
       @if (internship) {
-      <div>
-        <div class="row mb-2">
-          <div class="col">
-            <p><strong>Cég neve:</strong> {{ internship.company }}</p>
+          <div>
+            <div class="row mb-2">
+              <div class="col">
+                <p><strong>Cég neve:</strong> {{ internship.companyName }}</p>
+              </div>
+              <div class="col">
+                <p><strong>Mentor neve:</strong> {{ internship.mentorName }}</p>
+              </div>
+            </div>
+            <div class="row mb-2">
+               <div class="col">
+                <p><strong>Cég email:</strong> {{ internship.companyEmail }}</p>
+              </div>
+              <div class="col">
+                <p><strong>Mentor email:</strong> {{ internship.mentorEmail }}</p>
+              </div>
+            </div>
+            <div class="row mb-2">
+              <div class="col">
+                <p><strong>Település:</strong> {{ internship.companyCity }}</p>
+              </div>
+              <div class="col">
+                <p><strong>Cím:</strong> {{ internship.companyAddress }}</p>
+              </div>
+            </div>
+            <div class="alert alert-info mt-3">
+              Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem
+              módosíthatók.
+            </div>
           </div>
-          <div class="col">
-            <p><strong>Mentor neve:</strong> {{ internship.mentor }}</p>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <p><strong>Mentor email:</strong> {{ internship }}</p>
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <p><strong>Település:</strong> {{ internship }}</p>
-          </div>
-          <div class="col">
-            <p><strong>Cím:</strong> {{ internship }}</p>
-          </div>
-        </div>
-        <div class="alert alert-info mt-3">
-          Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem
-          módosíthatók.
-        </div>
-      </div>
       } @else {
       <ng-template #noData>
         <div class="alert alert-warning">

@@ -5,6 +5,7 @@ import { Internship } from "./entity/Internship";
 import { Student } from "./entity/Student";
 import { Company } from "./entity/Company";
 import { Mentor } from "./entity/Mentor";
+import { InternshipSession } from "./entity/IntershipSession";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
@@ -15,7 +16,7 @@ export const AppDataSource = new DataSource({
   database: "internship_management",
   synchronize: true,
   logging: false,
-  entities: [User, Internship, Student, Company, Mentor],
+  entities: [User, Internship, Student, Company, Mentor, InternshipSession],
   migrations: [],
   subscribers: [],
 });

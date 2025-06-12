@@ -28,50 +28,6 @@ export interface StudentDTO {
   university: string;
 }
 
-export interface CreateStudentUserDto {
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  role: "student";
-  student: {
-    phone?: string;
-    neptun: string;
-    major: string;
-    university: string;
-  };
-}
-
-export interface CreateMentorUserDto {
-  email: string;
-  password: string;
-  firstname: string;
-  lastname: string;
-  role: "mentor";
-  mentor: {
-    position: string;
-    companyId: number;
-  };
-}
-
-export interface UpdateUserDto {
-  email?: string;
-  firstname?: string;
-  lastname?: string;
-  active?: boolean;
-
-  student?: {
-    phone?: string | null;
-    major?: string;
-    university?: string;
-  };
-
-  mentor?: {
-    position?: string;
-    companyId?: number;
-  };
-}
-
 export interface CompanyDTO {
   id: number;
   name: string;
@@ -95,11 +51,6 @@ export interface profileDTO {
   student: StudentDTO;
 }
 
-export interface UserResponseDTO extends BaseUserDTO {
-  student?: StudentDTO;
-  mentor?: MentorDTO;
-}
-
 export interface InternshipDTO {
   id: number;
   startDate: string;
@@ -109,4 +60,17 @@ export interface InternshipDTO {
   studentNeptun: string | null;
   mentorName: string;
   companyName: string;
+}
+
+export interface profileInternshipDTO {
+  id: number;
+  startDate: string;
+  endDate: string;
+  isApproved: boolean;
+  mentorName: string;
+  companyName: string;
+  mentorEmail: string;
+  companyEmail: string;
+  companyAddress: string;
+  companyCity: string;
 }

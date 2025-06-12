@@ -3,12 +3,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Student } from "./Student";
 import { Company } from "./Company";
 import { Mentor } from "./Mentor";
+import { InternshipSession } from "./IntershipSession";
 
 @Entity()
 export class Internship {
@@ -46,4 +48,9 @@ export class Internship {
     onDelete: "SET NULL",
   })
   company: Company;
+
+  @OneToMany(() => InternshipSession, (session) => session.internship, {
+    cascade: true,
+  })
+  sessions: InternshipSession[];
 }

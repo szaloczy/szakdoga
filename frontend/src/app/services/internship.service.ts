@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { InternshipDTO, InternshipListDTO } from '../../types';
+import { InternshipDTO, InternshipListDTO, ProfileInternshipDTO } from '../../types';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +12,8 @@ export class InternshipService {
   getAll() { return this.http.get<InternshipListDTO[]>(`/api/internship`) }
 
   getOne(id: number) { return this.http.get<InternshipDTO>(`/api/internship/${id}`)}
+
+  getByStudentId(studentId: number) { return this.http.get<ProfileInternshipDTO>(`/api/profile/internship/${studentId}`) }
 
   create(internship: InternshipDTO) { return this.http.post<InternshipDTO>(`/api/internship`, internship) }
 

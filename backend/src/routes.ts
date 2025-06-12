@@ -41,10 +41,12 @@ router.delete("/company/:id", companyController.delete);
 const internshipController = new InternshipController();
 
 router.get("/internship", internshipController.getAll);
-router.get("/internship/:id", internshipController.getByStudentId);
+router.get("/internship/:id", internshipController.getOne);
 router.post("/internship", internshipController.create);
 router.put("/internship/:id", internshipController.update);
 router.delete("/internship/:id", internshipController.delete);
+
+router.get("/profile/internship/:id", internshipController.getByUserId);
 
 const mentorController = new MentorController();
 

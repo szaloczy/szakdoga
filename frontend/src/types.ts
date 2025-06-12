@@ -101,6 +101,19 @@ export interface InternshipListDTO {
     companyName: string;
 }
 
+export interface ProfileInternshipDTO {
+    id: number;
+    startDate: string;
+    endDate: string;
+    isApproved: boolean;
+    mentorName: string;
+    companyName: string;
+    mentorEmail: string;
+    companyEmail: string;
+    companyAddress: string;
+    companyCity: string;
+}
+
 export interface CompanyDTO {
     id: number;
     name: string;

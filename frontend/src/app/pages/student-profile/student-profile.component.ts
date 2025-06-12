@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InternshipDTO, ProfileDTO, StudentDTO, UserRole } from '../../../types';
+import { InternshipDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { InternshipService } from '../../services/internship.service';
@@ -30,7 +30,7 @@ export class StudentProfileComponent implements OnInit{
     student: undefined
   }
 
-  internship: InternshipDTO | null = null;
+  internship: ProfileInternshipDTO | null = null;
 
   ngOnInit(): void {
     this.profileForm = this.fb.group({
@@ -63,7 +63,14 @@ export class StudentProfileComponent implements OnInit{
       }
     });
 
-  
+    this.internshipService.getByStudentId(this.authService.getUserId()).subscribe({
+      next: (internshipData) => {
+        this.internship = internshipData;
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    });
   }
 
   onSubmitProfile() {

@@ -56,6 +56,14 @@ router.post("/mentor", mentorController.create);
 router.put("/mentor/:id", mentorController.update);
 router.delete("/mentor/:id", mentorController.delete);
 
+const internshipSessionController = new InternshipController();
+
+router.get("/internship-session", internshipSessionController.getAll);
+router.get("/internship-session/:id", internshipSessionController.getOne);
+router.post("/internship-session", internshipSessionController.create);
+router.put("/internship-session/:id", internshipSessionController.update);
+router.delete("/internship-session/:id", internshipSessionController.delete);
+
 /* const practiceController = new PracticeController();
 
 router.get("/practice", practiceController.getAll);

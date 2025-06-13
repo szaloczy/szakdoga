@@ -10,7 +10,7 @@ import {
 import { Student } from "./Student";
 import { Company } from "./Company";
 import { Mentor } from "./Mentor";
-import { InternshipSession } from "./IntershipSession";
+import { InternshipSession } from "./InternshipSession";
 
 @Entity()
 export class Internship {

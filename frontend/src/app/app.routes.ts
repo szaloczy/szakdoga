@@ -10,6 +10,7 @@ import { AdminComponent } from './admin-panel/admin/admin.component';
 import { UserManagementComponent } from './admin-panel/user-management/user-management.component';
 import { CompanyManagementComponent } from './admin-panel/company-management/company-management.component';
 import { InternshipManagementComponent } from './admin-panel/internship-management/internship-management.component';
+import { InternshipHoursComponent } from './pages/internship-hours/internship-hours.component';
 
 export const routes: Routes = [
     {
@@ -37,7 +38,8 @@ export const routes: Routes = [
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'profile', component: StudentProfileComponent },
-            { path: '', redirectTo: 'dashboard', pathMatch:'full' }
+            { path: 'internship-hours', component: InternshipHoursComponent },
+            { path: '', redirectTo: 'dashboard', pathMatch:'full' },
         ]
     },
     {

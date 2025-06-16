@@ -1,0 +1,56 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <button class="btn btn-outline-primary" (click)="prevWeek()">⬅️ Előző hét</button>
+    <h4>Gyakorlati órák – {{ weekDays[0] | date: 'yyyy. MMM d.' }} - {{ weekDays[6] | date: 'MMM d.' }}</h4>
+    <button class="btn btn-outline-primary" (click)="nextWeek()">Következő hét ➡️</button>
+  </div>
+
+  <div class="row">
+    <div class="col-md-1" *ngFor="let day of weekDays">
+      <div class="card text-white bg-dark mb-3" style="min-height: 300px;">
+        <div class="card-header text-center">
+          {{ day | date: 'EEE' }}<br>{{ day | date: 'MM.dd' }}
+        </div>
+        <div class="card-body p-2">
+          <div *ngFor="let entry of getHoursForDay(day)" class="mb-2 bg-light text-dark p-1 rounded">
+            <strong>{{ entry.start }}–{{ entry.end }}</strong><br>
+            <small>{{ entry.description }}</small>
+          </div>
+        </div>
+        <div class="card-footer p-1 text-center">
+          <button class="btn btn-sm btn-light" (click)="openAddModal(day)">+</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal d-block" *ngIf="modalVisible" style="background-color: rgba(0,0,0,0.6);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Új óra hozzáadása ({{ selectedDay }})</h5>
+          <button type="button" class="btn-close" (click)="modalVisible = false"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-2">
+            <label>Kezdés:</label>
+            <input type="time" class="form-control">
+          </div>
+          <div class="mb-2">
+            <label>Befejezés:</label>
+            <input type="time" class="form-control" >
+          </div>
+          <div class="mb-2">
+            <label>Leírás:</label>
+            <textarea class="form-control" rows="2"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" (click)="modalVisible = false">Mégse</button>
+          <button class="btn btn-primary" (click)="addHourEntry()">Hozzáadás</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

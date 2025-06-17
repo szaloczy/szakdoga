@@ -3,12 +3,14 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
+  OneToMany,
   OneToOne,
   PrimaryGeneratedColumn,
 } from "typeorm";
 import { Company } from "./Company";
 import { Internship } from "./Internship";
 import { User } from "./User";
+import { InternshipHour } from "./InternshipHour";
 
 @Entity()
 export class Mentor {
@@ -29,4 +31,7 @@ export class Mentor {
     nullable: true,
   })
   company: Company;
+
+  @OneToMany(() => InternshipHour, (hour) => hour.approvedBy)
+  approvedHours: InternshipHour[];
 }

@@ -1,8 +1,5 @@
 import express from "express";
 import { UserController } from "./controller/user.controller";
-/* import { PracticeController } from "./controller/practice.controller";
-import { DocumentController } from "./controller/document.controller";
-import { FeedbackController } from "./controller/feedback.controller"; */
 import { StudentController } from "./controller/student.controller";
 import { CompanyController } from "./controller/company.controller";
 import { InternshipController } from "./controller/internship.controller";
@@ -55,35 +52,3 @@ router.get("/mentor/:id", mentorController.getOne);
 router.post("/mentor", mentorController.create);
 router.put("/mentor/:id", mentorController.update);
 router.delete("/mentor/:id", mentorController.delete);
-
-const internshipSessionController = new InternshipController();
-
-router.get("/internship-session", internshipSessionController.getAll);
-router.get("/internship-session/:id", internshipSessionController.getOne);
-router.post("/internship-session", internshipSessionController.create);
-router.put("/internship-session/:id", internshipSessionController.update);
-router.delete("/internship-session/:id", internshipSessionController.delete);
-
-/* const practiceController = new PracticeController();
-
-router.get("/practice", practiceController.getAll);
-router.get("/pracice/:id", practiceController.getOne);
-router.post("/practice", practiceController.create);
-router.put("/practice/:id", practiceController.update);
-router.delete("/practice/:id", practiceController.delete);
-
-const documentController = new DocumentController();
-
-router.get("/document", documentController.getAll);
-router.get("/document/:id", documentController.getOne);
-router.post("/document", documentController.create);
-router.put("/document/:id", documentController.update);
-router.delete("/document/:id", documentController.delete);
-
-const feedbackController = new FeedbackController();
-
-router.get("/feedback", feedbackController.getAll);
-router.get("/feedback/:id", feedbackController.getOne);
-router.post("/feedback", feedbackController.create);
-router.put("/feedback/:id", feedbackController.update);
-router.delete("/feedback/:id", feedbackController.delete); */

@@ -10,7 +10,7 @@ import {
 import { Student } from "./Student";
 import { Company } from "./Company";
 import { Mentor } from "./Mentor";
-import { InternshipSession } from "./InternshipSession";
+import { InternshipHour } from "./InternshipHour";
 
 @Entity()
 export class Internship {
@@ -49,8 +49,8 @@ export class Internship {
   })
   company: Company;
 
-  @OneToMany(() => InternshipSession, (session) => session.internship, {
+  @OneToMany(() => InternshipHour, (hour) => hour.internship, {
     cascade: true,
   })
-  sessions: InternshipSession[];
+  hours: InternshipHour[];
 }

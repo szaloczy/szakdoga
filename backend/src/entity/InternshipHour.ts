@@ -14,7 +14,7 @@ export class InternshipHour {
   id: number;
 
   @Column()
-  data: string;
+  date: string;
 
   @Column()
   startTime: string;

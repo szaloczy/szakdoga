@@ -4,6 +4,8 @@ import { StudentController } from "./controller/student.controller";
 import { CompanyController } from "./controller/company.controller";
 import { InternshipController } from "./controller/internship.controller";
 import { MentorController } from "./controller/mentor.controller";
+import { InternshipHourController } from "./controller/internshipHour.controller";
+import { authMiddleware } from "./middleware/auth.middlewate";
 
 export const router = express.Router();
 
@@ -52,3 +54,19 @@ router.get("/mentor/:id", mentorController.getOne);
 router.post("/mentor", mentorController.create);
 router.put("/mentor/:id", mentorController.update);
 router.delete("/mentor/:id", mentorController.delete);
+
+const internshipHourConterller = new InternshipHourController();
+
+router.get("/internship-hour", internshipHourConterller.getAll);
+router.get("/internship-hour/:id", internshipHourConterller.getOne);
+router.post(
+  "/internship-hour",
+  authMiddleware,
+  internshipHourConterller.create
+);
+router.put(
+  "/internship-hour/:id",
+  authMiddleware,
+  internshipHourConterller.update
+);
+router.delete("/internship-hour/:id", internshipHourConterller.delete);

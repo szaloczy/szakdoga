@@ -135,6 +135,14 @@ export interface DialogField {
     placeholder?: string;
 }
 
+export interface CreateInternshipHourDTO {
+    date: string;
+    startTime: string; 
+    endTime: string;   
+    description: string;
+    internshipId?: number; 
+}
+
 export enum UserRole {
     STUDENT = "student",
     ADMIN = "admin",

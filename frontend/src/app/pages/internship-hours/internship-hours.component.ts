@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { InternshipHourService } from '../../services/internship-hour.service';
+import { CreateInternshipHourDTO } from '../../../types';
 
 interface HourEntry {
   id: number;
@@ -26,8 +28,13 @@ interface InternshipHour {
   styleUrl: './internship-hours.component.scss'
 })
 export class InternshipHoursComponent implements OnInit{
-internshipHours: InternshipHour[] = [];
+
+  fb = inject(FormBuilder);
+  internshipHourService = inject(InternshipHourService);
+
+  internshipHours: InternshipHour[] = [];
   selectedDate: Date = new Date();
+  hourForm!: FormGroup;
 
   newHour: InternshipHour = {
     date: '',
@@ -41,6 +48,12 @@ internshipHours: InternshipHour[] = [];
 
   ngOnInit(): void {
     this.selectedDate.setHours(0, 0, 0, 0);
+
+    this.hourForm = this.fb.group({
+      startTime: ['', [Validators.required, Validators.pattern(/^\d{2}:\d{2}$/)]],
+      endTime: ['', [Validators.required, Validators.pattern(/^\d{2}:\d{2}$/)]],
+      description: ['', [Validators.required, Validators.minLength(5)]],
+    });
   }
 
   // Aktuális hét napjait adja vissza (hétfőtől vasárnapig)
@@ -121,10 +134,21 @@ internshipHours: InternshipHour[] = [];
   }
 
   addHour(): void {
-    if (this.newHour.startTime && this.newHour.endTime && this.newHour.description) {
-      this.internshipHours.push({ ...this.newHour });
-      this.closeModal();
-    }
+  if (this.hourForm.invalid) return;
 
+  const payload = {
+    ...this.hourForm.value,
+    date: this.selectedDate.toISOString().split("T")[0],
+  };
+
+  this.internshipHourService.create(payload).subscribe({
+    next: (response) => {
+      console.log('Óra hozzáadva:', response);
+      this.closeModal();
+    },
+    error: (error) => {
+      console.error('Hiba az óra hozzáadásakor:', error);
+    }
+  });
 }
 }

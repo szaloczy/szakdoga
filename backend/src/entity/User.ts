@@ -1,6 +1,5 @@
 import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
 import { UserRole } from "../types";
-import { Internship } from "./Internship";
 import { Student } from "./Student";
 import { Mentor } from "./Mentor";
 

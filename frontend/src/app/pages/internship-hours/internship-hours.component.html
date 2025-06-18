@@ -57,29 +57,29 @@
     class="custom-modal-backdrop"
   >
     <div class="custom-modal">
-      <form (ngSubmit)="addHour()" #hourForm="ngForm">
+      <form (ngSubmit)="addHour()" [formGroup]="hourForm">
         <div class="mb-3">
           <h5>Új óra hozzáadása</h5>
         </div>
 
         <div class="mb-3">
           <label class="form-label">Kezdés</label>
-          <input type="time" class="form-control" [(ngModel)]="newHour.startTime" name="startTime" required />
+          <input type="time" class="form-control" formControlName="startTime" name="startTime" required />
         </div>
 
         <div class="mb-3">
           <label class="form-label">Befejezés</label>
-          <input type="time" class="form-control" [(ngModel)]="newHour.endTime" name="endTime" required />
+          <input type="time" class="form-control" formControlName="endTime" name="endTime" required />
         </div>
 
         <div class="mb-3">
           <label class="form-label">Leírás</label>
-          <textarea class="form-control" [(ngModel)]="newHour.description" name="description" rows="3" required></textarea>
+          <textarea class="form-control" formControlName="description" name="description" rows="3" required></textarea>
         </div>
 
         <div class="d-flex justify-content-end gap-2">
           <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">Mégse</button>
-          <button type="submit" class="btn btn-primary" [disabled]="!hourForm.form.valid">Hozzáadás</button>
+          <button type="submit" class="btn btn-primary" >Hozzáadás</button>
         </div>
       </form>
     </div>

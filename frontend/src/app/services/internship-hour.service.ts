@@ -9,5 +9,5 @@ export class InternshipHourService {
 
   http = inject(HttpClient);
 
-  create(hour: CreateInternshipHourDTO) { return this.http.post<CreateInternshipHourDTO>(`/api/internship-hour`, {hour}) }
+  create(hour: CreateInternshipHourDTO) { return this.http.post<CreateInternshipHourDTO>(`/api/internship-hour`, hour) }
 }

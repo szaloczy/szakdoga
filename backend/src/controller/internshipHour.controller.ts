@@ -11,7 +11,9 @@ export class InternshipHourController extends Controller {
 
   create = async (req, res) => {
     try {
-      const { date, startTime, endTime, description, internshipId } = req.body;
+      const hour = req.body;
+
+      console.log(hour);
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const user = (req as any).user;
@@ -19,6 +21,8 @@ export class InternshipHourController extends Controller {
       if (!user) {
         return res.status(401).json({ message: "Unauthorized" });
       }
+
+      console.log(user);
 
       const role = user.role;
       const userId = user.id;
@@ -41,11 +45,11 @@ export class InternshipHourController extends Controller {
             .json({ message: "No approved internship found." });
         }
 
-        console.log("inputDate:", date);
+        console.log("inputDate:", hour.date);
         console.log("today:", new Date().toISOString().split("T")[0]);
 
         const today = new Date().toISOString().split("T")[0];
-        if (date !== today) {
+        if (hour.date !== today) {
           return res
             .status(400)
             .json({ message: "Students can only add hours for today." });
@@ -53,6 +57,8 @@ export class InternshipHourController extends Controller {
 
         internship = student.internship;
       }
+
+      console.log(internship);
 
       if (role === "MENTOR") {
         const mentor = await mentorRepository.findOne({
@@ -65,7 +71,7 @@ export class InternshipHourController extends Controller {
         }
 
         internship = await internshipRepository.findOne({
-          where: { id: internshipId, mentor: { id: mentor.id } },
+          where: { id: hour.intershipId, mentor: { id: mentor.id } },
         });
 
         if (!internship) {
@@ -80,10 +86,10 @@ export class InternshipHourController extends Controller {
       }
 
       const newHour = this.repository.create({
-        data: date,
-        startTime,
-        endTime,
-        description,
+        date: hour.date,
+        startTime: hour.startTime,
+        endTime: hour.endTime,
+        description: hour.description,
         internship,
         status: role === "MENTOR" ? "approved" : "pending",
         approvedBy:
@@ -96,6 +102,9 @@ export class InternshipHourController extends Controller {
 
       const saved = await this.repository.save(newHour);
       res.status(201).json(saved);
-    } catch (error) {}
+    } catch (error) {
+      console.error("Internship hour creation error:", error);
+      return res.status(500).json({ message: "Server error." });
+    }
   };
 }

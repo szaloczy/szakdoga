@@ -1,17 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, NgModel, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { CreateInternshipHourDTO } from '../../../types';
-
-interface HourEntry {
-  id: number;
-  project: string;
-  client: string;
-  category: string;
-  duration: string;
-  running: boolean;
-}
 
 interface InternshipHour {
   date: string;         // ISO formátum: '2025-06-17'
@@ -134,21 +125,21 @@ export class InternshipHoursComponent implements OnInit{
   }
 
   addHour(): void {
-  if (this.hourForm.invalid) return;
+    if (this.hourForm.invalid) return;
 
-  const payload = {
-    ...this.hourForm.value,
-    date: this.selectedDate.toISOString().split("T")[0],
-  };
+    const payload = {
+      ...this.hourForm.value,
+      date: this.formatDate(new Date()),
+    };
 
-  this.internshipHourService.create(payload).subscribe({
-    next: (response) => {
-      console.log('Óra hozzáadva:', response);
-      this.closeModal();
-    },
-    error: (error) => {
-      console.error('Hiba az óra hozzáadásakor:', error);
-    }
-  });
-}
+    this.internshipHourService.create(payload).subscribe({
+      next: (response) => {
+        console.log('Óra hozzáadva:', response);
+        this.closeModal();
+      },
+      error: (error) => {
+        console.error('Hiba az óra hozzáadásakor:', error);
+      }
+    });
+  }
 }

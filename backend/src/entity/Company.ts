@@ -5,7 +5,7 @@ import { Internship } from "./Internship";
 @Entity()
 export class Company {
   @PrimaryGeneratedColumn()
-  id: string;
+  id: number;
 
   @Column()
   name: string;

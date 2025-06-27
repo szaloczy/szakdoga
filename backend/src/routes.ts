@@ -55,18 +55,18 @@ router.post("/mentor", mentorController.create);
 router.put("/mentor/:id", mentorController.update);
 router.delete("/mentor/:id", mentorController.delete);
 
-const internshipHourConterller = new InternshipHourController();
+const internshipHourController = new InternshipHourController();
 
-router.get("/internship-hour", internshipHourConterller.getAll);
-router.get("/internship-hour/:id", internshipHourConterller.getOne);
+router.get("/internship-hour", internshipHourController.getAll);
+router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post(
   "/internship-hour",
   authMiddleware,
-  internshipHourConterller.create
+  internshipHourController.create
 );
 router.put(
   "/internship-hour/:id",
   authMiddleware,
-  internshipHourConterller.update
+  internshipHourController.update
 );
-router.delete("/internship-hour/:id", internshipHourConterller.delete);
+router.delete("/internship-hour/:id", internshipHourController.delete);

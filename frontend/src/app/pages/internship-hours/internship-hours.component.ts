@@ -1,40 +1,25 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InternshipHourService } from '../../services/internship-hour.service';
-import { CreateInternshipHourDTO } from '../../../types';
-
-interface InternshipHour {
-  date: string;         // ISO formátum: '2025-06-17'
-  startTime: string;    // pl. '08:00'
-  endTime: string;      // pl. '12:00'
-  description: string;  // szöveges leírás
-}
-
+import { CreateInternshipHourDTO, InternshipHourDTO } from '../../../types';
 
 @Component({
   selector: 'app-internship-hours',
-  imports: [ ReactiveFormsModule, CommonModule, FormsModule ],
+  standalone: true,
+  imports: [ReactiveFormsModule, CommonModule, FormsModule],
   templateUrl: './internship-hours.component.html',
   styleUrl: './internship-hours.component.scss'
 })
-export class InternshipHoursComponent implements OnInit{
-
+export class InternshipHoursComponent implements OnInit {
   fb = inject(FormBuilder);
   internshipHourService = inject(InternshipHourService);
 
-  internshipHours: InternshipHour[] = [];
+  allEntries: InternshipHourDTO[] = [];
+  todayEntries: InternshipHourDTO[] = [];
   selectedDate: Date = new Date();
   hourForm!: FormGroup;
 
-  newHour: InternshipHour = {
-    date: '',
-    startTime: '',
-    endTime: '',
-    description: '',
-  };
-
-  modalInstance: null = null;
   isModalOpen = false;
 
   ngOnInit(): void {
@@ -45,9 +30,27 @@ export class InternshipHoursComponent implements OnInit{
       endTime: ['', [Validators.required, Validators.pattern(/^\d{2}:\d{2}$/)]],
       description: ['', [Validators.required, Validators.minLength(5)]],
     });
+
+    this.loadHours();
   }
 
-  // Aktuális hét napjait adja vissza (hétfőtől vasárnapig)
+  loadHours(): void {
+    this.internshipHourService.getHours().subscribe({
+      next: (hours) => {
+        this.allEntries = hours;
+        this.filterTodayEntries();
+      },
+      error: (error) => {
+        console.error('Hiba a gyakorlati órák lekérdezésekor:', error);
+      }
+    });
+  }
+
+  filterTodayEntries(): void {
+    const dateStr = this.formatDate(this.selectedDate);
+    this.todayEntries = this.allEntries.filter((entry) => entry.date === dateStr);
+  }
+
   getWeekDates(): Date[] {
     const today = new Date(this.selectedDate);
     const monday = new Date(today);
@@ -59,80 +62,62 @@ export class InternshipHoursComponent implements OnInit{
     });
   }
 
-  // Kiválasztott nap módosítása
   selectDate(date: Date): void {
     this.selectedDate = new Date(date);
     this.selectedDate.setHours(0, 0, 0, 0);
+    this.filterTodayEntries(); // 👉 nap váltáskor szűrés
   }
 
-  // Az adott naphoz tartozó órák
-  get todayEntries(): InternshipHour[] {
-    const dateStr = this.formatDate(this.selectedDate);
-    return this.internshipHours.filter((h) => h.date === dateStr);
+  getTotalForDay(date: Date): string {
+    const dateStr = this.formatDate(date);
+    const entries = this.allEntries.filter((e) => e.date === dateStr);
+    const totalMinutes = entries.reduce((sum, e) => {
+      const [sh, sm] = e.startTime.split(':').map(Number);
+      const [eh, em] = e.endTime.split(':').map(Number);
+      return sum + ((eh * 60 + em) - (sh * 60 + sm));
+    }, 0);
+
+    const h = Math.floor(totalMinutes / 60);
+    const m = totalMinutes % 60;
+    return h > 0 ? `${h} óra ${m > 0 ? m + ' perc' : ''}` : `${m} perc`;
   }
 
-  // Órák időtartama (pl. 2 óra 15 perc)
   getDuration(start: string, end: string): string {
     const [sh, sm] = start.split(':').map(Number);
     const [eh, em] = end.split(':').map(Number);
-    let minutes = (eh * 60 + em) - (sh * 60 + sm);
-    if (minutes < 0) minutes += 24 * 60;
-    const h = Math.floor(minutes / 60);
-    const m = minutes % 60;
-    return `${h}h ${m}m`;
+    const mins = (eh * 60 + em) - (sh * 60 + sm);
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return h > 0 ? `${h} ó ${m > 0 ? m + ' p' : ''}` : `${m} perc`;
   }
 
-  // Napi összidő szövegesen
-  getTotalForDay(date: Date): string {
-    const dateStr = this.formatDate(date);
-    const hours = this.internshipHours.filter((h) => h.date === dateStr);
-    let totalMinutes = 0;
-    for (const h of hours) {
-      const [sh, sm] = h.startTime.split(':').map(Number);
-      const [eh, em] = h.endTime.split(':').map(Number);
-      let diff = (eh * 60 + em) - (sh * 60 + sm);
-      if (diff < 0) diff += 24 * 60;
-      totalMinutes += diff;
-    }
-    const h = Math.floor(totalMinutes / 60);
-    const m = totalMinutes % 60;
-    return `${h}h ${m}m`;
-  }
-
-  // Dátumformázás ISO formátumra
   formatDate(date: Date): string {
-    return date.toISOString().split('T')[0]; // 'YYYY-MM-DD'
+    return date.toISOString().split('T')[0];
   }
 
-  // Kijelölt nap összehasonlítás
   isSameDay(d1: Date, d2: Date): boolean {
     return d1.toDateString() === d2.toDateString();
   }
 
-  // Modál megnyitása
   openModal(): void {
-  this.newHour = {
-    date: this.formatDate(this.selectedDate),
-    startTime: '',
-    endTime: '',
-    description: '',
-  };
-  this.isModalOpen = true;
+    this.isModalOpen = true;
+    this.hourForm.reset();
   }
 
   closeModal(): void {
     this.isModalOpen = false;
+    this.hourForm.reset();
   }
 
   addHour(): void {
     if (this.hourForm.invalid) return;
 
-    const payload = {
+    const payload: CreateInternshipHourDTO = {
       ...this.hourForm.value,
-      date: this.formatDate(new Date()),
+      date: this.formatDate(this.selectedDate), // ⬅ aktuálisan kiválasztott napra
     };
 
-    this.internshipHourService.create(payload).subscribe({
+     this.internshipHourService.create(payload).subscribe({
       next: (response) => {
         console.log('Óra hozzáadva:', response);
         this.closeModal();

@@ -135,6 +135,15 @@ export interface DialogField {
     placeholder?: string;
 }
 
+export interface InternshipHourDTO {
+  id: number;
+  date: string;         
+  startTime: string;   
+  endTime: string;     
+  description: string;
+  status: "pending" | "approved" | "rejected";
+}
+
 export interface CreateInternshipHourDTO {
     date: string;
     startTime: string; 

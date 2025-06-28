@@ -18,4 +18,16 @@ export class InternshipHourController extends Controller {
       res.status(400).json({ message: error.message });
     }
   };
+
+  getById = async (req, res) => {
+    const user = (req as any).user;
+
+    try {
+      const hours = await this.service.getHoursForStudent(user.id);
+      res.json(hours);
+    } catch (error) {
+      console.error(error);
+      res.status(400).json({ message: error.message });
+    }
+  };
 };

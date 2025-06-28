@@ -19,7 +19,7 @@
           'text-muted': !isSameDay(date, selectedDate)
         }"
       >
-        {{ date | date: 'EEE' }}<br />
+        {{ date | date: 'EEE' }} - {{date | date: 'MM.dd' }}<br />
         <small>{{ getTotalForDay(date) }}</small>
       </div>
     </div>
@@ -34,7 +34,22 @@
       >
         <div>
           <strong>{{ entry.startTime }} – {{ entry.endTime }}</strong><br />
-          <small class="text-muted">{{ entry.description }}</small>
+          <small class="text-muted">{{ entry.description }}</small> <br />
+          <small
+          [ngClass]="{
+            'text-success': entry.status === 'approved',
+            'text-warning': entry.status === 'pending',
+            'text-danger': entry.status === 'rejected'
+          }"
+          >
+          {{
+            entry.status === 'approved'
+              ? 'Elfogadva'
+              : entry.status === 'rejected'
+              ? 'Elutasítva'
+              : 'Függőben'
+          }}
+          </small>
         </div>
         <span class="badge bg-light text-dark">
           {{ getDuration(entry.startTime, entry.endTime) }}

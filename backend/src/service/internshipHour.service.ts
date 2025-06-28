@@ -2,8 +2,8 @@
 import { AppDataSource } from "../data-source";
 import { InternshipHour } from "../entity/InternshipHour";
 import { Internship } from "../entity/Internship";
-import { Repository } from "typeorm";
 import { Student } from "../entity/Student";
+import { mapInternshipHourToDTO } from "../dto/internshipHour.dto";
 
 export class InternshipHourService {
   private hourRepo = AppDataSource.getRepository(InternshipHour);
@@ -26,7 +26,7 @@ export class InternshipHourService {
     });
 
     if (!student) {
-      throw new Error("Hallgató nem található.");
+      throw new Error("Student not found");
     }
 
     // 2. Lekérjük a gyakornokságot
@@ -35,12 +35,12 @@ export class InternshipHourService {
     });
 
     if (!internship) {
-      throw new Error("Ehhez a hallgatóhoz nem tartozik gyakornokság.");
+      throw new Error("This student don't have aproved iternship");
     }
 
     // 3. Opcionális validáció
     if (data.startTime >= data.endTime) {
-      throw new Error("A kezdési időnek korábbinak kell lennie, mint a befejezési idő.");
+      throw new Error("The start time must be earlier than the end time.");
     }
 
     // 4. Létrehozás
@@ -54,5 +54,34 @@ export class InternshipHourService {
     });
 
     return await this.hourRepo.save(hour);
+  }
+
+
+  async getHoursForStudent(userId: number): Promise<any[]> {
+    const student = await this.studentRepo.findOne({
+      where: { user: { id: userId } },
+      relations: ["user", "internship"],
+    });
+
+    if (!student) {
+      throw new Error("Student not found.");
+    }
+
+    const hours = await this.hourRepo.find({
+      where: {
+        internship: {
+          student: {
+            id: student.id,
+          },
+        },
+      },
+      relations: ["internship", "approvedBy"], // approvedBy == mentor
+      order: {
+        date: "ASC",
+        startTime: "ASC",
+      },
+    });
+
+    return hours.map(mapInternshipHourToDTO);
   }
 }

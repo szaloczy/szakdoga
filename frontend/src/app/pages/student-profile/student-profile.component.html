@@ -19,21 +19,21 @@
 
     <!-- Right Panel: Form -->
     <div class="col-md-8">
-      <h2>Hallgató adatok</h2>
+      <h2>{{ 'profile.student_details.title' | translate }}</h2>
       <hr />
       <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
         <div class="row mb-2">
           <div class="col">
             <input
               formControlName="firstname"
-              placeholder="First name"
+              placeholder="{{ 'profile.student_details.placeholder.firstname' | translate }}"
               class="form-control"
             />
           </div>
           <div class="col">
             <input
               formControlName="lastname"
-              placeholder="Last name"
+              placeholder="{{ 'profile.student_details.placeholder.lastname' | translate }}"
               class="form-control"
             />
           </div>
@@ -42,14 +42,14 @@
           <div class="col">
             <input
               formControlName="phone"
-              placeholder="Phone"
+              placeholder="{{ 'profile.student_details.placeholder.phone' | translate }}"
               class="form-control"
             />
           </div>
           <div class="col">
             <input
               formControlName="email"
-              placeholder="Email"
+              placeholder="{{ 'profile.student_details.placeholder.email' | translate }}"
               class="form-control"
             />
           </div>
@@ -58,21 +58,21 @@
           <div class="col">
             <input
               formControlName="university"
-              placeholder="University"
+              placeholder="{{ 'profile.student_details.placeholder.uni' | translate }}"
               class="form-control"
             />
           </div>
           <div class="col">
             <input
               formControlName="major"
-              placeholder="Major"
+              placeholder="{{ 'profile.student_details.placeholder.major' | translate }}"
               class="form-control"
             />
           </div>
           <div class="col">
             <input
               formControlName="neptun"
-              placeholder="Neptunkód"
+              placeholder="{{ 'profile.student_details.placeholder.neptun' | translate }}"
               class="form-control"
             />
           </div>
@@ -83,52 +83,51 @@
           class="btn btn-success me-2"
           [disabled]="profileForm.invalid"
         >
-          ✅ Save
+          ✅ {{ 'buttons.forms.save' | translate }}
         </button>
         <button type="reset" class="btn btn-secondary" (click)="resetProfile()">
-          🔄 Reset
+          🔄 {{ 'buttons.forms.reset' | translate }}
         </button>
       </form>
     </div>
 
     <div class="mt-5">
-      <h2>Gyakorlati adatok</h2>
+      <h2>{{ 'profile.company_details.title' | translate }}</h2>
       <hr />
       @if (internship) {
           <div>
             <div class="row mb-2">
               <div class="col">
-                <p><strong>Cég neve:</strong> {{ internship.companyName }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.company_name' | translate }}:</strong> {{ internship.companyName }}</p>
               </div>
               <div class="col">
-                <p><strong>Mentor neve:</strong> {{ internship.mentorName }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.mentor_name' | translate }}:</strong> {{ internship.mentorName }}</p>
               </div>
             </div>
             <div class="row mb-2">
                <div class="col">
-                <p><strong>Cég email:</strong> {{ internship.companyEmail }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.company_email' | translate }}:</strong> {{ internship.companyEmail }}</p>
               </div>
               <div class="col">
-                <p><strong>Mentor email:</strong> {{ internship.mentorEmail }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.mentor_email' | translate }}:</strong> {{ internship.mentorEmail }}</p>
               </div>
             </div>
             <div class="row mb-2">
               <div class="col">
-                <p><strong>Település:</strong> {{ internship.companyCity }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.city' | translate }}:</strong> {{ internship.companyCity }}</p>
               </div>
               <div class="col">
-                <p><strong>Cím:</strong> {{ internship.companyAddress }}</p>
+                <p><strong>{{ 'profile.company_details.placeholder.company_address' | translate }}:</strong> {{ internship.companyAddress }}</p>
               </div>
             </div>
             <div class="alert alert-info mt-3">
-              Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem
-              módosíthatók.
+              {{ 'profile.company_details.message.data' | translate }}
             </div>
           </div>
       } @else {
       <ng-template #noData>
         <div class="alert alert-warning">
-          Még nincs jóváhagyott gyakorlati adat.
+          {{ 'profile.company_details.message.no_data' | translate }}
         </div>
       </ng-template>
       }

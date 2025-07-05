@@ -4,10 +4,11 @@ import { InternshipDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole }
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { InternshipService } from '../../services/internship.service';
+import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
   selector: 'app-student-profile',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, I18nService],
   templateUrl: './student-profile.component.html',
   styleUrl: './student-profile.component.scss'
 })

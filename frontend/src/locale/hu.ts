@@ -112,7 +112,7 @@ export const hu: NestedI18n = {
                 text: "Profil"
             },
             completed_hours: {
-                text: "Teljesített órák"
+                text: "Óra hozzáadása"
             },
             documents: {
                 text: "Dokumentumok"
@@ -128,6 +128,94 @@ export const hu: NestedI18n = {
     dashboard: {
         title: {
             text: "Üdvözlünk, "
+        }
+    },
+    profile: {
+        student_details: {
+            title: {
+                text: "Hallgatói adatok"
+            },
+            placeholder: {
+                firstname: {
+                    text: "Keresztnév"
+                },
+                lastname: {
+                    text: "Vezetéknév"
+                },
+                phone: {
+                    text: "Telefonszám"
+                },
+                email: {
+                    text: "Email cím"
+                },
+                uni: {
+                    text: "Egyetem"
+                },
+                major: {
+                    text: "Szak"
+                },
+                neptun: {
+                    text: "Neptun"
+                }
+            }
+        },
+        company_details: {
+            title: {
+                text: "Céges adatok"
+            },
+            placeholder: {
+                company_name: {
+                    text: "Cég neve"
+                },
+                mentor_name: {
+                    text: "Mentor neve"
+                },
+                company_address: {
+                    text: "Cím"
+                },
+                company_email: {
+                    text: "Cég email címe"
+                },
+                mentor_email: {
+                    text: "Mentor email címe"
+                },
+                city: {
+                    text: "Település"
+                }
+            },
+            message: {
+                data: {
+                    text: "Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem módosíthatók."
+                },
+                no_date: {
+                    text: "Még nincs jóváhagyott gyakorlati adat."
+                }
+            }
+    },
+    },
+    internship_hours:{
+        title: {
+            text: "Gyakorlati órák"
+        },
+        add_hour: {
+            text: "Óra hozzáadása"
+        },
+        add_hour_box: {
+            title: {
+                text: "Új óra hozzáadása"
+            },
+            start: {
+                text: "Kezdés"
+            },
+            end: {
+                text: "Vége"
+            },
+            desc: {
+                text: "Leírás"
+            },
+        },
+        zero_hour: {
+            text: "Nincs rögzített óra ehez a naphoz"
         }
     },
     admin_panel: {
@@ -152,6 +240,19 @@ export const hu: NestedI18n = {
         },
         user_management: {
 
+        }
+    },
+    buttons: {
+        forms: {
+            cancel: {
+                text: "Mégse"
+            },
+            save: {
+                text: "Mentés"
+            },
+            reset: {
+                text: "Visszaállítás"
+            }
         }
     }
 }

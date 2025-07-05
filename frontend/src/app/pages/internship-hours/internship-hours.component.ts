@@ -3,11 +3,12 @@ import { Component, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { CreateInternshipHourDTO, InternshipHourDTO } from '../../../types';
+import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
   selector: 'app-internship-hours',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, I18nService],
   templateUrl: './internship-hours.component.html',
   styleUrl: './internship-hours.component.scss'
 })

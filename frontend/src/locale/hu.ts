@@ -93,6 +93,9 @@ export const hu: NestedI18n = {
         },
         password_required: {
             text: "*Jelszó megadása kötelező"
+        },
+        terms_required: {
+            text: "*Feltételek elfogadása szükséges"
         }
     },
     navbar: {

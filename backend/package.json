@@ -35,6 +35,7 @@
       "typeorm": "0.3.22"
    },
    "scripts": {
+      "build": "tsc",
       "start": "ts-node src/index.ts",
       "dev": "nodemon -w *.ts -w .env src/index.ts",
       "test": "jest",

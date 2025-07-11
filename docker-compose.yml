@@ -21,7 +21,7 @@ services:
       DB_PORT: 5432
       DB_USER: postgres
       DB_PASSWORD: postgres
-      DB_NAME: mydb
+      DB_NAME: internship_management
     depends_on:
       - postgres
     restart: unless-stopped

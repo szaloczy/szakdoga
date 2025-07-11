@@ -9,7 +9,7 @@ import { InternshipHour } from "./entity/InternshipHour";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: "localhost",
+  host: process.env.DB_HOST || "postgres",
   port: 5432,
   username: "postgres",
   password: "postgres",

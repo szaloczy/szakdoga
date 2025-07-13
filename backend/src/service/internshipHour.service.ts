@@ -57,7 +57,7 @@ export class InternshipHourService {
   }
 
 
-  async getHoursForStudent(userId: number): Promise<any[]> {
+  async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
     const student = await this.studentRepo.findOne({
       where: { user: { id: userId } },
       relations: ["user", "internship"],
@@ -67,21 +67,28 @@ export class InternshipHourService {
       throw new Error("Student not found.");
     }
 
-    const hours = await this.hourRepo.find({
-      where: {
-        internship: {
-          student: {
-            id: student.id,
-          },
-        },
-      },
-      relations: ["internship", "approvedBy"], // approvedBy == mentor
-      order: {
-        date: "ASC",
-        startTime: "ASC",
-      },
-    });
+    const whereCondition: any = {
+      internship: {
+        student: {
+          id: student.id
+        }
+      }
+    }
 
-    return hours.map(mapInternshipHourToDTO);
+    const allowedStatuses = ["pending", "approved", "rejected"];
+    if (status && allowedStatuses.includes(status)) {
+      whereCondition.status = status;
+    }
+
+     const hours = await this.hourRepo.find({
+    where: whereCondition,
+    relations: ["internship", "approvedBy"],
+    order: {
+      date: "ASC",
+      startTime: "ASC",
+    },
+  });
+
+  return hours.map(mapInternshipHourToDTO);
   }
 }

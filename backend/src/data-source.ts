@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import { dbHost } from "./config";
 import { DataSource } from "typeorm";
 import { User } from "./entity/User";
 import { Internship } from "./entity/Internship";
@@ -9,7 +10,7 @@ import { InternshipHour } from "./entity/InternshipHour";
 
 export const AppDataSource = new DataSource({
   type: "postgres",
-  host: process.env.DB_HOST || "postgres",
+  host: dbHost,
   port: 5432,
   username: "postgres",
   password: "postgres",

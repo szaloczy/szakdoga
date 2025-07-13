@@ -21,9 +21,10 @@ export class InternshipHourController extends Controller {
 
   getById = async (req, res) => {
     const user = (req as any).user;
+    const status = req.query.status as string;
 
     try {
-      const hours = await this.service.getHoursForStudent(user.id);
+      const hours = await this.service.getHoursForStudent(user.id, status);
       res.json(hours);
     } catch (error) {
       console.error(error);

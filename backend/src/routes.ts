@@ -59,6 +59,7 @@ const internshipHourController = new InternshipHourController();
 
 router.get("/internship-hour", internshipHourController.getAll);
 router.get("/internship-hour/mine", authMiddleware, internshipHourController.getById);
+router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post(
   "/internship-hour",
   authMiddleware,

@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { CreateInternshipHourDTO, InternshipDTO, InternshipHourDTO } from '../../types';
 
@@ -11,5 +11,10 @@ export class InternshipHourService {
 
   create(hour: CreateInternshipHourDTO) { return this.http.post<CreateInternshipHourDTO>(`/api/internship-hour`, hour); }
 
-  getHours() { return this.http.get<InternshipHourDTO[]>(`/api/internship-hour/mine`); }
+  getHours(status?: 'approved' | 'pending' | 'rejected') {
+    let params = new HttpParams();
+    if (status) {
+      params = params.set('status', status);
+    }
+    return this.http.get<InternshipHourDTO[]>(`/api/internship-hour/mine`, {params}); }
 }

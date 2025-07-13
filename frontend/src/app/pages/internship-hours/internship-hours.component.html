@@ -1,98 +1,73 @@
-<div class="container mt-4">
-  <!-- Header -->
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h2 class="fw-semibold">{{ 'internship_hours.title' | translate }}</h2>
-    <button class="btn btn-primary" (click)="openModal()">+ {{ 'internship_hours.add_hour' | translate }}</button>
-  </div>
-
-  <!-- Hét napjai -->
-  <div class="d-flex justify-content-between text-center border-bottom pb-2 mb-4">
-    <div
-      *ngFor="let date of getWeekDates()"
-      class="flex-fill px-2"
-      style="cursor: pointer;"
-      (click)="selectDate(date)"
+<ul class="nav nav-tabs justify-content-center mb-4 shadow-sm bg-white rounded-3 overflow-hidden">
+  <li class="nav-item">
+    <a
+      class="nav-link px-4 py-2"
+      [class.active]="selectedTab === 'week'"
+      (click)="handleTabChange('week')"
+      href="javascript:void(0)"
     >
-      <div
-        [ngClass]="{
-          'fw-bold border-bottom border-3 border-warning text-dark': isSameDay(date, selectedDate),
-          'text-muted': !isSameDay(date, selectedDate)
-        }"
-      >
-        {{ date | date: 'EEE' }} - {{date | date: 'MM.dd' }}<br />
-        <small>{{ getTotalForDay(date) }}</small>
-      </div>
-    </div>
-  </div>
+      <i class="bi bi-calendar-week me-1"></i> Heti nézet
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link px-4 py-2"
+      [class.active]="selectedTab === 'approved'"
+      (click)="handleTabChange('approved')"
+      href="javascript:void(0)"
+    >
+      <i class="bi bi-check-circle me-1"></i> Elfogadott órák
+    </a>
+  </li>
+  <li class="nav-item">
+    <a
+      class="nav-link px-4 py-2"
+      [class.active]="selectedTab === 'pending'"
+      (click)="handleTabChange('pending')"
+      href="javascript:void(0)"
+    >
+      <i class="bi bi-hourglass-split me-1"></i> Függőben lévő órák
+    </a>
+  </li>
+</ul>
 
-  <!-- Kiválasztott napi órák -->
-  <div *ngIf="todayEntries.length > 0; else noEntries">
-    <div class="list-group">
-      <div
-        *ngFor="let entry of todayEntries"
-        class="list-group-item d-flex justify-content-between align-items-center"
-      >
-        <div>
-          <strong>{{ entry.startTime }} – {{ entry.endTime }}</strong><br />
-          <small class="text-muted">{{ entry.description }}</small> <br />
-          <small
-          [ngClass]="{
-            'text-success': entry.status === 'approved',
-            'text-warning': entry.status === 'pending',
-            'text-danger': entry.status === 'rejected'
-          }"
-          >
+<div class="container">
+  @if (selectedTab === 'week') {
+    <app-week-view></app-week-view>
+  }
+  @if (selectedTab === 'approved' || selectedTab === 'pending') {
+    <div *ngIf="entries.length > 0; else noEntries">
+  <div class="list-group">
+    <div
+      *ngFor="let entry of entries"
+      class="list-group-item d-flex justify-content-between align-items-center"
+    >
+      <div>
+        <strong>{{ entry.startTime }} – {{ entry.endTime }}</strong><br />
+        <small class="text-muted">{{ entry.description }}</small><br />
+        <small [ngClass]="{
+          'text-success': entry.status === 'approved',
+          'text-warning': entry.status === 'pending',
+          'text-danger': entry.status === 'rejected'
+        }">
           {{
-            entry.status === 'approved' ? 'Elfogadva': entry.status === 'rejected' ? 'Elutasítva': 'Függőben'
+            entry.status === 'approved' ? 'Elfogadva':
+            entry.status === 'rejected' ? 'Elutasítva':
+            'Függőben'
           }}
-          </small>
-        </div>
-        <span class="badge bg-light text-dark">
-          {{ getDuration(entry.startTime, entry.endTime) }}
-        </span>
+        </small>
       </div>
+      <span class="badge bg-light text-dark">
+        <!-- {{ getDuration(entry.startTime, entry.endTime) }} -->
+      </span>
     </div>
   </div>
-
-  <!-- Nincs bejegyzés -->
-  <ng-template #noEntries>
-    <div class="alert alert-light text-center" role="alert">
-      {{ 'internship_hours.zero_hour' | translate }}
-    </div>
-  </ng-template>
 </div>
 
-<!-- MODAL -->
- @if (isModalOpen) {
-  <div
-    class="custom-modal-backdrop"
-  >
-    <div class="custom-modal">
-      <form (ngSubmit)="addHour()" [formGroup]="hourForm">
-        <div class="mb-3">
-          <h5>{{ 'internship_hours.add_hour_box.title' | translate }}</h5>
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
-          <input type="time" class="form-control" formControlName="startTime" name="startTime" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ 'internship_hours.add_hour_box.end' | translate }}</label>
-          <input type="time" class="form-control" formControlName="endTime" name="endTime" required />
-        </div>
-
-        <div class="mb-3">
-          <label class="form-label">{{ 'internship_hours.add_hour_box.desc' | translate }}</label>
-          <textarea class="form-control" formControlName="description" name="description" rows="3" required></textarea>
-        </div>
-
-        <div class="d-flex justify-content-end gap-2">
-          <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">{{ 'buttons.forms.cancel' | translate }}</button>
-          <button type="submit" class="btn btn-primary">{{ 'buttons.forms.save' | translate }}</button>
-        </div>
-      </form>
-    </div>
+<ng-template #noEntries>
+  <div class="alert alert-light text-center">
+    Nincs bejegyzés.
   </div>
-}
+</ng-template>
+  } 
+</div>

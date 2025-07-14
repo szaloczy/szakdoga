@@ -15,7 +15,7 @@ import { UserDTO, UserRole } from '../../../types';
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit{
+export class SidebarComponent implements OnInit {
   @Input() isCollapsed = false;
 
   userService = inject(UserService);

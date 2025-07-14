@@ -1,5 +1,5 @@
 import { NgClass } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { ToastService } from '../../services/toast.service';
 
 @Component({
@@ -10,7 +10,7 @@ import { ToastService } from '../../services/toast.service';
   templateUrl: './toast.component.html',
   styleUrl: './toast.component.scss'
 })
-export class ToastComponent {
+export class ToastComponent implements OnInit{
   message: string | null = null;
   toastClass: string = '';
 

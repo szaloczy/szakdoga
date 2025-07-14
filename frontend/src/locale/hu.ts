@@ -6,7 +6,7 @@ export const hu: NestedI18n = {
             text: 'Hallgató'
         },
         mentor: {
-            text: 'mentor'
+            text: 'Mentor'
         },
         admin: {
             text : 'Adminisztrátor'
@@ -122,6 +122,9 @@ export const hu: NestedI18n = {
             },
             statistics: {
                 text: "Statisztikák"
+            },
+            students: {
+                text: "Hallgatók"
             }
         },
         logout_button: {

@@ -23,13 +23,21 @@
       <span class="label" routerLink="/profile">{{ 'sidenav.items.profile' | translate }}</span>
       }
     </li>
+    @if(authService.getUserRole() === "Mentor") {
+      <li class="menu-item">
+      <i class="bi bi-people-fill"></i>
+      @if (!isCollapsed) {
+      <span class="label">{{ 'sidenav.items.students' | translate }}</span>
+      }
+    </li>
+    }
     <li class="menu-item">
       <i class="bi bi-hourglass"></i>
       @if (!isCollapsed) {
       <span class="label" routerLink="/internship-hours">{{ 'sidenav.items.completed_hours' | translate }}</span>
       }
     </li>
-     <li class="menu-item">
+    <li class="menu-item">
       <i class="bi bi-file-earmark-text"></i>
       @if (!isCollapsed) {
       <span class="label">{{ 'sidenav.items.documents' | translate }}</span>

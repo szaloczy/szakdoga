@@ -1,9 +1,10 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, Inject, inject, Input, OnInit } from '@angular/core';
 import { CreateInternshipHourDTO, InternshipHourDTO, InternshipListDTO } from '../../../../types';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InternshipHourService } from '../../../services/internship-hour.service';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../shared/i18n.pipe';
+import { AuthService } from '../../../services/auth.service';
 
 @Component({
   selector: 'app-week-view',
@@ -14,7 +15,9 @@ import { I18nService } from '../../../shared/i18n.pipe';
 export class WeekViewComponent implements OnInit {
 
   fb = inject(FormBuilder);
+  authService = Inject(AuthService);
   internshipHourService = inject(InternshipHourService);
+
 
   allEntries: InternshipHourDTO[] = [];
   todayEntries: InternshipHourDTO[] = [];

@@ -122,6 +122,9 @@ export const en: NestedI18n = {
             },
             statistics: {
                 text: "Statistics"
+            },
+            students: {
+                text: "Students"
             }
         },
         logout_button: {

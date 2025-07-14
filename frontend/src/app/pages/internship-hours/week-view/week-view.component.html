@@ -84,7 +84,14 @@
         <div class="mb-3">
           <h5>{{ 'internship_hours.add_hour_box.title' | translate }}</h5>
         </div>
-
+<!-- 
+        @if (authService.getUserRole() === "Mentor") {
+        <div class="mb-3">
+          <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
+          <input type="time" class="form-control" formControlName="startTime" name="startTime" required />
+        </div>
+        }
+ -->
         <div class="mb-3">
           <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
           <input type="time" class="form-control" formControlName="startTime" name="startTime" required />

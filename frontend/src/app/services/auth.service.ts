@@ -81,6 +81,10 @@ export class AuthService {
     }
   }
 
+  getRole() {
+    return this.decodeToken()?.role;
+  }
+
   getUserId(): number {
     return this.decodeToken()?.id;
   }

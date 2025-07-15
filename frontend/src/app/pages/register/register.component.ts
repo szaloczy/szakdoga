@@ -4,6 +4,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { I18nService } from '../../shared/i18n.pipe';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-register',
@@ -22,6 +23,7 @@ export class RegisterComponent implements OnInit {
   i18nService = inject(I18nService);
   router = inject(Router);
   fb = inject(FormBuilder);
+  toastService = inject(ToastService);
   registerForm!: FormGroup;
   submitted = false;
 
@@ -39,11 +41,11 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.userService.register(this.registerForm.value).subscribe({
         next: (res) => {
-          console.log("Sikeres regisztrálás");
+          this.toastService.showSuccess("Sikeres Regisztráció")
           this.router.navigateByUrl("/login");
         },
         error: (err) => {
-          console.error(err);
+          this.toastService.showError(err.error.message)
         }
       });
     }

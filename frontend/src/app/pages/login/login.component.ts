@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit{
           }
         },
         error: (err) => {
-          console.error("Hiba: " + err);
+          this.toastService.showError(err.error.message);
         }
       })
     }

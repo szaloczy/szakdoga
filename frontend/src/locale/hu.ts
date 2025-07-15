@@ -98,6 +98,14 @@ export const hu: NestedI18n = {
             text: "*Feltételek elfogadása szükséges"
         }
     },
+    response: {
+        hour_created: {
+            text: "Új óra sikeresen rögzítve"
+        },
+        hour_invalid: {
+            text: "Hiba az óra rögzítésnél"
+        }
+    },
     navbar: {
         title: {
             text: "Gyakorlat nyílvántartó"
@@ -163,6 +171,31 @@ export const hu: NestedI18n = {
                 neptun: {
                     text: "Neptun"
                 }
+            }
+        },
+        mentor_details: {
+            title: {
+                text: "Mentor adatok"
+            },
+            placeholder: {
+                firstname: {
+                    text: "Firstname"
+                },
+                lastname: {
+                    text: "Lastname"
+                },
+                phone: {
+                    text: "Phone"
+                },
+                email: {
+                    text: "Email"
+                },
+                company: {
+                    text: "Cég"
+                },
+                role: {
+                    text: "Beosztás"
+                },
             }
         },
         company_details: {

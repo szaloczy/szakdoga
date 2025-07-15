@@ -23,7 +23,7 @@
       <span class="label" routerLink="/profile">{{ 'sidenav.items.profile' | translate }}</span>
       }
     </li>
-    @if(authService.getUserRole() === "Mentor") {
+    @if(authService.getRole() === "mentor") {
       <li class="menu-item">
       <i class="bi bi-people-fill"></i>
       @if (!isCollapsed) {

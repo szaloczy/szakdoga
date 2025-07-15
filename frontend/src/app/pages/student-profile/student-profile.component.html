@@ -10,14 +10,23 @@
       />
       <input type="file" (change)="onFileSelected($event)" />
       <div class="mt-3">
-        <p><strong>Intership</strong> <a href="#">########</a></p>
-        <p><strong>Activity</strong></p>
-        <p>Completed hours: ######</p>
-        <p>Uploaded documents: #####</p>
+        @if (authService.getRole() === "student") {
+          <p><strong>Intership</strong> <a href="#">########</a></p>
+          <p><strong>Activity</strong></p>
+          
+          <p>Completed hours: ######</p>
+          <p>Uploaded documents: #####</p>
+        }@else {
+          <p>{{ authService.getUserRole()}}</p>
+          <p><strong>Activity</strong></p>
+
+          <p>students: ######</p>
+        }
       </div>
     </div>
 
     <!-- Right Panel: Form -->
+    @if (authService.getRole() === "student") {
     <div class="col-md-8">
       <h2>{{ 'profile.student_details.title' | translate }}</h2>
       <hr />
@@ -77,6 +86,7 @@
             />
           </div>
         </div>
+        
 
         <button
           type="submit"
@@ -90,7 +100,76 @@
         </button>
       </form>
     </div>
+    } @else {
+      <div class="col-md-8">
+      <h2>{{ 'profile.mentor_details.title' | translate }}</h2>
+      <hr />
+      <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
+        <div class="row mb-2">
+          <div class="col">
+            <input
+              formControlName="firstname"
+              placeholder="{{ 'profile.student_details.placeholder.firstname' | translate }}"
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              formControlName="lastname"
+              placeholder="{{ 'profile.student_details.placeholder.lastname' | translate }}"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input
+              formControlName="phone"
+              placeholder="{{ 'profile.student_details.placeholder.phone' | translate }}"
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              formControlName="email"
+              placeholder="{{ 'profile.student_details.placeholder.email' | translate }}"
+              class="form-control"
+            />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col">
+            <input
+              formControlName="university"
+              placeholder="{{ 'profile.mentor_details.placeholder.company' | translate }}"
+              class="form-control"
+            />
+          </div>
+          <div class="col">
+            <input
+              formControlName="major"
+              placeholder="{{ 'profile.mentor_details.placeholder.role' | translate }}"
+              class="form-control"
+            />
+          </div>
+        </div>
+        
 
+        <button
+          type="submit"
+          class="btn btn-success me-2"
+          [disabled]="profileForm.invalid"
+        >
+          ✅ {{ 'buttons.forms.save' | translate }}
+        </button>
+        <button type="reset" class="btn btn-secondary" (click)="resetProfile()">
+          🔄 {{ 'buttons.forms.reset' | translate }}
+        </button>
+      </form>
+    </div>
+    }
+
+    @if( authService.getRole() === "student") { 
     <div class="mt-5">
       <h2>{{ 'profile.company_details.title' | translate }}</h2>
       <hr />
@@ -132,5 +211,9 @@
       </ng-template>
       }
     </div>
+    } @else {
+      
+    }
   </div>
 </div>
+

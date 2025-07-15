@@ -1,10 +1,11 @@
-import { Component, Inject, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { CreateInternshipHourDTO, InternshipHourDTO, InternshipListDTO } from '../../../../types';
 import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { InternshipHourService } from '../../../services/internship-hour.service';
 import { CommonModule } from '@angular/common';
 import { I18nService } from '../../../shared/i18n.pipe';
 import { AuthService } from '../../../services/auth.service';
+import { ToastService } from '../../../services/toast.service';
 
 @Component({
   selector: 'app-week-view',
@@ -15,8 +16,10 @@ import { AuthService } from '../../../services/auth.service';
 export class WeekViewComponent implements OnInit {
 
   fb = inject(FormBuilder);
-  authService = Inject(AuthService);
+  authService = inject(AuthService);
   internshipHourService = inject(InternshipHourService);
+  toastService = inject(ToastService);
+  i18nService = inject(I18nService);
 
 
   allEntries: InternshipHourDTO[] = [];
@@ -146,17 +149,17 @@ export class WeekViewComponent implements OnInit {
 
     const payload: CreateInternshipHourDTO = {
       ...this.hourForm.value,
-      date: this.formatDate(this.selectedDate), // ⬅ aktuálisan kiválasztott napra
+      date: this.formatDate(this.selectedDate),
     };
 
      this.internshipHourService.create(payload).subscribe({
       next: (response) => {
-        console.log('Óra hozzáadva:', response);
+        this.toastService.showSuccess(this.i18nService.transform('response.hour_created'))
         this.closeModal();
         this.loadHours();
       },
-      error: (error) => {
-        console.error('Hiba az óra hozzáadásakor:', error);
+      error: (err) => {
+        this.toastService.showError(this.i18nService.transform('response.hour_invalid'+ `: ${err.error.message}`));
       }
     });
   }

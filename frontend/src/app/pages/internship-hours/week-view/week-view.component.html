@@ -2,7 +2,9 @@
   <!-- Header -->
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2 class="fw-semibold">{{ 'internship_hours.title' | translate }}</h2>
-    <button class="btn btn-primary" (click)="openModal()">+ {{ 'internship_hours.add_hour' | translate }}</button>
+    @if (authService.getRole() === "student") {
+      <button class="btn btn-primary" (click)="openModal()">+ {{ 'internship_hours.add_hour' | translate }}</button>
+    }
   </div>
 
     <div class="d-flex justify-content-center align-items-center mb-3">

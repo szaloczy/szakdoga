@@ -7,6 +7,7 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { profileDTO, UserRole } from "../types";
 import { Mentor } from "../entity/Mentor";
+import { QueryFailedError } from "typeorm";
 
 export class UserController extends Controller {
   repository = AppDataSource.getRepository(User);
@@ -48,6 +49,9 @@ export class UserController extends Controller {
 
       res.json(createdUser);
     } catch (error) {
+      if (error instanceof QueryFailedError && (error as any).code === '23505'){
+         return res.status(409).json({ message: "this Email address is already used" });
+      }
       this.handleError(res, error);
     }
   };

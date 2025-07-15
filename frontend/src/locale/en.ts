@@ -98,6 +98,14 @@ export const en: NestedI18n = {
             text: "*Trems must be accepted"
         }
     },
+    response: {
+        hour_created: {
+            text: "New hour saved successfully"
+        },
+        hour_invalid: {
+            text: "Error during hour creation"
+        }
+    },
     navbar: {
         title: {
             text: "Internship tracker"
@@ -163,6 +171,31 @@ export const en: NestedI18n = {
                 neptun: {
                     text: "Neptun"
                 }
+            }
+        },
+        mentor_details: {
+            title: {
+                text: "Mentor details"
+            },
+            placeholder: {
+                firstname: {
+                    text: "Firstname"
+                },
+                lastname: {
+                    text: "Lastname"
+                },
+                phone: {
+                    text: "Phone"
+                },
+                email: {
+                    text: "Email"
+                },
+                company: {
+                    text: "Company"
+                },
+                role: {
+                    text: "Role"
+                },
             }
         },
         company_details: {

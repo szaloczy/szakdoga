@@ -74,3 +74,12 @@ export interface profileInternshipDTO {
   companyAddress: string;
   companyCity: string;
 }
+export interface StudentWithHoursDto {
+  id: number;
+  firstname: string;
+  lastname: string;
+  email: string;
+  major?: string | null;
+  university?: string | null;
+  hours: number;
+}

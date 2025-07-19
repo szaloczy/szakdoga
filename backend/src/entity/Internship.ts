@@ -35,9 +35,8 @@ export class Internship {
   @JoinColumn()
   student: Student;
 
-  @OneToOne(() => Mentor, (mentor) => mentor.internship, {
+  @ManyToOne(() => Mentor, (mentor) => mentor.internship, {
     onDelete: "SET NULL",
-    cascade: false,
     nullable: true,
     eager: true,
   })

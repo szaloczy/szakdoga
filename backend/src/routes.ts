@@ -5,8 +5,7 @@ import { CompanyController } from "./controller/company.controller";
 import { InternshipController } from "./controller/internship.controller";
 import { MentorController } from "./controller/mentor.controller";
 import { InternshipHourController } from "./controller/internshipHour.controller";
-import { authMiddleware } from "./middleware/auth.middlewate";
-import { checkUser } from "./utils/mappers/protect-routes";
+import { authMiddleware } from "./middleware/auth.middleware";
 
 export const router = express.Router();
 
@@ -34,27 +33,28 @@ const companyController = new CompanyController();
 
 router.get("/company", companyController.getAll);
 router.get("/company/:id", companyController.getOne);
-router.post("/company", checkUser, companyController.create);
-router.put("/company/:id", checkUser, companyController.update);
-router.delete("/company/:id", checkUser, companyController.delete);
+router.post("/company", authMiddleware, companyController.create);
+router.put("/company/:id", authMiddleware, companyController.update);
+router.delete("/company/:id", authMiddleware, companyController.delete);
 
 const internshipController = new InternshipController();
 
 router.get("/internship", internshipController.getAll);
-router.get("/internship/:id", internshipController.getOne);
-router.post("/internship", checkUser, internshipController.create);
-router.put("/internship/:id", checkUser, internshipController.update);
-router.delete("/internship/:id", checkUser, internshipController.delete);
+router.get("/internship/:id",authMiddleware, internshipController.getOne);
+router.post("/internship",authMiddleware, internshipController.create);
+router.put("/internship/:id",authMiddleware, internshipController.update);
+router.delete("/internship/:id",authMiddleware, internshipController.delete);
 
 router.get("/profile/internship/:id", internshipController.getByUserId);
 
 const mentorController = new MentorController();
 
 router.get("/mentor", mentorController.getAll);
-router.get("/mentor/:id", mentorController.getOne);
-router.post("/mentor", checkUser, mentorController.create);
-router.put("/mentor/:id", checkUser, mentorController.update);
-router.delete("/mentor/:id", checkUser, mentorController.delete);
+router.get("/mentor/students", authMiddleware, mentorController.getStudents);
+router.get("/mentor/:id",authMiddleware, mentorController.getOne);
+router.post("/mentor",authMiddleware, mentorController.create);
+router.put("/mentor/:id",authMiddleware, mentorController.update);
+router.delete("/mentor/:id",authMiddleware, mentorController.delete);
 
 const internshipHourController = new InternshipHourController();
 
@@ -64,13 +64,13 @@ router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post(
   "/internship-hour",
   authMiddleware,
-  checkUser,
+authMiddleware,
   internshipHourController.create
 );
 router.put(
   "/internship-hour/:id",
   authMiddleware,
-  checkUser,
+authMiddleware,
   internshipHourController.update
 );
-router.delete("/internship-hour/:id", checkUser, internshipHourController.delete);
+router.delete("/internship-hour/:id",authMiddleware, internshipHourController.delete);

@@ -1,6 +1,7 @@
 <div class="container mt-4">
   <h2>{{ 'dashboard.title' | translate }} {{user.firstname}} {{user.lastname}}!</h2>
 
+  @if (authService.getRole() === "student") {
   <div class="row my-4">
     @for(card of summaryCards; track card) {
     <div class="col-md-3">
@@ -24,4 +25,9 @@
     <button class="btn btn-outline-secondary">Új gyakorlat rögzítése</button>
     <button class="btn btn-outline-info">Korábbi gyakorlatok</button>
   </div>
+  } @else {
+    <app-student-list></app-student-list>
+  }
 </div>
+
+

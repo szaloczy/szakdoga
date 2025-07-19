@@ -1,0 +1,45 @@
+@if(students.length === 0) {
+    <div class="alert alert-info text-center mt-4">
+        Nincs hozzád rendelt hallgató.
+    </div>
+} @else {
+    <div class="container mt-4">
+    <div class="row g-4">
+        @for (student of students;track student) {
+        <div
+        class="col-12 col-md-6 col-lg-4"
+        >
+        <div
+            class="card h-100 shadow-sm student-card"
+            (click)="viewStudent()"
+            style="cursor: pointer"
+        >
+            <div class="card-body">
+            <h5 class="card-title text-primary fw-semibold mb-2">
+                {{ student.student.user?.firstname }} {{ student.student.user?.lastname }}
+            </h5>
+            <p class="card-text text-secondary mb-0">
+                {{ student.student.university || '–' }}
+            </p>
+            <p class="card-text text-secondary">
+                {{ student.student.major || '–' }}
+            </p>
+            </div>
+        </div>
+        </div>
+        }
+    </div>
+    </div>
+}
+
+<!-- @if (students.length === 0) {
+    <div>Nincs hozzád rendelt hallgató.</div>
+} @else {
+    @for(student of students; track student) {
+        <ul class="student-list">
+            <li (click)="viewStudent()">
+            <strong>{{ student.student.user?.firstname  }} {{student.student.user?.lastname}}</strong> – {{ student.student.university }} / {{ student.student.major }}
+            </li>
+        </ul>
+    }
+} -->

@@ -152,6 +152,11 @@ export interface CreateInternshipHourDTO {
     internshipId?: number; 
 }
 
+export interface InternshipWithHours {
+    student: StudentDTO;
+    hours: InternshipHourDTO[];
+}
+
 export enum UserRole {
     STUDENT = "student",
     ADMIN = "admin",

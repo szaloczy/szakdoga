@@ -24,7 +24,7 @@ export class Mentor {
   @JoinColumn()
   user: User;
 
-  @OneToOne(() => Internship, (internship) => internship.mentor)
+  @OneToMany(() => Internship, (internship) => internship.mentor)
   internship: Internship;
 
   @ManyToOne(() => Company, (company) => company.mentors, {

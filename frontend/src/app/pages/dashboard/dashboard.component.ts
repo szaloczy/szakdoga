@@ -4,12 +4,14 @@ import { AuthService } from '../../services/auth.service';
 import { I18nService } from '../../shared/i18n.pipe';
 import { UserDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
+import { StudentListComponent } from '../../components/student-list/student-list.component';
 
 @Component({
   selector: 'app-dashboard',
   imports: [
     I18nService,
-    NgClass
+    NgClass,
+    StudentListComponent
   ],
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'

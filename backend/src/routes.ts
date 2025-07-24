@@ -56,6 +56,7 @@ router.post("/mentor",authMiddleware, mentorController.create);
 router.put("/mentor/:id",authMiddleware, mentorController.update);
 router.delete("/mentor/:id",authMiddleware, mentorController.delete);
 
+
 const internshipHourController = new InternshipHourController();
 
 router.get("/internship-hour", internshipHourController.getAll);

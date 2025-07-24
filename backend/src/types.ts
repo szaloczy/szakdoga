@@ -83,3 +83,13 @@ export interface StudentWithHoursDto {
   university?: string | null;
   hours: number;
 }
+
+export interface createMentorDTO {
+  firstname: string;
+  lastname: string;
+  email: string;
+  password: string;
+  position: string;
+  company: number;
+  active: boolean;
+}

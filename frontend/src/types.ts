@@ -76,7 +76,7 @@ export interface MentorDTO {
     lastname: string;
     position: string;
     companyId: number;
-    internship: InternshipDTO;
+    internship: InternshipDTO | null;
     user: UserDTO | null;
 }
 

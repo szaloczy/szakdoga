@@ -31,4 +31,11 @@ export class MentorService {
 
     return result;
   }
+
+  async getMentorById(id: number) {
+  return await AppDataSource.getRepository(Mentor).findOne({
+    where: { id },
+    relations: ["user", "company", "internship", "approvedHours"],
+  });
+}
 }

@@ -11,5 +11,7 @@ export class MentorService {
 
   getAll() { return this.http.get<MentorDTO[]>(`/api/mentor`)}
 
+  getOne(id: number) { return this.http.get<MentorDTO>("/api/mentor/" + id)};
+
   getStudents() { return this.http.get<InternshipWithHours[]>(`/api/mentor/students`)};
 }

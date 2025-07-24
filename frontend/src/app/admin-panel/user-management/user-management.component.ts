@@ -13,10 +13,11 @@ import {
   Validators,
 } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-user-management',
-  imports: [RouterLink, ReactiveFormsModule],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })
@@ -52,7 +53,7 @@ export class UserManagementComponent implements OnInit {
       password: ['', [Validators.required]],
       position: ['', Validators.required],
       active: [true, [Validators.required]],
-      companyId: ['', [Validators.required]],
+      companyId: ['',[Validators.required]],
     });
 
     this.loadUsers();

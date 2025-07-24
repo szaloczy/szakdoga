@@ -102,71 +102,45 @@
     </div>
     } @else {
       <div class="col-md-8">
-      <h2>{{ 'profile.mentor_details.title' | translate }}</h2>
-      <hr />
-      <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="firstname"
-              placeholder="{{ 'profile.student_details.placeholder.firstname' | translate }}"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="lastname"
-              placeholder="{{ 'profile.student_details.placeholder.lastname' | translate }}"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="phone"
-              placeholder="{{ 'profile.student_details.placeholder.phone' | translate }}"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="email"
-              placeholder="{{ 'profile.student_details.placeholder.email' | translate }}"
-              class="form-control"
-            />
-          </div>
-        </div>
-        <div class="row mb-2">
-          <div class="col">
-            <input
-              formControlName="university"
-              placeholder="{{ 'profile.mentor_details.placeholder.company' | translate }}"
-              class="form-control"
-            />
-          </div>
-          <div class="col">
-            <input
-              formControlName="major"
-              placeholder="{{ 'profile.mentor_details.placeholder.role' | translate }}"
-              class="form-control"
-            />
-          </div>
-        </div>
-        
+        <h2 class="text-primary">{{ 'profile.mentor_details.title' | translate }}</h2>
+        <hr />
+        <div class="card shadow-sm">
+          <div class="card-body bg-light rounded">
+            <div class="row mb-3">
+              <div class="col">
+                <label class="form-label text-muted">Vezetéknév</label>
+                <p class="form-control-plaintext fw-semibold">{{ profileForm.get('lastname')?.value }}</p>
+              </div>
+              <div class="col">
+                <label class="form-label text-muted">Keresztnév</label>
+                <p class="form-control-plaintext fw-semibold">{{ profileForm.get('firstname')?.value }}</p>
+              </div>
+            </div>
 
-        <button
-          type="submit"
-          class="btn btn-success me-2"
-          [disabled]="profileForm.invalid"
-        >
-          ✅ {{ 'buttons.forms.save' | translate }}
-        </button>
-        <button type="reset" class="btn btn-secondary" (click)="resetProfile()">
-          🔄 {{ 'buttons.forms.reset' | translate }}
-        </button>
-      </form>
-    </div>
+            <div class="row mb-3">
+              <div class="col">
+                <label class="form-label text-muted">Telefonszám</label>
+                <p class="form-control-plaintext">{{ profileForm.get('phone')?.value }}</p>
+              </div>
+              <div class="col">
+                <label class="form-label text-muted">Email</label>
+                <p class="form-control-plaintext">{{ profileForm.get('email')?.value }}</p>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col">
+                <label class="form-label text-muted">Cég / Egyetem</label>
+                <p class="form-control-plaintext">{{ profileForm.get('university')?.value }}</p>
+              </div>
+              <div class="col">
+                <label class="form-label text-muted">Beosztás / Szerep</label>
+                <p class="form-control-plaintext">{{ profileForm.get('major')?.value }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     }
 
     @if( authService.getRole() === "student") { 

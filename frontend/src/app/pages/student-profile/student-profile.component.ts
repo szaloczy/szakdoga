@@ -1,10 +1,11 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InternshipDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
+import { InternshipDTO, MentorDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { InternshipService } from '../../services/internship.service';
 import { I18nService } from '../../shared/i18n.pipe';
+import { MentorService } from '../../services/mentor.service';
 
 @Component({
   selector: 'app-student-profile',
@@ -16,6 +17,7 @@ export class StudentProfileComponent implements OnInit{
 
   userService = inject(UserService);
   authService = inject(AuthService);
+  mentorService = inject(MentorService);
   internshipService = inject(InternshipService);
   
   fb = inject(FormBuilder);
@@ -31,9 +33,21 @@ export class StudentProfileComponent implements OnInit{
     student: undefined
   }
 
+  mentorProfile: MentorDTO = {
+    id: 0,
+    firstname: '',
+    lastname: '',
+    position: '',
+    companyId: 0,
+    internship: null,
+    user: null
+  }
+
   internship: ProfileInternshipDTO | null = null;
 
   ngOnInit(): void {
+    const currentUserRole = this.authService.getRole();
+
     this.profileForm = this.fb.group({
       firstname: ['', []],
       lastname: ['', []],
@@ -44,7 +58,15 @@ export class StudentProfileComponent implements OnInit{
       neptun: ['', []]
     });
 
-    this.userService.getProfile(this.authService.getUserId()).subscribe({
+   this.loadStudentData();
+
+   if(currentUserRole === "student") {
+    this.loadIntershipData();
+   }
+  }
+
+  loadStudentData() {
+     this.userService.getProfile(this.authService.getUserId()).subscribe({
       next: (profileData) => {
         this.profile = profileData;
         this.profileForm.patchValue({
@@ -63,8 +85,10 @@ export class StudentProfileComponent implements OnInit{
         console.error(err);
       }
     });
+  }
 
-    this.internshipService.getByStudentId(this.authService.getUserId()).subscribe({
+  loadIntershipData() {
+     this.internshipService.getByStudentId(this.authService.getUserId()).subscribe({
       next: (internshipData) => {
         this.internship = internshipData;
       },
@@ -72,6 +96,19 @@ export class StudentProfileComponent implements OnInit{
         console.error(err);
       }
     });
+  }
+
+  loadMentorData() {
+    this.mentorService.getOne(this.authService.getUserId()).subscribe({
+      next: (mentorData) => {
+        this.mentorProfile = mentorData;
+        console.log(mentorData);
+        
+      },
+      error: (err) => {
+        console.error(err);
+      }
+    })
   }
 
   onSubmitProfile() {

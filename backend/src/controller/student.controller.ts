@@ -1,30 +1,49 @@
-import { AppDataSource } from "../data-source";
-import { Student } from "../entity/Student";
+import { StudentService } from "../service/student.service";
 import { Controller } from "./base.controller";
 
 export class StudentController extends Controller {
-  repository = AppDataSource.getRepository(Student);
+  private service = new StudentService();
 
   getAll = async (req, res) => {
-    const students = await this.repository.find({
-      relations: ["user"],
-    });
-
-    res.json(students);
+    try {
+      const students = await this.service.getAllActiveStudents();
+      res.json(students);
+    } catch (error) {
+      this.handleError(res, error);
+    }
   };
 
-  getProfile = async (req, res) => {
+  getById = async (req, res) => {
     try {
-      const fullUser = await this.repository.findOne({
-        where: { id: req.params["id"] },
-        relations: ["user"],
-      });
-
-      if (!fullUser) {
-        this.handleError(res, null, 404, "User not found");
+      const studentId = Number(req.params["id"]);
+      
+      if (isNaN(studentId)) {
+        return this.handleError(res, null, 400, "Invalid student ID");
       }
 
-      res.json(fullUser);
+      const student = await this.service.getStudentById(studentId);
+      
+      if (!student) {
+        return this.handleError(res, null, 404, "Student not found");
+      }
+
+      res.json(student);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  updateProfile = async (req, res) => {
+    try {
+      const studentId = Number(req.params["id"]);
+      const updateData = req.body;
+
+      if (isNaN(studentId)) {
+        return this.handleError(res, null, 400, "Invalid student ID");
+      }
+
+      await this.service.updateStudentProfile(studentId, updateData);
+      res.json({ message: "Student profile updated successfully" });
     } catch (error) {
       this.handleError(res, error);
     }

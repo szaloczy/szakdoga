@@ -83,6 +83,7 @@
         </div>
         <div class="col-md-6">
           <select class="form-select" name="companyId" formControlName="companyId" required>
+            <option value="" disabled selected>Select Company</option>
             @for(company of companies; track company) {
             <option [value]="company.id">{{ company.name }}</option>
             }

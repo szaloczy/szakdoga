@@ -4,15 +4,8 @@ export enum UserRole {
   ADMIN = "admin",
 }
 
-export interface StudentDTO {
-  phone: number;
-  university: string;
-  major: string;
-  neptun: string;
-}
-
 export interface BaseUserDTO {
-  id: number;
+  id: number | null;
   email: string;
   firstname: string;
   lastname: string;
@@ -21,8 +14,8 @@ export interface BaseUserDTO {
 }
 
 export interface StudentDTO {
-  id: number;
-  phone: number | null;
+  id?: number;
+  phone: string | null;
   neptun: string;
   major: string;
   university: string;
@@ -90,6 +83,34 @@ export interface createMentorDTO {
   email: string;
   password: string;
   position: string;
-  company: number;
+  companyId: number;
   active: boolean;
+}
+
+
+/* 
+============================================New DTOs=============================================
+*/ 
+
+export interface UpdateProfileDTO {
+  email?: string;
+  firstname?: string;
+  lastname?: string;
+  student?: {
+    phone?: string;
+    major?: string;
+    university?: string;
+    neptun?: string;
+  };
+}
+
+export interface GetProfileResponseDTO {
+  id: number;
+  email: string;
+  firstname: string;
+  lastname: string;
+  role: UserRole;
+  active: boolean;
+  student?: StudentDTO;
+  mentor?: MentorDTO;
 }

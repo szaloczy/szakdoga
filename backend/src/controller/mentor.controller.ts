@@ -1,48 +1,143 @@
-import { AppDataSource } from "../data-source";
-import { Mentor } from "../entity/Mentor";
 import { MentorService } from "../service/mentor.service";
+import { createMentorDTO, GetProfileResponseDTO } from "../types";
 import { Controller } from "./base.controller";
 
 export class MentorController extends Controller {
-  repository = AppDataSource.getRepository(Mentor);
-  service = new MentorService();
+  private service = new MentorService();
 
   getAll = async (req, res) => {
-    const mentors = await this.repository.find({
-      relations: ["user"],
-    });
+    try {
+      const mentors = await this.service.getAllActiveMentors();
+      res.json(mentors);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
 
-    res.json(mentors);
+  getById = async (req, res) => {
+    try {
+      const mentorId = Number(req.params["id"]);
+
+      if (isNaN(mentorId)) {
+        return this.handleError(res, null, 400, "Invalid mentor ID");
+      }
+
+      const mentor = await this.service.getMentorById(mentorId);
+
+      if (!mentor) {
+        return this.handleError(res, null, 404, "Mentor not found");
+      }
+
+      const response: GetProfileResponseDTO = {
+        id: mentor.user.id,
+        email: mentor.user.email,
+        firstname: mentor.user.firstname,
+        lastname: mentor.user.lastname,
+        role: mentor.user.role,
+        active: mentor.user.active,
+        mentor: {
+          id: mentor.id,
+          position: mentor.position,
+          company: mentor.company
+        }
+      };
+
+      res.json(response);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  create = async (req, res) => {
+    try {
+      const mentorData: createMentorDTO = req.body;
+
+      if (!mentorData.firstname || !mentorData.lastname || !mentorData.email || 
+          !mentorData.position || !mentorData.password || !mentorData.companyId) {
+        return this.handleError(res, null, 400, "Missing required fields");
+      }
+
+      const newMentor = await this.service.createMentor(mentorData);
+      res.status(201).json(newMentor);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  updateProfile = async (req, res) => {
+    try {
+      const mentorId = Number(req.params["id"]);
+      const updateData = req.body;
+
+      if (isNaN(mentorId)) {
+        return this.handleError(res, null, 400, "Invalid mentor ID");
+      }
+
+      await this.service.updateMentorProfile(mentorId, updateData);
+      res.json({ message: "Mentor profile updated successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
   };
 
   getStudents = async (req, res) => {
     try {
-      const userId = req.user.id;
-      const studentsWithHours = await this.service.getStudentsWithHoursByMentor(userId);
+      const userId = req.user?.id;
 
+      if (!userId) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      const studentsWithHours = await this.service.getStudentsWithHoursByMentor(userId);
       res.json(studentsWithHours);
-    } catch (err) {
-      console.error(err);
-      res.status(500).json({ message: "Error while fetching students data." });
+    } catch (error) {
+      this.handleError(res, error);
     }
   };
 
-  getOne = async (req, res) => {
+  getByCompany = async (req, res) => {
     try {
-      const id = parseInt(req.params.id);
-      if (isNaN(id)) {
-        return res.status(400).json({ message: "Invalid mentor ID" });
+      const companyId = Number(req.params["companyId"]);
+
+      if (isNaN(companyId)) {
+        return this.handleError(res, null, 400, "Invalid company ID");
       }
 
-      const mentor = await this.service.getMentorById(id);
-      if (!mentor) {
-        return res.status(404).json({ message: "Mentor not found" });
+      const mentors = await this.service.getMentorsByCompany(companyId);
+      res.json(mentors);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  searchMentors = async (req, res) => {
+    try {
+      const { name, position, company } = req.query;
+      
+      const mentors = await this.service.searchMentors({
+        name: name as string,
+        position: position as string,
+        company: company as string,
+      });
+
+      res.json(mentors);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  deactivate = async (req, res) => {
+    try {
+      const mentorId = Number(req.params["id"]);
+
+      if (isNaN(mentorId)) {
+        return this.handleError(res, null, 400, "Invalid mentor ID");
       }
 
-      res.json(mentor);
-    } catch (err) {
-      console.error("Error fetching mentor:", err);
-      res.status(500).json({ message: "Server error while fetching mentor." });
+      await this.service.deactivateMentor(mentorId);
+      res.json({ message: "Mentor deactivated successfully" });
+    } catch (error) {
+      this.handleError(res, error);
     }
   };
 }

@@ -2,7 +2,7 @@ import { AppDataSource } from "../data-source";
 import { Mentor } from "../entity/Mentor";
 import { User } from "../entity/User";
 import { Company } from "../entity/Company";
-import { MentorDTO, createMentorDTO, GetProfileResponseDTO, StudentWithHoursDto } from "../types";
+import { MentorDTO, createMentorDTO, GetProfileResponseDTO, StudentWithHoursDto, UserRole } from "../types";
 import bcrypt from "bcrypt";
 
 export class MentorService {
@@ -66,7 +66,7 @@ export class MentorService {
       firstname: mentorData.firstname,
       lastname: mentorData.lastname,
       password: hashedPassword,
-      role: "mentor",
+      role: UserRole.MENTOR,
       active: mentorData.active,
     });
 

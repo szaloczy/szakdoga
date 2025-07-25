@@ -80,6 +80,36 @@ export interface MentorDTO {
     user: UserDTO | null;
 }
 
+export interface CreateMentorDTO {
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+    position: string;
+    companyId: number;
+    active: boolean;
+    role: UserRole;
+}
+
+export interface UpdateMentorDTO {
+    firstname?: string;
+    lastname?: string;
+    email?: string;
+    password?: string;
+    position?: string;
+    companyId?: number;
+    active?: boolean;
+}
+
+export interface CreateStudentDTO {
+    firstname: string;
+    lastname: string;
+    email: string;
+    password: string;
+    active: boolean;
+    role: UserRole;
+}
+
 export interface InternshipDTO {
     id: number;
     startDate: Date;

@@ -36,7 +36,7 @@ export class InternshipHoursComponent implements OnInit {
   }
 
   loadEntries(status?: any): void {
-    this.internshipHoursService.getHours(status).subscribe({
+    this.internshipHoursService.getMine(status).subscribe({
       next: (hours) => {
         this.entries = hours;
       },

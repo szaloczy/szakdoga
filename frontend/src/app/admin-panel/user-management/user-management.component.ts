@@ -3,8 +3,11 @@ import {
   CompanyDTO,
   UserResponseDto,
   UserRole,
+  CreateMentorDTO,
+  CreateStudentDTO,
 } from '../../../types';
 import { UserService } from '../../services/user.service';
+import { MentorService } from '../../services/mentor.service';
 import { RouterLink } from '@angular/router';
 import {
   FormBuilder,
@@ -23,6 +26,7 @@ import { CommonModule } from '@angular/common';
 })
 export class UserManagementComponent implements OnInit {
   userService = inject(UserService);
+  mentorService = inject(MentorService);
   companyService = inject(CompanyService);
   fb = inject(FormBuilder);
 
@@ -75,20 +79,20 @@ export class UserManagementComponent implements OnInit {
   }
 
 startCreateMentor() {
-    this.mentorForm.reset({ active: true });
+    this.mentorForm.reset({ active: true, companyId: '' });
     this.isEditMode = false;
     this.editingUser = null;
     this.toggleForm('mentor');
   }
 
   createStudent() {
-    const studentData = {
+    const studentData: CreateStudentDTO = {
       ...this.studentForm.value,
       role: UserRole.STUDENT,
     };
 
     const action$ = this.isEditMode && this.editingUser
-      ? this.userService.update(this.editingUser.id, studentData)
+      ? this.userService.update(this.editingUser.id, studentData as any)
       : this.userService.create(studentData);
 
     action$.subscribe({
@@ -103,29 +107,31 @@ startCreateMentor() {
   }
 
   createMentor() {
-    const mentorData = {
+    const mentorData: CreateMentorDTO = {
       ...this.mentorForm.value,
       role: UserRole.MENTOR,
     };
 
     if(this.isEditMode && this.editingUser) {
-      mentorData.id = this.editingUser.id;
-      this.userService.update(this.editingUser.id, mentorData).subscribe({
-        next: () => this.loadUsers(),
+      // Update existing mentor
+      this.userService.update(this.editingUser.id, mentorData as any).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.showMentorForm = false;
+          this.isEditMode = false;
+          this.editingUser = null;
+        },
         error: (err) => console.error(err),
       });
-      this.isEditMode = false;
-      this.editingUser = null;
-      this.showMentorForm = false;
     } else {
-    
-    this.userService.create(mentorData).subscribe({
-      next: () => {
-        this.loadUsers();
-        this.showMentorForm = false;
-      },
-      error: (err) => console.error(err),
-    });
+      // Create new mentor
+      this.mentorService.create(mentorData).subscribe({
+        next: () => {
+          this.loadUsers();
+          this.showMentorForm = false;
+        },
+        error: (err) => console.error(err),
+      });
     }
   }
 

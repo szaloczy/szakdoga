@@ -77,10 +77,10 @@ export class UserController extends Controller {
       );
 
       if (!passwordMatches) {
-        return this.handleError(res, null, 401, "Incorrect emai. or password");
+        return this.handleError(res, null, 401, "Incorrect email or password");
       }
 
-      const token = jwt.sign({ 
+      const token = jwt.sign({
         id: user.id,
         firstname: user.firstname,
         lastname: user.lastname,
@@ -99,7 +99,7 @@ export class UserController extends Controller {
 
   getProfile = async (req, res) => {
    try {
-    const userId = Number(req.parans["id"]);
+    const userId = Number(req.params["id"]);
 
     const fullUser = await this.repository.findOne({
       where: {id: userId},
@@ -123,8 +123,8 @@ export class UserController extends Controller {
 
     res.json(profileResponse);
    } catch (error) {
-    
-   }
+      this.handleError(res, error);
+    }
   }
 
   updateProfile = async (req, res) => {

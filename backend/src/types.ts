@@ -4,7 +4,7 @@ export enum UserRole {
   ADMIN = "admin",
 }
 
-export interface BaseUserDTO {
+export interface User {
   id: number | null;
   email: string;
   firstname: string;

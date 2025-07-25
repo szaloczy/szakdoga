@@ -43,7 +43,7 @@ export class WeekViewComponent implements OnInit {
   }
 
   loadHours(): void {
-    this.internshipHourService.getHours().subscribe({
+    this.internshipHourService.getMine().subscribe({
       next: (hours) => {
         this.allEntries = hours;
         this.filterTodayEntries();

@@ -1,5 +1,6 @@
 import { AppDataSource } from "../data-source";
 import { Internship } from "../entity/Internship";
+import { InternshipService } from "../service/internship.service";
 import {
   mapInternshipToDTO,
   mapProfileInternshipToDTO,
@@ -7,60 +8,234 @@ import {
 import { Controller } from "./base.controller";
 
 export class InternshipController extends Controller {
-  repository = AppDataSource.getRepository(Internship);
+  private service = new InternshipService();
 
   getAll = async (req, res) => {
-    const internships = await this.repository.find({
-      relations: [
-        "student",
-        "student.user",
-        "mentor",
-        "mentor.user",
-        "company",
-      ],
-    });
+    try {
+      const { isApproved, studentId, mentorId, companyId } = req.query;
+      
+      const filters: any = {};
+      if (isApproved !== undefined) filters.isApproved = isApproved === 'true';
+      if (studentId) filters.studentId = Number(studentId);
+      if (mentorId) filters.mentorId = Number(mentorId);
+      if (companyId) filters.companyId = Number(companyId);
 
-    const result = internships.map(mapInternshipToDTO);
+      const internships = await this.service.getAllInternships(filters);
+      const result = internships.map(mapInternshipToDTO);
+      res.json(result);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
 
-    res.json(result);
+  getOne = async (req, res) => {
+    try {
+      const internshipId = Number(req.params["id"]);
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      const internship = await this.service.getInternshipById(internshipId);
+
+      if (!internship) {
+        return this.handleError(res, null, 404, "Internship not found");
+      }
+
+      const result = mapInternshipToDTO(internship);
+      res.json(result);
+    } catch (error) {
+      this.handleError(res, error);
+    }
   };
 
   getByUserId = async (req, res) => {
-    const userId = req.params["id"];
-
-    if (isNaN(userId)) {
-      return res.status(400).json({ message: "Invalid userId parameter" });
-    }
-
     try {
-      const internship = await this.repository.findOne({
-        where: {
-          student: {
-            user: {
-              id: userId,
-            },
-          },
-        },
-        relations: [
-          "student",
-          "student.user",
-          "mentor",
-          "mentor.user",
-          "company",
-        ],
-      });
+      const userId = Number(req.params["id"]);
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const internship = await this.service.getInternshipByUserId(userId);
 
       if (!internship) {
-        return res
-          .status(404)
-          .json({ message: "No internship found for user" });
+        return this.handleError(res, null, 404, "No internship found for user");
       }
 
       const result = mapProfileInternshipToDTO(internship);
       res.json(result);
     } catch (error) {
-      console.error(error);
-      res.status(500).json({ message: "Internal server error" });
+      this.handleError(res, error);
+    }
+  };
+
+  // Saját gyakornokság lekérdezése (authentikált felhasználó számára)
+  getMyInternship = async (req, res) => {
+    try {
+      const user = (req as any).user;
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      const internship = await this.service.getInternshipByUserId(user.id);
+
+      if (!internship) {
+        return this.handleError(res, null, 404, "No internship found");
+      }
+
+      const result = mapProfileInternshipToDTO(internship);
+      res.json(result);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  create = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const { startDate, endDate, mentorId, companyId } = req.body;
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      // Validáció
+      if (!startDate || !endDate || !mentorId || !companyId) {
+        return this.handleError(res, null, 400, "All fields are required");
+      }
+
+      const internship = await this.service.createInternshipForStudent(user.id, {
+        startDate,
+        endDate,
+        mentorId,
+        companyId,
+      });
+
+      // Teljes adatok visszaadása
+      const fullInternship = await this.service.getInternshipById(internship.id);
+      const result = mapInternshipToDTO(fullInternship);
+      res.status(201).json(result);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const internshipId = Number(req.params["id"]);
+      const { startDate, endDate, mentorId, companyId } = req.body;
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      const updatedInternship = await this.service.updateInternship(
+        internshipId,
+        user.id,
+        { startDate, endDate, mentorId, companyId }
+      );
+
+      const result = mapInternshipToDTO(updatedInternship);
+      res.json(result);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  delete = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const internshipId = Number(req.params["id"]);
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      await this.service.deleteInternship(internshipId, user.id);
+      res.json({ message: "Internship deleted successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  approve = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const internshipId = Number(req.params["id"]);
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (user.role !== "admin" && user.role !== "mentor") {
+        return this.handleError(res, null, 403, "Only admins and mentors can approve internships");
+      }
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      // Admin mindent jóváhagyhat, mentor csak a sajátját
+      if (user.role === "admin") {
+        const internship = await this.service.getInternshipById(internshipId);
+        if (!internship) {
+          return this.handleError(res, null, 404, "Internship not found");
+        }
+        // Admin esetén közvetlenül frissítjük a service-en keresztül
+        await this.service.approveInternship(internshipId, internship.mentor.user.id);
+      } else {
+        await this.service.approveInternship(internshipId, user.id);
+      }
+
+      res.json({ message: "Internship approved successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  reject = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const internshipId = Number(req.params["id"]);
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (user.role !== "admin" && user.role !== "mentor") {
+        return this.handleError(res, null, 403, "Only admins and mentors can reject internships");
+      }
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      // Admin mindent elutasíthat, mentor csak a sajátját
+      if (user.role === "admin") {
+        const internship = await this.service.getInternshipById(internshipId);
+        if (!internship) {
+          return this.handleError(res, null, 404, "Internship not found");
+        }
+        // Admin esetén közvetlenül frissítjük a service-en keresztül
+        await this.service.rejectInternship(internshipId, internship.mentor.user.id);
+      } else {
+        await this.service.rejectInternship(internshipId, user.id);
+      }
+
+      res.json({ message: "Internship rejected successfully" });
+    } catch (error) {
+      this.handleError(res, error);
     }
   };
 }

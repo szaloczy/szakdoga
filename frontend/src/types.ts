@@ -80,6 +80,20 @@ export interface MentorDTO {
     user: UserDTO | null;
 }
 
+export interface MentorProfileDTO {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    role: string;
+    active: boolean;
+    mentor: {
+        id: number;
+        position: string;
+        company: CompanyDTO;
+    };
+}
+
 export interface CreateMentorDTO {
     firstname: string;
     lastname: string;

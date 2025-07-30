@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InternshipDTO, MentorDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
+import { InternshipDTO, MentorDTO, MentorProfileDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { InternshipService } from '../../services/internship.service';
@@ -48,14 +48,28 @@ export class StudentProfileComponent implements OnInit{
     student: undefined
   }
 
-  mentorProfile: MentorDTO = {
+  mentorProfile: MentorProfileDTO = {
     id: 0,
+    email: '',
     firstname: '',
     lastname: '',
-    position: '',
-    companyId: 0,
-    internship: null,
-    user: null
+    role: '',
+    active: false,
+    mentor: {
+      id: 0,
+      position: '',
+      company: {
+        id: 0,
+        name: '',
+        email: '',
+        phone: '',
+        city: '',
+        address: '',
+        active: false,
+        mentors: [],
+        internships: null
+      }
+    }
   }
 
   internship: ProfileInternshipDTO | null = null;
@@ -70,6 +84,7 @@ export class StudentProfileComponent implements OnInit{
       this.loadInternshipData();
     } else if(currentUserRole === "mentor") {
       this.loadMentorData();
+      this.getMentorStats();
     }
   }
 
@@ -146,7 +161,7 @@ export class StudentProfileComponent implements OnInit{
 
   loadMentorData() {
     this.isMentorLoading = true;
-    this.mentorService.getById(this.authService.getUserId()).subscribe({
+    this.mentorService.getByUserId(this.authService.getUserId()).subscribe({
       next: (mentorData) => {
         this.mentorProfile = mentorData;
         this.populateMentorForm();
@@ -161,13 +176,15 @@ export class StudentProfileComponent implements OnInit{
   }
 
   private populateMentorForm(): void {
-    if (this.mentorProfile.user) {
+    if (this.mentorProfile) {
       this.profileForm.patchValue({
-        firstname: this.mentorProfile.user.firstname,
-        lastname: this.mentorProfile.user.lastname,
-        email: this.mentorProfile.user.email,
-        university: 'Company', // For mentor, this could be company name
-        major: this.mentorProfile.position
+        firstname: this.mentorProfile.firstname,
+        lastname: this.mentorProfile.lastname,
+        email: this.mentorProfile.email,
+        university: this.mentorProfile.mentor.company.name, // Company name instead of university
+        major: this.mentorProfile.mentor.position, // Position instead of major
+        phone: '', // Mentors might not have phone in this structure
+        neptun: '' // Mentors don't have neptun
       });
     }
   }
@@ -290,5 +307,48 @@ export class StudentProfileComponent implements OnInit{
       name: this.authService.getUserName(),
       role: this.authService.getRole()
     };
+  }
+
+  // Mentor specific functionality
+  getMentorStats() {
+    if (this.authService.getRole() === 'mentor') {
+      // Get mentor's students and statistics
+      this.mentorService.getStudents().subscribe({
+        next: (students) => {
+          console.log('Mentor students:', students);
+          // This could be stored in a property to display
+        },
+        error: (err) => {
+          console.error('Error loading mentor students:', err);
+        }
+      });
+    }
+  }
+
+  // Copy company info to clipboard
+  copyToClipboard(text: string, label: string) {
+    navigator.clipboard.writeText(text).then(() => {
+      this.toastService.showSuccess(`${label} copied to clipboard!`);
+    }).catch(() => {
+      this.toastService.showError('Failed to copy to clipboard');
+    });
+  }
+
+  // Contact company directly
+  contactCompany() {
+    if (this.mentorProfile.mentor?.company) {
+      const email = this.mentorProfile.mentor.company.email;
+      const subject = `Contact from ${this.mentorProfile.firstname} ${this.mentorProfile.lastname}`;
+      window.open(`mailto:${email}?subject=${encodeURIComponent(subject)}`);
+    }
+  }
+
+  // Get company location for maps
+  openLocationInMaps() {
+    if (this.mentorProfile.mentor?.company) {
+      const address = `${this.mentorProfile.mentor.company.address}, ${this.mentorProfile.mentor.company.city}`;
+      const encodedAddress = encodeURIComponent(address);
+      window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
+    }
   }
 }

@@ -12,28 +12,43 @@ export class MentorService {
 
   async getAllActiveMentors(): Promise<MentorDTO[]> {
     const mentors = await this.mentorRepository.find({
-      relations: ["user", "company"],
-      where: { user: { active: true } },
-    });
+    relations: ["user", "company"],
+    where: { user: { active: true } },
+  });
 
-    return mentors.map(mentor => ({
-      id: mentor.id,
-      position: mentor.position,
-      company: {
-        id: mentor.company.id,
-        name: mentor.company.name,
-        city: mentor.company.city,
-        email: mentor.company.email,
-        phone: mentor.company.phone,
-        address: mentor.company.address,
-        active: mentor.company.active,
-      }
-    }));
+  return mentors.map(mentor => ({
+    id: mentor.id,
+    position: mentor.position,
+    company: mentor.company ? {
+      id: mentor.company.id,
+      name: mentor.company.name,
+      city: mentor.company.city,
+      email: mentor.company.email,
+      phone: mentor.company.phone,
+      address: mentor.company.address,
+      active: mentor.company.active,
+    } : null, // Ha nincs cég, akkor null
+    user: {
+      id: mentor.user.id,
+      email: mentor.user.email,
+      firstname: mentor.user.firstname,
+      lastname: mentor.user.lastname,
+      role: mentor.user.role,
+      active: mentor.user.active,
+    }
+  }));
   }
 
   async getMentorById(id: number): Promise<Mentor | null> {
     return await this.mentorRepository.findOne({
       where: { id },
+      relations: ["user", "company"],
+    });
+  }
+
+  async getMentorByUserId(userId: number): Promise<Mentor | null> {
+    return await this.mentorRepository.findOne({
+      where: { user: { id: userId } },
       relations: ["user", "company"],
     });
   }
@@ -179,27 +194,43 @@ export class MentorService {
   }
 
   async getStudentsWithHoursByMentor(userId: number): Promise<StudentWithHoursDto[]> {
-    // Itt implementálhatod a logikát, hogy lekérd a mentorhoz tartozó diákokat és óráikat
-    // Ez függ a projekt struktúrájától és az órák tárolásának módjától
+    // Először lekérjük a mentort a userId alapján
+    const mentor = await this.getMentorByUserId(userId);
     
-    const queryBuilder = this.mentorRepository.createQueryBuilder("mentor")
-      .leftJoin("mentor.user", "user")
-      .leftJoin("mentor.internships", "internship") // Feltételezve, hogy van internships kapcsolat
+    if (!mentor) {
+      throw new Error("Mentor not found for this user");
+    }
+
+    // Lekérjük a mentor diákjait a gyakornokságokon keresztül
+    const queryBuilder = AppDataSource.createQueryBuilder()
+      .select([
+        "studentUser.id",
+        "studentUser.firstname", 
+        "studentUser.lastname",
+        "studentUser.email",
+        "student.major",
+        "student.university",
+        "COALESCE(SUM(EXTRACT(EPOCH FROM (ih.endTime::time - ih.startTime::time))/3600), 0) as hours"
+      ])
+      .from("internship", "internship")
       .leftJoin("internship.student", "student")
       .leftJoin("student.user", "studentUser")
-      .leftJoin("student.workHours", "workHours") // Feltételezve, hogy van workHours kapcsolat
-      .select([
-        "studentUser.id as id",
-        "studentUser.firstname as firstname",
-        "studentUser.lastname as lastname",
-        "studentUser.email as email",
-        "student.major as major",
-        "student.university as university",
-        "COALESCE(SUM(workHours.hours), 0) as hours"
-      ])
-      .where("user.id = :userId", { userId })
-      .groupBy("studentUser.id, student.id");
+      .leftJoin("internship_hour", "ih", "ih.internshipId = internship.id AND ih.status = 'approved'")
+      .where("internship.mentorId = :mentorId", { mentorId: mentor.id })
+      .andWhere("internship.isApproved = :isApproved", { isApproved: true })
+      .groupBy("studentUser.id, student.id")
+      .orderBy("studentUser.lastname", "ASC");
 
-    return await queryBuilder.getRawMany();
+    const result = await queryBuilder.getRawMany();
+    
+    return result.map(row => ({
+      id: parseInt(row.studentUser_id),
+      firstname: row.studentUser_firstname,
+      lastname: row.studentUser_lastname,
+      email: row.studentUser_email,
+      major: row.student_major,
+      university: row.student_university,
+      hours: parseFloat(row.hours) || 0
+    }));
   }
 }

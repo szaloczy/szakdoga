@@ -29,7 +29,7 @@ export class InternshipService {
     if (existingInternship) {
       throw new Error("Student already has an active internship");
     }
-
+ 
     const mentor = await this.getMentor(data.mentorId);
     const company = await this.getCompany(data.companyId);
 
@@ -49,11 +49,28 @@ export class InternshipService {
   }
 
   private async getStudentByUserId(userId: number): Promise<Student> {
+    // Először ellenőrizzük a felhasználót
+    const user = await this.userRepo.findOne({
+      where: { id: userId },
+    });
+    
+    if (!user) {
+      throw new Error(`User with ID ${userId} not found`);
+    }
+    
+    if (user.role !== "student") {
+      throw new Error(`User with ID ${userId} is not a student (role: ${user.role})`);
+    }
+
     const student = await this.studentRepo.findOne({
       where: { user: { id: userId } },
       relations: ["user"],
     });
-    if (!student) throw new Error("Student not found for this user");
+    
+    if (!student) {
+      throw new Error(`Student entity not found for user ID ${userId}. User exists but no Student record is linked.`);
+    }
+    
     return student;
   }
 

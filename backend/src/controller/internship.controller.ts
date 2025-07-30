@@ -95,22 +95,26 @@ export class InternshipController extends Controller {
   create = async (req, res) => {
     try {
       const user = (req as any).user;
-      const { startDate, endDate, mentorId, companyId } = req.body;
+      const { startDate, endDate, mentor, company, mentorId, companyId } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
+      // Rugalmas mezőnév kezelés - frontend `mentor` és `company` mezőket küld
+      const finalMentorId = mentorId || mentor;
+      const finalCompanyId = companyId || company;
+
       // Validáció
-      if (!startDate || !endDate || !mentorId || !companyId) {
-        return this.handleError(res, null, 400, "All fields are required");
+      if (!startDate || !endDate || !finalMentorId || !finalCompanyId) {
+        return this.handleError(res, null, 400, "startDate, endDate, mentor and company are required");
       }
 
       const internship = await this.service.createInternshipForStudent(user.id, {
         startDate,
         endDate,
-        mentorId,
-        companyId,
+        mentorId: Number(finalMentorId),
+        companyId: Number(finalCompanyId),
       });
 
       // Teljes adatok visszaadása
@@ -126,7 +130,7 @@ export class InternshipController extends Controller {
     try {
       const user = (req as any).user;
       const internshipId = Number(req.params["id"]);
-      const { startDate, endDate, mentorId, companyId } = req.body;
+      const { startDate, endDate, mentor, company, mentorId, companyId } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
@@ -136,10 +140,19 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
+      // Rugalmas mezőnév kezelés
+      const finalMentorId = mentorId || mentor;
+      const finalCompanyId = companyId || company;
+
       const updatedInternship = await this.service.updateInternship(
         internshipId,
         user.id,
-        { startDate, endDate, mentorId, companyId }
+        { 
+          startDate, 
+          endDate, 
+          mentorId: finalMentorId ? Number(finalMentorId) : undefined,
+          companyId: finalCompanyId ? Number(finalCompanyId) : undefined
+        }
       );
 
       const result = mapInternshipToDTO(updatedInternship);

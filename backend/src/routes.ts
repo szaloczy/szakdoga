@@ -26,7 +26,9 @@ const studentController = new StudentController();
 
 router.get("/student", studentController.getAll);
 router.get("/student/:id", authMiddleware, studentController.getById);
+router.get("/student/user/:userId", authMiddleware, studentController.getByUserId);
 router.put("/student/:id", authMiddleware, studentController.updateProfile);
+router.put("/student/user/:userId", authMiddleware, studentController.updateProfileByUserId);
 //router.get("/student/neptun/:neptun", studentController.getByNeptun);
 //router.get("/student/search", studentController.searchStudents);
 
@@ -63,6 +65,7 @@ const mentorController = new MentorController();
 
 router.get("/mentor", mentorController.getAll);
 router.get("/mentor/:id", authMiddleware, mentorController.getById);
+router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId);
 router.post("/mentor", authMiddleware, mentorController.create);
 router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);
 router.delete("/mentor/:id", authMiddleware, mentorController.deactivate);

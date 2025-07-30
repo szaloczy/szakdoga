@@ -46,8 +46,13 @@
               @if (isMentorLoading) {
                 <div class="spinner-border spinner-border-sm" role="status"></div>
               } @else {
-                <p><strong>Position:</strong> {{ mentorProfile.position || 'N/A' }}</p>
-                <p><strong>Company ID:</strong> {{ mentorProfile.companyId || 'N/A' }}</p>
+                <p><strong>Position:</strong> {{ mentorProfile.mentor.position || 'N/A' }}</p>
+                <p><strong>Company:</strong> {{ mentorProfile.mentor.company.name || 'N/A' }}</p>
+                <p><strong>Status:</strong> 
+                  <span class="badge" [class]="mentorProfile.active ? 'bg-success' : 'bg-danger'">
+                    {{ mentorProfile.active ? 'Active' : 'Inactive' }}
+                  </span>
+                </p>
               }
             </div>
           </div>
@@ -57,16 +62,16 @@
 
     <!-- Right Panel: Form -->
     @if (authService.getRole() === "student") {
-    <div class="col-md-8">
-      <h2>{{ 'profile.student_details.title' | translate }}</h2>
-      <hr />
-      
-      @if (hasUnsavedChanges) {
-        <div class="alert alert-warning">
-          <i class="bi bi-exclamation-triangle me-2"></i>
-          You have unsaved changes. Please save or reset to continue.
-        </div>
-      }
+      <div class="col-md-8">
+        <h2>{{ 'profile.student_details.title' | translate }}</h2>
+        <hr />
+        
+        @if (hasUnsavedChanges) {
+          <div class="alert alert-warning">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            You have unsaved changes. Please save or reset to continue.
+          </div>
+        }
       
       <form [formGroup]="profileForm" (ngSubmit)="onSubmitProfile()">
         <div class="row mb-3">
@@ -200,35 +205,124 @@
               <div class="row mb-3">
                 <div class="col">
                   <label class="form-label text-muted">Last Name</label>
-                  <p class="form-control-plaintext fw-semibold">{{ mentorProfile.user?.lastname || profile.lastname }}</p>
+                  <p class="form-control-plaintext fw-semibold">{{ mentorProfile.lastname || 'N/A' }}</p>
                 </div>
                 <div class="col">
                   <label class="form-label text-muted">First Name</label>
-                  <p class="form-control-plaintext fw-semibold">{{ mentorProfile.user?.firstname || profile.firstname }}</p>
+                  <p class="form-control-plaintext fw-semibold">{{ mentorProfile.firstname || 'N/A' }}</p>
                 </div>
               </div>
 
               <div class="row mb-3">
                 <div class="col">
                   <label class="form-label text-muted">Position</label>
-                  <p class="form-control-plaintext">{{ mentorProfile.position || 'N/A' }}</p>
+                  <p class="form-control-plaintext">{{ mentorProfile.mentor.position || 'N/A' }}</p>
                 </div>
                 <div class="col">
                   <label class="form-label text-muted">Email</label>
-                  <p class="form-control-plaintext">{{ mentorProfile.user?.email || profile.email }}</p>
+                  <p class="form-control-plaintext">{{ mentorProfile.email || 'N/A' }}</p>
                 </div>
               </div>
 
               <div class="row mb-3">
                 <div class="col">
-                  <label class="form-label text-muted">Company ID</label>
-                  <p class="form-control-plaintext">{{ mentorProfile.companyId || 'N/A' }}</p>
+                  <label class="form-label text-muted">Company</label>
+                  <p class="form-control-plaintext">{{ mentorProfile.mentor.company.name || 'N/A' }}</p>
                 </div>
                 <div class="col">
-                  <label class="form-label text-muted">Active</label>
+                  <label class="form-label text-muted">Company Location</label>
+                  <p class="form-control-plaintext">{{ mentorProfile.mentor.company.city || 'N/A' }}</p>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label text-muted">Company Address</label>
                   <p class="form-control-plaintext">
-                    <span class="badge" [class]="mentorProfile.user?.active ? 'bg-success' : 'bg-danger'">
-                      {{ mentorProfile.user?.active ? 'Active' : 'Inactive' }}
+                    {{ mentorProfile.mentor.company.address || 'N/A' }}
+                    @if (mentorProfile.mentor.company.address) {
+                      <button 
+                        class="btn btn-sm btn-outline-secondary ms-2" 
+                        (click)="openLocationInMaps()"
+                        title="Open in maps">
+                        <i class="bi bi-geo-alt"></i>
+                      </button>
+                    }
+                  </p>
+                </div>
+                <div class="col">
+                  <label class="form-label text-muted">Company Contact</label>
+                  <div class="form-control-plaintext">
+                    <div class="d-flex align-items-center mb-1">
+                      <a href="mailto:{{ mentorProfile.mentor.company.email }}" class="me-2">
+                        <i class="bi bi-envelope-fill"></i> {{ mentorProfile.mentor.company.email }}
+                      </a>
+                      <button 
+                        class="btn btn-sm btn-outline-secondary" 
+                        (click)="copyToClipboard(mentorProfile.mentor.company.email, 'Email')"
+                        title="Copy email">
+                        <i class="bi bi-copy"></i>
+                      </button>
+                    </div>
+                    <div class="d-flex align-items-center">
+                      <a href="tel:{{ mentorProfile.mentor.company.phone }}" class="me-2">
+                        <i class="bi bi-telephone-fill"></i> {{ mentorProfile.mentor.company.phone }}
+                      </a>
+                      <button 
+                        class="btn btn-sm btn-outline-secondary" 
+                        (click)="copyToClipboard(mentorProfile.mentor.company.phone, 'Phone')"
+                        title="Copy phone">
+                        <i class="bi bi-copy"></i>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Quick Actions Row -->
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label text-muted">Quick Actions</label>
+                  <div class="d-flex gap-2 flex-wrap">
+                    <button 
+                      class="btn btn-sm btn-primary" 
+                      (click)="contactCompany()"
+                      title="Send email to company">
+                      <i class="bi bi-envelope"></i> Contact Company
+                    </button>
+                    <button 
+                      class="btn btn-sm btn-info" 
+                      (click)="getMentorStats()"
+                      title="View mentor statistics">
+                      <i class="bi bi-graph-up"></i> View Stats
+                    </button>
+                  </div>
+                </div>
+                <div class="col">
+                  <label class="form-label text-muted">Role Information</label>
+                  <p class="form-control-plaintext">
+                    <span class="badge bg-info">{{ mentorProfile.role | titlecase }}</span>
+                    <small class="text-muted d-block mt-1">
+                      Mentor ID: {{ mentorProfile.mentor.id }}
+                    </small>
+                  </p>
+                </div>
+              </div>
+
+              <div class="row mb-3">
+                <div class="col">
+                  <label class="form-label text-muted">Status</label>
+                  <p class="form-control-plaintext">
+                    <span class="badge" [class]="mentorProfile.active ? 'bg-success' : 'bg-danger'">
+                      {{ mentorProfile.active ? 'Active' : 'Inactive' }}
+                    </span>
+                  </p>
+                </div>
+                <div class="col">
+                  <label class="form-label text-muted">Company Status</label>
+                  <p class="form-control-plaintext">
+                    <span class="badge" [class]="mentorProfile.mentor.company.active ? 'bg-success' : 'bg-danger'">
+                      {{ mentorProfile.mentor.company.active ? 'Active' : 'Inactive' }}
                     </span>
                   </p>
                 </div>
@@ -300,8 +394,8 @@
           </div>
         }
       }
-    </div>
-    }
-  </div>
-  }
-</div>
+      </div> <!-- Close col-md-8 -->
+    } <!-- Close if student check -->
+  </div> <!-- Close row -->
+  } <!-- Close loading check -->
+</div> <!-- Close container -->

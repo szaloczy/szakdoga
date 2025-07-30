@@ -33,6 +33,26 @@ export class StudentController extends Controller {
     }
   };
 
+  getByUserId = async (req, res) => {
+    try {
+      const userId = Number(req.params["userId"]);
+      
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const student = await this.service.getStudentByUserId(userId);
+      
+      if (!student) {
+        return this.handleError(res, null, 404, "Student not found for this user");
+      }
+
+      res.json(student);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   updateProfile = async (req, res) => {
     try {
       const studentId = Number(req.params["id"]);
@@ -43,6 +63,22 @@ export class StudentController extends Controller {
       }
 
       await this.service.updateStudentProfile(studentId, updateData);
+      res.json({ message: "Student profile updated successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  updateProfileByUserId = async (req, res) => {
+    try {
+      const userId = Number(req.params["userId"]);
+      const updateData = req.body;
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      await this.service.updateStudentProfileByUserId(userId, updateData);
       res.json({ message: "Student profile updated successfully" });
     } catch (error) {
       this.handleError(res, error);

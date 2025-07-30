@@ -19,6 +19,14 @@ export interface StudentDTO {
   neptun: string;
   major: string;
   university: string;
+  user?: {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    role: UserRole;
+    active: boolean;
+  };
 }
 
 export interface CompanyDTO {
@@ -35,6 +43,14 @@ export interface MentorDTO {
   id: number;
   position: string;
   company: CompanyDTO;
+  user?: {
+    id: number;
+    email: string;
+    firstname: string;
+    lastname: string;
+    role: UserRole;
+    active: boolean;
+  };
 }
 
 export interface profileDTO {

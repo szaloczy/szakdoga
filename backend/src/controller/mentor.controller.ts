@@ -48,6 +48,40 @@ export class MentorController extends Controller {
     }
   };
 
+  getByUserId = async (req, res) => {
+    try {
+      const userId = Number(req.params["userId"]);
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const mentor = await this.service.getMentorByUserId(userId);
+
+      if (!mentor) {
+        return this.handleError(res, null, 404, "Mentor not found for this user");
+      }
+
+      const response: GetProfileResponseDTO = {
+        id: mentor.user.id,
+        email: mentor.user.email,
+        firstname: mentor.user.firstname,
+        lastname: mentor.user.lastname,
+        role: mentor.user.role,
+        active: mentor.user.active,
+        mentor: {
+          id: mentor.id,
+          position: mentor.position,
+          company: mentor.company
+        }
+      };
+
+      res.json(response);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   create = async (req, res) => {
     try {
       const mentorData: createMentorDTO = req.body;

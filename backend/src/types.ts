@@ -109,10 +109,12 @@ export interface createMentorDTO {
 */ 
 
 export interface UpdateProfileDTO {
+  id?: number; // User ID
   email?: string;
   firstname?: string;
   lastname?: string;
   student?: {
+    id?: number; // Student ID
     phone?: string;
     major?: string;
     university?: string;

@@ -69,10 +69,18 @@ export class StudentService {
   }
 
   async updateStudentProfileByUserId(userId: number, updateData: UpdateProfileDTO): Promise<void> {
-    const student = await this.getStudentByUserId(userId);
+    let student: Student | null = null;
+    
+    // Először userId alapján próbáljuk megtalálni
+    student = await this.getStudentByUserId(userId);
+    
+    // Ha nem találjuk userId alapján és van student ID a payload-ban, akkor azt próbáljuk
+    if (!student && updateData.student?.id) {
+      student = await this.getStudentById(updateData.student.id);
+    }
     
     if (!student) {
-      throw new Error("Student not found for this user");
+      throw new Error(`Student not found for user ID ${userId}`);
     }
 
     // User adatok frissítése

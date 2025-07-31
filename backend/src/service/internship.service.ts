@@ -19,17 +19,24 @@ export class InternshipService {
       endDate: string;
       mentorId: number;
       companyId: number;
+      studentId?: number; // Hozzáadom a studentId opcionális mezőt
+      isApproved?: boolean; // Hozzáadom az isApproved opcionális mezőt
     }
   ): Promise<Internship> {
-    // Lekérjük a studentet userId alapján
-    const student = await this.getStudentByUserId(userId);
+    // Ha van studentId, azt használjuk, különben userId alapján keresünk
+    let student: Student;
+    if (data.studentId) {
+      student = await this.getStudent(data.studentId);
+    } else {
+      student = await this.getStudentByUserId(userId);
+    }
     
     // Ellenőrizzük, hogy nincs-e már aktív gyakornokság
-    const existingInternship = await this.getActiveInternshipByUserId(userId);
+    const existingInternship = await this.getActiveInternshipByStudentId(student.id);
     if (existingInternship) {
       throw new Error("Student already has an active internship");
     }
- 
+
     const mentor = await this.getMentor(data.mentorId);
     const company = await this.getCompany(data.companyId);
 
@@ -42,35 +49,18 @@ export class InternshipService {
       company,
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
-      isApproved: false,
+      isApproved: data.isApproved !== undefined ? data.isApproved : false,
     });
 
     return await this.internshipRepo.save(internship);
   }
 
   private async getStudentByUserId(userId: number): Promise<Student> {
-    // Először ellenőrizzük a felhasználót
-    const user = await this.userRepo.findOne({
-      where: { id: userId },
-    });
-    
-    if (!user) {
-      throw new Error(`User with ID ${userId} not found`);
-    }
-    
-    if (user.role !== "student") {
-      throw new Error(`User with ID ${userId} is not a student (role: ${user.role})`);
-    }
-
     const student = await this.studentRepo.findOne({
       where: { user: { id: userId } },
       relations: ["user"],
     });
-    
-    if (!student) {
-      throw new Error(`Student entity not found for user ID ${userId}. User exists but no Student record is linked.`);
-    }
-    
+    if (!student) throw new Error("Student not found for this user");
     return student;
   }
 
@@ -102,9 +92,17 @@ export class InternshipService {
     const start = new Date(startDate);
     const end = new Date(endDate);
     const today = new Date();
+    
+    // Csak a dátum részt hasonlítjuk össze, nem az időt
+    const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+    
+    // Engedélyezzük a mai napot és az elmúlt 1 napot is (rugalmasság miatt)
+    const oneDayAgo = new Date(todayDateOnly);
+    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
-    if (start < today) {
-      throw new Error("Start date cannot be in the past");
+    if (startDateOnly < oneDayAgo) {
+      throw new Error("Start date cannot be more than 1 day in the past");
     }
 
     if (end <= start) {
@@ -116,6 +114,16 @@ export class InternshipService {
     return this.internshipRepo.findOne({
       where: {
         student: { user: { id: userId } },
+        isApproved: true,
+      },
+      relations: ["student", "student.user"],
+    });
+  }
+
+  private async getActiveInternshipByStudentId(studentId: number): Promise<Internship | null> {
+    return this.internshipRepo.findOne({
+      where: {
+        student: { id: studentId },
         isApproved: true,
       },
       relations: ["student", "student.user"],
@@ -208,20 +216,22 @@ export class InternshipService {
       endDate?: string;
       mentorId?: number;
       companyId?: number;
-    }
+      isApproved?: boolean;
+    },
+    isAdmin: boolean = false
   ): Promise<Internship> {
     const internship = await this.getInternshipById(internshipId);
     if (!internship) {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük a jogosultságot
-    if (internship.student.user.id !== userId) {
+    // Ellenőrizzük a jogosultságot - admin mindent módosíthat
+    if (!isAdmin && internship.student.user.id !== userId) {
       throw new Error("You can only update your own internship");
     }
 
-    // Csak nem jóváhagyott gyakornokságot lehet módosítani
-    if (internship.isApproved) {
+    // Csak nem jóváhagyott gyakornokságot lehet módosítani (admin kivétel)
+    if (!isAdmin && internship.isApproved) {
       throw new Error("Cannot update approved internship");
     }
 
@@ -239,6 +249,11 @@ export class InternshipService {
       internship.company = company;
     }
 
+    // isApproved frissítés (csak admin vagy ha explicit módon van beállítva)
+    if (data.isApproved !== undefined) {
+      internship.isApproved = data.isApproved;
+    }
+
     // Dátum validáció ha változtak
     if (data.startDate || data.endDate) {
       this.validateDates(
@@ -250,19 +265,19 @@ export class InternshipService {
     return await this.internshipRepo.save(internship);
   }
 
-  async deleteInternship(internshipId: number, userId: number): Promise<void> {
+  async deleteInternship(internshipId: number, userId: number, isAdmin: boolean = false): Promise<void> {
     const internship = await this.getInternshipById(internshipId);
     if (!internship) {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük a jogosultságot
-    if (internship.student.user.id !== userId) {
+    // Ellenőrizzük a jogosultságot - admin mindent törölhet
+    if (!isAdmin && internship.student.user.id !== userId) {
       throw new Error("You can only delete your own internship");
     }
 
-    // Csak nem jóváhagyott gyakornokságot lehet törölni
-    if (internship.isApproved) {
+    // Csak nem jóváhagyott gyakornokságot lehet törölni (admin kivétel)
+    if (!isAdmin && internship.isApproved) {
       throw new Error("Cannot delete approved internship");
     }
 

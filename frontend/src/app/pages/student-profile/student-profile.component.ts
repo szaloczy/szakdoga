@@ -199,23 +199,17 @@ export class StudentProfileComponent implements OnInit{
     this.isLoading = true;
     const formValue = this.profileForm.value;
 
-    const profileData: ProfileDTO = {
-      id: this.profile.id,
+    const profileData = {
       email: formValue.email,
       firstname: formValue.firstname,
       lastname: formValue.lastname,
-      role: this.profile.role,
-      student: {
-        id: this.profile.student?.id ?? 0,
-        phone: formValue.phone,
-        neptun: formValue.neptun,
-        university: formValue.university,
-        major: formValue.major,
-        user: null
-      },
+      phone: formValue.phone,
+      neptun: formValue.neptun,
+      university: formValue.university,
+      major: formValue.major
     };
 
-    this.userService.updateProfile(this.profile.id, profileData).subscribe({
+    this.studentService.updateProfileByUserId(this.authService.getUserId(), profileData).subscribe({
       next: (msg) => {
         this.toastService.showSuccess('Profile updated successfully!');
         this.loadStudentData(); // Reload data to reflect changes

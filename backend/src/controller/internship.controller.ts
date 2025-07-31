@@ -95,15 +95,16 @@ export class InternshipController extends Controller {
   create = async (req, res) => {
     try {
       const user = (req as any).user;
-      const { startDate, endDate, mentor, company, mentorId, companyId } = req.body;
+      const { startDate, endDate, mentor, company, student, mentorId, companyId, studentId, isApproved } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Rugalmas mezőnév kezelés - frontend `mentor` és `company` mezőket küld
+      // Rugalmas mezőnév kezelés - frontend `mentor`, `company` és `student` mezőket küld
       const finalMentorId = mentorId || mentor;
       const finalCompanyId = companyId || company;
+      const finalStudentId = studentId || student;
 
       // Validáció
       if (!startDate || !endDate || !finalMentorId || !finalCompanyId) {
@@ -115,6 +116,8 @@ export class InternshipController extends Controller {
         endDate,
         mentorId: Number(finalMentorId),
         companyId: Number(finalCompanyId),
+        studentId: finalStudentId ? Number(finalStudentId) : undefined,
+        isApproved: isApproved !== undefined ? Boolean(isApproved) : false,
       });
 
       // Teljes adatok visszaadása
@@ -130,7 +133,7 @@ export class InternshipController extends Controller {
     try {
       const user = (req as any).user;
       const internshipId = Number(req.params["id"]);
-      const { startDate, endDate, mentor, company, mentorId, companyId } = req.body;
+      const { startDate, endDate, mentor, company, mentorId, companyId, isApproved } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
@@ -144,6 +147,9 @@ export class InternshipController extends Controller {
       const finalMentorId = mentorId || mentor;
       const finalCompanyId = companyId || company;
 
+      // Admin státusz ellenőrzése
+      const isAdmin = user.role === "admin";
+
       const updatedInternship = await this.service.updateInternship(
         internshipId,
         user.id,
@@ -151,8 +157,10 @@ export class InternshipController extends Controller {
           startDate, 
           endDate, 
           mentorId: finalMentorId ? Number(finalMentorId) : undefined,
-          companyId: finalCompanyId ? Number(finalCompanyId) : undefined
-        }
+          companyId: finalCompanyId ? Number(finalCompanyId) : undefined,
+          isApproved: isApproved !== undefined ? Boolean(isApproved) : undefined,
+        },
+        isAdmin
       );
 
       const result = mapInternshipToDTO(updatedInternship);
@@ -175,7 +183,10 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
-      await this.service.deleteInternship(internshipId, user.id);
+      // Admin státusz ellenőrzése
+      const isAdmin = user.role === "admin";
+
+      await this.service.deleteInternship(internshipId, user.id, isAdmin);
       res.json({ message: "Internship deleted successfully" });
     } catch (error) {
       this.handleError(res, error);

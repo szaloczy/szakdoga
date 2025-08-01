@@ -15,11 +15,10 @@ router.get("/user", userController.getAll);
 router.get("/user/:id", userController.getOne);
 router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
-router.put("/user/:id", userController.update);
-router.delete("/user/:id", userController.delete);
+router.put("/user/:id", authMiddleware, userController.update);
+router.delete("/user/:id", authMiddleware, userController.delete);
 
 router.get("/profile/:id", userController.getProfile);
-router.put("/profile/:id", userController.updateProfile);
 
 // Student routes
 const studentController = new StudentController();
@@ -27,8 +26,6 @@ const studentController = new StudentController();
 router.get("/student", studentController.getAll);
 router.get("/student/:id", authMiddleware, studentController.getById);
 router.get("/student/user/:userId", authMiddleware, studentController.getByUserId);
-router.put("/student/:id", authMiddleware, studentController.updateProfile);
-router.put("/student/user/:userId", authMiddleware, studentController.updateProfileByUserId);
 //router.get("/student/neptun/:neptun", studentController.getByNeptun);
 //router.get("/student/search", studentController.searchStudents);
 
@@ -64,16 +61,16 @@ router.get("/profile/internship/:id", internshipController.getByUserId);
 const mentorController = new MentorController();
 
 router.get("/mentor", mentorController.getAll);
-router.get("/mentor/:id", authMiddleware, mentorController.getById);
-router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId);
-router.post("/mentor", authMiddleware, mentorController.create);
-router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);
-router.delete("/mentor/:id", authMiddleware, mentorController.deactivate);
-
-// Mentor specific routes
+// Specifikus route-ok előbb
 router.get("/mentor/students", authMiddleware, mentorController.getStudents);
 router.get("/mentor/company/:companyId", mentorController.getByCompany);
 router.get("/mentor/search", mentorController.searchMentors);
+router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId);
+// Paraméterezett route-ok utoljára
+router.get("/mentor/:id", authMiddleware, mentorController.getById);
+router.post("/mentor", authMiddleware, mentorController.create);
+router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);
+router.delete("/mentor/:id", authMiddleware, mentorController.deactivate);
 
 // Internship Hour routes
 const internshipHourController = new InternshipHourController();

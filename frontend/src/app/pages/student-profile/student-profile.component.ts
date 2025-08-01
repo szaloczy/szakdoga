@@ -94,15 +94,16 @@ export class StudentProfileComponent implements OnInit{
       lastname: ['', [Validators.required, Validators.minLength(2)]],
       phone: ['', [Validators.pattern(/^\d{10,15}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      university: ['', [Validators.required]],
-      major: ['', [Validators.required]],
-      neptun: ['', [Validators.required, Validators.pattern(/^[A-Z0-9]{6}$/)]]
+      university: [''],
+      major: [''],
+      neptun: ['']
     });
 
     this.companyForm = this.fb.group({
       // Add company form fields if needed
     });
   }
+  
   loadStudentData() {
     this.isProfileLoading = true;
     this.userService.getProfile(this.authService.getUserId()).subscribe({
@@ -190,27 +191,43 @@ export class StudentProfileComponent implements OnInit{
   }
 
   onSubmitProfile() {
-    if (!this.profileForm.valid) {
+    // Only check required fields (firstname, lastname, email)
+    const requiredFields = ['firstname', 'lastname', 'email'];
+    const hasRequiredFieldErrors = requiredFields.some(field => {
+      const control = this.profileForm.get(field);
+      return control && control.invalid;
+    });
+
+    if (hasRequiredFieldErrors) {
       this.markFormGroupTouched(this.profileForm);
-      this.toastService.showError('Please fill all required fields correctly');
+      this.toastService.showError('Please fill all required fields correctly (Name, Lastname, Email)');
       return;
     }
 
     this.isLoading = true;
     const formValue = this.profileForm.value;
 
-    const profileData = {
+    // Create the complete user data structure as expected by the backend
+    const userData = {
+      id: this.profile.id,
       email: formValue.email,
       firstname: formValue.firstname,
       lastname: formValue.lastname,
-      phone: formValue.phone,
-      neptun: formValue.neptun,
-      university: formValue.university,
-      major: formValue.major
+      role: this.profile.role,
+      active: true,
+      student: {
+        id: this.profile.student?.id || 0,
+        phone: formValue.phone && formValue.phone.trim() ? formValue.phone.trim() : null,
+        neptun: formValue.neptun && formValue.neptun.trim() ? formValue.neptun.trim() : null,
+        major: formValue.major && formValue.major.trim() ? formValue.major.trim() : null,
+        university: formValue.university && formValue.university.trim() ? formValue.university.trim() : null
+      }
     };
 
-    this.studentService.updateProfileByUserId(this.authService.getUserId(), profileData).subscribe({
-      next: (msg) => {
+    console.log('Sending user data:', userData); // Debug log
+
+    this.userService.updateUser(this.authService.getUserId(), userData).subscribe({
+      next: (response) => {
         this.toastService.showSuccess('Profile updated successfully!');
         this.loadStudentData(); // Reload data to reflect changes
         this.hasUnsavedChanges = false;

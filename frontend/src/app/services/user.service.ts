@@ -29,5 +29,5 @@ export class UserService {
 
   getProfile(id: number) { return this.http.get<ProfileDTO>(`/api/profile/${id}`)};
 
-  updateProfile(id: number, profile: ProfileDTO) { return this.http.put<string>(`/api/profile/${id}`, profile)};
+  updateUser(userId: number, userData: any) { return this.http.put<any>(`/api/user/${userId}`, userData);}
 }

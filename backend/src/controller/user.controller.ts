@@ -20,6 +20,93 @@ export class UserController extends Controller {
     res.json(users);
   };
 
+  getOne = async (req, res) => {
+    try {
+      const userId = Number(req.params["id"]);
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const user = await this.repository.findOne({
+        where: { id: userId },
+        relations: ["student", "mentor", "mentor.company"]
+      });
+
+      if (!user) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      res.json(user);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  update = async (req, res) => {
+    try {
+      const userId = Number(req.params["id"]);
+      const updateData = req.body;
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const user = await this.repository.findOne({
+        where: { id: userId },
+        relations: ["student", "mentor", "mentor.company"]
+      });
+
+      if (!user) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      // User adatok frissítése
+      if (updateData.email) user.email = updateData.email;
+      if (updateData.firstname) user.firstname = updateData.firstname;
+      if (updateData.lastname) user.lastname = updateData.lastname;
+      if (updateData.active !== undefined) user.active = updateData.active;
+
+      // Student adatok frissítése ha van
+      if (user.student && updateData.student) {
+        if (updateData.student.phone !== undefined) user.student.phone = updateData.student.phone;
+        if (updateData.student.major !== undefined) user.student.major = updateData.student.major;
+        if (updateData.student.university !== undefined) user.student.university = updateData.student.university;
+        if (updateData.student.neptun !== undefined) user.student.neptun = updateData.student.neptun;
+
+        await AppDataSource.getRepository(Student).save(user.student);
+      }
+
+      await this.repository.save(user);
+      res.json({ message: "User updated successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  delete = async (req, res) => {
+    try {
+      const userId = Number(req.params["id"]);
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      const user = await this.repository.findOne({
+        where: { id: userId }
+      });
+
+      if (!user) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      await this.repository.remove(user);
+      res.json({ message: "User deleted successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   register = async (req, res) => {
     try {
       const userToCreate = this.repository.create(req.body as User);
@@ -123,41 +210,6 @@ export class UserController extends Controller {
 
     res.json(profileResponse);
    } catch (error) {
-      this.handleError(res, error);
-    }
-  }
-
-  updateProfile = async (req, res) => {
-    const userId = Number(req.params["id"]);
-    const profile = req.body as UpdateProfileDTO;
-
-    try {
-      const user = await this.repository.findOne({
-        where: {id: userId },
-        relations: ["student"]
-      });
-
-      if (user) {
-        return this.handleError(res, null, 404, "User not found");
-      }
-
-      if (profile.email) user.email = profile.email;
-      if (profile.firstname) user.firstname = profile.firstname;
-      if (profile.lastname) user.lastname = profile.lastname;
-
-      if (user.student && profile.student) {
-        if (profile.student.phone) user.student.phone = profile.student.phone;
-        if (profile.student.major) user.student.major = profile.student.major;
-        if (profile.student.university) user.student.university = profile.student.university;
-        if (profile.student.neptun) user.student.neptun = profile.student.neptun;
-
-        await AppDataSource.getRepository(Student).save(user.student);
-      }
-
-      await this.repository.save(user);
-
-      res.json({ message: "Profile updated successfully" });
-    } catch (error) {
       this.handleError(res, error);
     }
   }

@@ -122,9 +122,11 @@ export class MentorController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
+      console.log(`Getting students for mentor with userId: ${userId}`);
       const studentsWithHours = await this.service.getStudentsWithHoursByMentor(userId);
       res.json(studentsWithHours);
     } catch (error) {
+      console.log(`Error in getStudents: ${error.message}`);
       this.handleError(res, error);
     }
   };

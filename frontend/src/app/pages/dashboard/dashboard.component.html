@@ -2,30 +2,149 @@
   <h2>{{ 'dashboard.title' | translate }} {{user.firstname}} {{user.lastname}}!</h2>
 
   @if (authService.getRole() === "student") {
-  <div class="row my-4">
-    @for(card of summaryCards; track card) {
-    <div class="col-md-3">
-      <div class="card text-white mb-3" [ngClass]="card.bg">
-        <div class="card-body">
-          <h5 class="card-title">{{ card.title }}</h5>
-          <p class="card-text">{{ card.value }}</p>
+    <!-- Student Dashboard -->
+    <div class="row my-4">
+      @for(card of summaryCards; track card) {
+      <div class="col-md-3">
+        <div class="card text-white mb-3" [ngClass]="card.bg">
+          <div class="card-body">
+            <h5 class="card-title">{{ card.title }}</h5>
+            <p class="card-text">{{ card.value }}</p>
+          </div>
         </div>
       </div>
+      }
     </div>
+
+    <div class="alert alert-warning d-flex align-items-center" role="alert">
+      <i class="bi bi-exclamation-triangle-fill me-2"></i>
+      Következő határidő: <strong> {{ nextDeadline.label }} </strong> – {{ nextDeadline.date }}
+    </div>
+
+    <div class="d-flex gap-3 mt-3 flex-wrap">
+      <button class="btn btn-primary">Dokumentumok feltöltése</button>
+      <button class="btn btn-outline-secondary">Új gyakorlat rögzítése</button>
+      <button class="btn btn-outline-info">Korábbi gyakorlatok</button>
+    </div>
+
+  } @else if (authService.getRole() === "mentor") {
+    <!-- Mentor Dashboard -->
+    
+    @if (isLoadingMentorData) {
+      <div class="d-flex justify-content-center my-5">
+        <div class="spinner-border" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </div>
+    } @else {
+      
+      <!-- Mentor Statistics Cards -->
+      <div class="row my-4">
+        @for(card of mentorCards; track card) {
+        <div class="col-md-3">
+          <div class="card text-white mb-3" [ngClass]="card.bg">
+            <div class="card-body d-flex align-items-center">
+              <div class="flex-grow-1">
+                <h5 class="card-title">{{ card.title }}</h5>
+                <p class="card-text fs-4 fw-bold mb-0">{{ card.value }}</p>
+              </div>
+              <i class="{{card.icon}} fs-1 opacity-75"></i>
+            </div>
+          </div>
+        </div>
+        }
+      </div>
+
+      <!-- Mentor Company Info -->
+      @if (mentorProfile) {
+        <div class="card mb-4">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-building me-2"></i>Cég információk</h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-6">
+                <p><strong>Cég neve:</strong> {{ mentorProfile.mentor.company.name }}</p>
+                <p><strong>Pozíció:</strong> {{ mentorProfile.mentor.position }}</p>
+              </div>
+              <div class="col-md-6">
+                <p><strong>Város:</strong> {{ mentorProfile.mentor.company.city }}</p>
+                <p><strong>Email:</strong> {{ mentorProfile.mentor.company.email }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Quick Actions -->
+      <div class="card mb-4">
+        <div class="card-header bg-secondary text-white">
+          <h5 class="mb-0"><i class="bi bi-lightning-fill me-2"></i>Gyors műveletek</h5>
+        </div>
+        <div class="card-body">
+          <div class="row">
+            @for(action of mentorActions; track action) {
+            <div class="col-md-6 col-lg-3 mb-3">
+              <button 
+                class="btn btn-outline-primary w-100 h-100 position-relative" 
+                (click)="handleMentorAction(action.action)">
+                <i class="{{action.icon}} fs-4 d-block mb-2"></i>
+                <span class="d-block">{{ action.label }}</span>
+                @if (action.count > 0) {
+                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                    {{ action.count }}
+                  </span>
+                }
+              </button>
+            </div>
+            }
+          </div>
+        </div>
+      </div>
+
+      <!-- Recent Students Activity -->
+      <div class="card">
+        <div class="card-header bg-info text-white">
+          <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Legutóbbi hallgatói aktivitás</h5>
+        </div>
+        <div class="card-body">
+          @if (mentorStudents.length > 0) {
+            <div class="list-group list-group-flush">
+              @for(student of mentorStudents.slice(0, 5); track student) {
+              <div class="list-group-item d-flex justify-content-between align-items-center">
+                <div>
+                  <h6 class="mb-1">{{ student.student.user?.firstname || 'N/A' }} {{ student.student.user?.lastname || '' }}</h6>
+                  <p class="mb-1 text-muted">{{ student.student.university || 'Egyetem nem megadva' }}</p>
+                  <small>Órák száma: {{ student.hours.length || 0 }}</small>
+                </div>
+                <div class="text-end">
+                  @if (hasPendingHours(student)) {
+                    <span class="badge bg-warning">Jóváhagyásra vár</span>
+                  } @else {
+                    <span class="badge bg-success">Naprakész</span>
+                  }
+                </div>
+              </div>
+              }
+            </div>
+            
+            @if (mentorStudents.length > 5) {
+              <div class="text-center mt-3">
+                <button class="btn btn-outline-primary">Összes hallgató megtekintése ({{ mentorStudents.length }})</button>
+              </div>
+            }
+          } @else {
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-people fs-1 d-block mb-3"></i>
+              <p>Még nincsenek hozzárendelt hallgatók.</p>
+            </div>
+          }
+        </div>
+      </div>
     }
-  </div>
 
-  <div class="alert alert-warning d-flex align-items-center" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    Következő határidő: <strong> {{ nextDeadline.label }} </strong> – {{ nextDeadline.date }}
-  </div>
-
-  <div class="d-flex gap-3 mt-3 flex-wrap">
-    <button class="btn btn-primary">Dokumentumok feltöltése</button>
-    <button class="btn btn-outline-secondary">Új gyakorlat rögzítése</button>
-    <button class="btn btn-outline-info">Korábbi gyakorlatok</button>
-  </div>
   } @else {
+    <!-- Admin Dashboard -->
     <app-student-list></app-student-list>
   }
 </div>

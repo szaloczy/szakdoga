@@ -194,12 +194,17 @@ export class MentorService {
   }
 
   async getStudentsWithHoursByMentor(userId: number): Promise<StudentWithHoursDto[]> {
+    console.log(`Looking for mentor with userId: ${userId}`);
+    
     // Először lekérjük a mentort a userId alapján
     const mentor = await this.getMentorByUserId(userId);
     
     if (!mentor) {
+      console.log(`No mentor found for userId: ${userId}`);
       throw new Error("Mentor not found for this user");
     }
+
+    console.log(`Found mentor: ${mentor.id} for userId: ${userId}`);
 
     // Lekérjük a mentor diákjait a gyakornokságokon keresztül
     const queryBuilder = AppDataSource.createQueryBuilder()

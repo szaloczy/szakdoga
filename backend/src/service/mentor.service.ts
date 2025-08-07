@@ -215,12 +215,12 @@ export class MentorService {
         "studentUser.email",
         "student.major",
         "student.university",
-        "COALESCE(SUM(EXTRACT(EPOCH FROM (ih.endTime::time - ih.startTime::time))/3600), 0) as hours"
+        'COALESCE(SUM(EXTRACT(EPOCH FROM (ih."endTime"::time - ih."startTime"::time))/3600), 0) as hours'
       ])
       .from("internship", "internship")
       .leftJoin("internship.student", "student")
       .leftJoin("student.user", "studentUser")
-      .leftJoin("internship_hour", "ih", "ih.internshipId = internship.id AND ih.status = 'approved'")
+      .leftJoin("internship_hour", "ih", 'ih."internshipId" = internship.id AND ih.status = \'approved\'')
       .where("internship.mentorId = :mentorId", { mentorId: mentor.id })
       .andWhere("internship.isApproved = :isApproved", { isApproved: true })
       .groupBy("studentUser.id, student.id")

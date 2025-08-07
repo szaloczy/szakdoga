@@ -142,6 +142,77 @@ export const hu: NestedI18n = {
     dashboard: {
         title: {
             text: "Üdvözlünk, "
+        },
+        cards: {
+            mentored_students: {
+                text: "Mentorált hallgatók"
+            },
+            active_students: {
+                text: "Aktív hallgatók"
+            },
+            pending_hours: {
+                text: "Jóváhagyásra váró órák"
+            },
+            total_hours: {
+                text: "Összes óra"
+            }
+        },
+        company_details: {
+            title: {
+                text: "Céges adatok"
+            },
+            company_name: {
+                text: "Cég neve"
+            },
+            city: {
+                text: "Város"
+            },
+            position: {
+                text: "Beosztás"
+            },
+            email: {
+                text: "Email"
+            }
+        },
+        quick_operations: {
+            title: {
+                text: "Gyors műveletek"
+            },
+            approve_hours: {
+                text: "Órák jóváhagyása"
+            },
+            view_documents: {
+                text: "Dokumentumok megtekintése"
+            },
+            view_students: {
+                text: "Hallgatók megtekintése"
+            }
+        },
+        last_activities: {
+            title: {
+                text: "Legutóbbi hallgatói aktivitások"
+            },
+            no_activities: {
+                text: "Nem található tevékenység"
+            },
+            no_students: {
+                text: "Még nincsenek hozzárendelt hallgatók."
+            },
+            hours_count: {
+                text: "Órák száma"
+            },
+            pending_approval: {
+                text: "Jóváhagyásra vár"
+            },
+            up_to_date: {
+                text: "Naprakész"
+            },
+            view_all_students: {
+                text: "Összes hallgató megtekintése"
+            },
+            university_not_provided: {
+                text: "Egyetem nem megadva"
+            }
         }
     },
     profile: {

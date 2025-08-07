@@ -5,6 +5,7 @@ import { I18nService } from '../../shared/i18n.pipe';
 import { Router, RouterLink } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { ToastService } from '../../services/toast.service';
+import { LanguageSelectorComponent } from '../../shared/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-register',
@@ -12,7 +13,8 @@ import { ToastService } from '../../services/toast.service';
     ReactiveFormsModule,
     CommonModule,
     I18nService,
-    RouterLink
+    RouterLink,
+    LanguageSelectorComponent
 ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.scss'

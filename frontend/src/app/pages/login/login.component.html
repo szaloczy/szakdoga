@@ -1,4 +1,9 @@
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light login-background">
+  <!-- Language Selector in top right corner -->
+  <div class="position-fixed top-0 end-0 m-3" style="z-index: 1000;">
+    <app-language-selector></app-language-selector>
+  </div>
+
   <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
     <h3 class="text-center fw-bold mb-4">{{ "login.form.title" | translate }}</h3>
 

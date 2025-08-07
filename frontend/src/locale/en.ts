@@ -142,8 +142,78 @@ export const en: NestedI18n = {
     dashboard: {
         title: {
             text: "Welcome, "
-        }
-    },
+        },
+        cards: {
+            mentored_students: {
+                text: "Mentored Students"
+            },
+            active_students: {
+                text: "Active Students"
+            },
+            pending_hours: {
+                text: "Pending Hours"
+            },
+            total_hours: {
+                text: "Total Hours"
+            }
+        },
+        company_details: {
+            title: {
+                text: "Company details"
+            },
+            company_name: {
+                text: "Company name"
+            },
+            city: {
+                text: "City"
+            },
+            position: {
+                text: "Position"
+            },
+            email: {
+                text: "Email"
+            }
+        },
+        quick_operations: {
+            title: {
+                text: "Quick operations"
+            },
+            approve_hours: {
+                text: "Approve hours"
+            },
+            view_documents: {
+                text: "View documents"
+            },
+            view_students: {
+                text: "View students"
+            }
+        },
+        last_activities: {
+            title: {
+                text: "Last activities"
+            },
+            no_activities: {
+                text: "No activities found"
+            },
+            no_students: {
+                text: "No assigned students yet."
+            },
+            hours_count: {
+                text: "Hours count"
+            },
+            pending_approval: {
+                text: "Pending approval"
+            },
+            up_to_date: {
+                text: "Up to date"
+            },
+            view_all_students: {
+                text: "View all students"
+            },
+            university_not_provided: {
+                text: "University not provided"
+            }
+        },
     profile: {
         student_details: {
             title: {
@@ -294,4 +364,4 @@ export const en: NestedI18n = {
             }
         }
     }
-}
+}}

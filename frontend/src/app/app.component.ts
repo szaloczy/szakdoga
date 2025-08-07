@@ -1,13 +1,12 @@
 import { Component, inject } from '@angular/core';
 import { Router, RouterOutlet } from '@angular/router';
-import { LanguageSelectorComponent } from "./shared/language-selector/language-selector.component";
 import { ToastService } from './services/toast.service';
 import { AuthService } from './services/auth.service';
 import { ToastComponent } from './shared/toast/toast.component';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, LanguageSelectorComponent, ToastComponent],
+  imports: [RouterOutlet, ToastComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })

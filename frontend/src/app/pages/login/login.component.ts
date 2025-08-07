@@ -6,6 +6,7 @@ import { NgClass } from '@angular/common';
 import { I18nService } from '../../shared/i18n.pipe';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from '../../services/auth.service';
+import { LanguageSelectorComponent } from '../../shared/language-selector/language-selector.component';
 
 @Component({
   selector: 'app-login',
@@ -14,6 +15,7 @@ import { AuthService } from '../../services/auth.service';
     I18nService,
     RouterLink,
     NgClass,
+    LanguageSelectorComponent
 ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

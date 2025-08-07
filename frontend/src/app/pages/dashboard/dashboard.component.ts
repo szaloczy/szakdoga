@@ -53,10 +53,10 @@ export class DashboardComponent implements OnInit{
 
   // Mentor quick actions
   mentorActions = [
-    { label: 'Órák jóváhagyása', icon: 'bi-check-circle', action: 'approveHours', count: 0 },
-    { label: 'Dokumentumok áttekintése', icon: 'bi-file-text', action: 'reviewDocs', count: 0 },
-    { label: 'Hallgatók üzenetek', icon: 'bi-chat-dots', action: 'messages', count: 0 },
-    { label: 'Értékelések', icon: 'bi-star', action: 'evaluations', count: 0 }
+    { label: 'dashboard.quick_operations.approve_hours.text', icon: 'bi-check-circle', action: 'approveHours', count: 0 },
+    { label: 'dashboard.quick_operations.view_documents.text', icon: 'bi-file-text', action: 'reviewDocs', count: 0 },
+    { label: 'dashboard.quick_operations.view_students.text', icon: 'bi-people', action: 'viewStudents', count: 0 },
+    { label: 'dashboard.quick_operations.view_students.text', icon: 'bi-star', action: 'evaluations', count: 0 }
   ];
 
   ngOnInit(): void {
@@ -123,25 +123,25 @@ export class DashboardComponent implements OnInit{
 
     this.mentorCards = [
       { 
-        title: 'Mentorált hallgatók', 
+        title: 'dashboard.cards.mentored_students.text', 
         value: totalStudents.toString(), 
         bg: 'bg-primary',
         icon: 'bi-people-fill'
       },
       { 
-        title: 'Aktív hallgatók', 
+        title: 'dashboard.cards.active_students.text', 
         value: studentsWithHours.toString(), 
         bg: 'bg-success',
         icon: 'bi-person-check-fill'
       },
       { 
-        title: 'Jóváhagyásra vár', 
+        title: 'dashboard.cards.pending_hours.text', 
         value: pendingApprovals.toString(), 
         bg: 'bg-warning',
         icon: 'bi-clock-fill'
       },
       { 
-        title: 'Összes mentorált óra', 
+        title: 'dashboard.cards.total_hours.text', 
         value: `${Math.round(totalHours)}h`, 
         bg: 'bg-info',
         icon: 'bi-check-circle-fill'

@@ -1,4 +1,9 @@
-<div class="auth-wrapper d-flex align-items-center justify-content-center min-vh-100 bg-light bg-gradient">
+<div class="auth-wrapper d-flex align-items-center justify-content-center min-vh-100 bg-light bg-gradient register-background">
+  <!-- Language Selector in top right corner -->
+  <div class="position-fixed top-0 end-0 m-3" style="z-index: 1000;">
+    <app-language-selector></app-language-selector>
+  </div>
+
   <div class="auth-box bg-white p-4 shadow rounded-4">
     <h4 class="text-center mb-4 fw-bold">{{ "register.form.title" | translate }}</h4>
 

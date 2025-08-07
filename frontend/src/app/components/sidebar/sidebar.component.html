@@ -11,39 +11,39 @@
   </div>
 
   <ul class="menu">
-    <li class="menu-item">
-      <i routerLink="/dashboard" class="bi bi-house"></i>
+    <li class="menu-item" routerLink="/dashboard" routerLinkActive="active">
+      <i class="bi bi-house"></i>
       @if (!isCollapsed) {
-      <span routerLink="/dashboard" class="label">{{ 'sidenav.items.dashboard' | translate }}</span>
+      <span class="label">{{ 'sidenav.items.dashboard' | translate }}</span>
       }
     </li>
-    <li class="menu-item">
-      <i routerLink="/profile" class="bi bi-person"></i>
+    <li class="menu-item" routerLink="/profile" routerLinkActive="active">
+      <i class="bi bi-person"></i>
       @if (!isCollapsed) {
-      <span class="label" routerLink="/profile">{{ 'sidenav.items.profile' | translate }}</span>
+      <span class="label">{{ 'sidenav.items.profile' | translate }}</span>
       }
     </li>
     @if(authService.getRole() === "mentor") {
-      <li class="menu-item">
+      <li class="menu-item" routerLinkActive="active">
       <i class="bi bi-people-fill"></i>
       @if (!isCollapsed) {
       <span class="label">{{ 'sidenav.items.students' | translate }}</span>
       }
     </li>
     }
-    <li class="menu-item">
+    <li class="menu-item" routerLink="/internship-hours" routerLinkActive="active">
       <i class="bi bi-hourglass"></i>
       @if (!isCollapsed) {
-      <span class="label" routerLink="/internship-hours">{{ 'sidenav.items.completed_hours' | translate }}</span>
+      <span class="label">{{ 'sidenav.items.completed_hours' | translate }}</span>
       }
     </li>
-    <li class="menu-item">
+    <li class="menu-item" routerLinkActive="active">
       <i class="bi bi-file-earmark-text"></i>
       @if (!isCollapsed) {
       <span class="label">{{ 'sidenav.items.documents' | translate }}</span>
       }
     </li>
-     <li class="menu-item">
+     <li class="menu-item" routerLinkActive="active">
       <i class="bi bi-bar-chart"></i>
       @if (!isCollapsed) {
       <span class="label">{{ 'sidenav.items.statistics' | translate }}</span>

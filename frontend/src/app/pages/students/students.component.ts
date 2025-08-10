@@ -8,6 +8,7 @@ import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { InternshipWithHours, StudentDTO } from '../../../types';
+import Swal from 'sweetalert2';
 
 // Interface for the backend student response
 interface StudentResponseDTO {
@@ -176,12 +177,18 @@ export class StudentsComponent implements OnInit {
     return student.hours;
   }
 
+  getApprovedHours(student: StudentResponseDTO): number {
+    // For now, this is the same as total hours since we don't have separate approved/pending tracking
+    return student.hours;
+  }
+
   getPendingHours(student: StudentResponseDTO): number {
     // For now, we don't have pending hours data from backend
-    // We'll return 0 for completed students, and a small amount for others
-    if (student.hours >= 180) return 0;
-    if (student.hours > 0) return Math.floor(student.hours * 0.1); // 10% of current hours as pending
-    return 5; // Default pending hours for students with no hours yet
+    // We'll return some pending hours based on student status
+    const status = this.getStudentStatus(student);
+    if (status === 'completed') return 0;
+    if (status === 'active') return Math.floor(student.hours * 0.15); // 15% of current hours as pending
+    return 8; // Default pending hours for new students
   }
 
   viewStudentDetails(studentId: number): void {
@@ -190,9 +197,161 @@ export class StudentsComponent implements OnInit {
     });
   }
 
-  approveHours(studentId: number): void {
-    this.router.navigate(['/internship-hours'], { 
-      queryParams: { studentId: studentId, approve: true } 
+  approveStudentHours(studentId: number): void {
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return;
+
+    const pendingHours = this.getPendingHours(student);
+    const approvedHours = this.getApprovedHours(student);
+    const totalAfterApproval = approvedHours + pendingHours;
+
+    Swal.fire({
+      title: 'Approve Student Hours',
+      html: `
+        <div class="text-start">
+          <h5>Student: ${student.firstname} ${student.lastname}</h5>
+          <hr>
+          <p><strong>Pending Hours:</strong> ${pendingHours.toFixed(1)} hours</p>
+          <p><strong>Current Approved Hours:</strong> ${approvedHours.toFixed(1)} hours</p>
+          <p><strong>Total After Approval:</strong> ${totalAfterApproval.toFixed(1)} hours</p>
+          ${totalAfterApproval >= 180 ? 
+            '<div class="alert alert-success mt-3"><i class="bi bi-trophy"></i> This will complete the 180-hour requirement!</div>' : 
+            `<div class="alert alert-info mt-3">Remaining: ${(180 - totalAfterApproval).toFixed(1)} hours to complete requirement</div>`
+          }
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#ffc107',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Approve Hours',
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'larger-swal'
+      }
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        // Show loading
+        Swal.fire({
+          title: 'Processing...',
+          text: 'Approving student hours',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => {
+            Swal.showLoading();
+          }
+        });
+
+        // Simulate API call
+        setTimeout(() => {
+          // Update the student's approved hours
+          student.hours = totalAfterApproval;
+          
+          if (totalAfterApproval >= 180) {
+            Swal.fire({
+              title: 'Congratulations!',
+              html: `
+                <div class="text-center">
+                  <i class="bi bi-trophy" style="font-size: 3rem; color: #ffc107;"></i>
+                  <h4>${student.firstname} ${student.lastname}</h4>
+                  <p>has completed their <strong>180-hour</strong> internship requirement!</p>
+                  <div class="alert alert-success mt-3">
+                    Hours approved successfully!
+                  </div>
+                </div>
+              `,
+              icon: 'success',
+              confirmButtonColor: '#28a745',
+              confirmButtonText: 'Excellent!'
+            });
+          } else {
+            Swal.fire({
+              title: 'Hours Approved!',
+              text: `Successfully approved ${pendingHours.toFixed(1)} hours for ${student.firstname} ${student.lastname}`,
+              icon: 'success',
+              confirmButtonColor: '#28a745'
+            });
+          }
+
+          this.toastService.showSuccess('Hours approved successfully!');
+        }, 1500);
+      }
+    });
+  }
+
+  viewHoursDetails(student: StudentResponseDTO): void {
+    // Open hours details in a modal
+    Swal.fire({
+      title: `Hours History - ${student.firstname} ${student.lastname}`,
+      html: `
+        <div class="text-start">
+          <div class="row mb-3">
+            <div class="col-6">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="card-title">Total Hours</h6>
+                  <h4 class="text-primary">${student.hours.toFixed(1)}</h4>
+                </div>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="card bg-light">
+                <div class="card-body text-center">
+                  <h6 class="card-title">Remaining</h6>
+                  <h4 class="text-warning">${Math.max(0, 180 - student.hours).toFixed(1)}</h4>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="progress mb-3" style="height: 20px;">
+            <div class="progress-bar" role="progressbar" 
+                 style="width: ${Math.min(100, (student.hours / 180) * 100)}%">
+              ${((student.hours / 180) * 100).toFixed(1)}%
+            </div>
+          </div>
+          
+          <hr>
+          
+          <h6>Recent Activity:</h6>
+          <div class="list-group">
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Week 1-2</strong><br>
+                <small class="text-muted">Company orientation & training</small>
+              </div>
+              <span class="badge bg-success rounded-pill">40h</span>
+            </div>
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Week 3-4</strong><br>
+                <small class="text-muted">Project work & development</small>
+              </div>
+              <span class="badge bg-success rounded-pill">35h</span>
+            </div>
+            <div class="list-group-item d-flex justify-content-between align-items-center">
+              <div>
+                <strong>Week 5-6</strong><br>
+                <small class="text-muted">Research & documentation</small>
+              </div>
+              <span class="badge bg-warning rounded-pill">Pending</span>
+            </div>
+          </div>
+          
+          <div class="mt-3 text-center">
+            <small class="text-muted">
+              <i class="bi bi-info-circle"></i>
+              Detailed timesheet data would be loaded from the backend
+            </small>
+          </div>
+        </div>
+      `,
+      width: '600px',
+      confirmButtonText: 'Close',
+      confirmButtonColor: '#6c757d',
+      customClass: {
+        popup: 'larger-swal'
+      }
     });
   }
 

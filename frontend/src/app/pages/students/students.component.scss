@@ -88,6 +88,46 @@
     100% { transform: rotate(360deg); }
   }
 
+  // Additional styles for buttons in card footer
+  .card-footer {
+    .btn-outline-info {
+      border-color: #17a2b8;
+      color: #17a2b8;
+      
+      &:hover {
+        background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+        border-color: #138496;
+        color: white;
+        transform: scale(1.02);
+      }
+    }
+  }
+
+  // Custom styles for SweetAlert2
+  :global(.larger-swal) {
+    .swal2-popup {
+      border-radius: 16px !important;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2) !important;
+    }
+    
+    .swal2-title {
+      color: #495057 !important;
+      font-weight: 600 !important;
+    }
+    
+    .swal2-confirm {
+      border-radius: 10px !important;
+      font-weight: 500 !important;
+      padding: 0.75rem 1.5rem !important;
+    }
+    
+    .swal2-cancel {
+      border-radius: 10px !important;
+      font-weight: 500 !important;
+      padding: 0.75rem 1.5rem !important;
+    }
+  }
+
   // Status specific colors
   .text-status-pending {
     color: #856404 !important;

@@ -206,36 +206,39 @@ export class MentorService {
 
     console.log(`Found mentor: ${mentor.id} for userId: ${userId}`);
 
-    // Lekérjük a mentor diákjait a gyakornokságokon keresztül
-    const queryBuilder = AppDataSource.createQueryBuilder()
-      .select([
-        "studentUser.id",
-        "studentUser.firstname", 
-        "studentUser.lastname",
-        "studentUser.email",
-        "student.major",
-        "student.university",
-        "COALESCE(SUM(EXTRACT(EPOCH FROM (ih.endTime::time - ih.startTime::time))/3600), 0) as hours"
-      ])
-      .from("internship", "internship")
-      .leftJoin("internship.student", "student")
-      .leftJoin("student.user", "studentUser")
-      .leftJoin("internship_hour", "ih", "ih.internshipId = internship.id AND ih.status = 'approved'")
-      .where("internship.mentorId = :mentorId", { mentorId: mentor.id })
-      .andWhere("internship.isApproved = :isApproved", { isApproved: true })
-      .groupBy("studentUser.id, student.id")
-      .orderBy("studentUser.lastname", "ASC");
+    // Lekérjük a mentor diákjait TypeORM repository-val
+    const internships = await AppDataSource.getRepository("Internship").find({
+      where: { 
+        mentor: { id: mentor.id },
+        isApproved: true 
+      },
+      relations: ["student", "student.user", "hours"]
+    });
 
-    const result = await queryBuilder.getRawMany();
+    const studentsWithHours: StudentWithHoursDto[] = [];
     
-    return result.map(row => ({
-      id: parseInt(row.studentUser_id),
-      firstname: row.studentUser_firstname,
-      lastname: row.studentUser_lastname,
-      email: row.studentUser_email,
-      major: row.student_major,
-      university: row.student_university,
-      hours: parseFloat(row.hours) || 0
-    }));
+    for (const internship of internships) {
+      const approvedHours = internship.hours?.filter(hour => hour.status === 'approved') || [];
+      
+      let totalHours = 0;
+      for (const hour of approvedHours) {
+        const start = new Date(`2000-01-01 ${hour.startTime}`);
+        const end = new Date(`2000-01-01 ${hour.endTime}`);
+        const diffMs = end.getTime() - start.getTime();
+        totalHours += diffMs / (1000 * 60 * 60); // ms to hours
+      }
+
+      studentsWithHours.push({
+        id: internship.student.user.id,
+        firstname: internship.student.user.firstname,
+        lastname: internship.student.user.lastname,
+        email: internship.student.user.email,
+        major: internship.student.major,
+        university: internship.student.university,
+        hours: totalHours
+      });
+    }
+
+    return studentsWithHours.sort((a, b) => a.lastname.localeCompare(b.lastname));
   }
 }

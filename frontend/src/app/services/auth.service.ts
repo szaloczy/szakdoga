@@ -40,6 +40,17 @@ export class AuthService {
     return isLoggedIn;
   }
 
+  mentorAccess(): boolean {
+    const isLoggedIn = this.isLoggedIn();
+
+    if(!isLoggedIn) {
+      this.router.navigateByUrl("/login");
+    } else if (this.decodeToken()?.role != "mentor") {
+      this.router.navigateByUrl("/dashboard");
+    }
+    return isLoggedIn && this.decodeToken()?.role === "mentor";
+  }
+
   preventGuestAccess(): boolean {
     const isLoggedIn = this.isLoggedIn();
 

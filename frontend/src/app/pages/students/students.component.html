@@ -1,0 +1,243 @@
+<div class="students-page container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="bi bi-people-fill me-2"></i>
+      {{ 'students.page.title' | translate }}
+    </h2>
+    <div class="d-flex align-items-center gap-3">
+      <div class="search-box">
+        <div class="input-group">
+          <span class="input-group-text">
+            <i class="bi bi-search"></i>
+          </span>
+          <input 
+            type="text" 
+            class="form-control" 
+            placeholder="{{ 'students.search.placeholder' | translate }}"
+            [(ngModel)]="searchTerm"
+          >
+          @if (searchTerm) {
+            <button class="btn btn-outline-secondary" (click)="searchTerm = ''" title="{{ 'students.actions.clear_search' | translate }}">
+              <i class="bi bi-x"></i>
+            </button>
+          }
+        </div>
+      </div>
+      <div class="d-flex gap-2">
+        <select class="form-select" [(ngModel)]="selectedFilter">
+          <option value="all">All Students</option>
+          <option value="active">Active</option>
+          <option value="pending">Pending</option>
+          <option value="completed">Completed</option>
+        </select>
+        <select class="form-select" [(ngModel)]="sortBy" (change)="sortStudents(sortBy)">
+          <option value="name">Sort by Name</option>
+          <option value="hours">Sort by Hours</option>
+          <option value="university">Sort by University</option>
+          <option value="status">Sort by Status</option>
+        </select>
+      </div>
+      <button class="btn btn-outline-primary" (click)="loadStudents()">
+        <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+        {{ 'students.actions.refresh' | translate }}
+      </button>
+      <div class="dropdown">
+        <button class="btn btn-success dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          <i class="bi bi-gear"></i> Actions
+        </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item" href="#" (click)="exportStudentData()">
+            <i class="bi bi-download me-2"></i>Export Data
+          </a></li>
+          <li><a class="dropdown-item" href="#" (click)="bulkApproveHours()" [class.disabled]="getPendingStudentsCount() === 0">
+            <i class="bi bi-check-all me-2"></i>Bulk Approve
+          </a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Statistics Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card bg-primary text-white">
+        <div class="card-body d-flex align-items-center">
+          <div class="flex-grow-1">
+            <h5 class="card-title">{{ 'students.stats.total' | translate }}</h5>
+            <p class="card-text fs-4 fw-bold mb-0">{{ students.length }}</p>
+          </div>
+          <i class="bi bi-people-fill fs-1 opacity-75"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-success text-white">
+        <div class="card-body d-flex align-items-center">
+          <div class="flex-grow-1">
+            <h5 class="card-title">{{ 'students.stats.completed' | translate }}</h5>
+            <p class="card-text fs-4 fw-bold mb-0">
+              {{ getCompletedStudentsCount() }}
+            </p>
+          </div>
+          <i class="bi bi-check-circle-fill fs-1 opacity-75"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-warning text-dark">
+        <div class="card-body d-flex align-items-center">
+          <div class="flex-grow-1">
+            <h5 class="card-title">{{ 'students.stats.pending' | translate }}</h5>
+            <p class="card-text fs-4 fw-bold mb-0">
+              {{ getPendingStudentsCount() }}
+            </p>
+          </div>
+          <i class="bi bi-clock-fill fs-1 opacity-75"></i>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card bg-info text-white">
+        <div class="card-body d-flex align-items-center">
+          <div class="flex-grow-1">
+            <h5 class="card-title">{{ 'students.stats.active' | translate }}</h5>
+            <p class="card-text fs-4 fw-bold mb-0">
+              {{ getActiveStudentsCount() }}
+            </p>
+          </div>
+          <i class="bi bi-person-check-fill fs-1 opacity-75"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="text-center py-5">
+      <div class="spinner-border text-primary" role="status">
+        <span class="visually-hidden">Loading...</span>
+      </div>
+      <p class="mt-2">{{ 'students.loading' | translate }}</p>
+    </div>
+  }
+
+  <!-- Students List -->
+  @if (!isLoading && filteredStudents.length > 0) {
+    <div class="row">
+      @for (student of filteredStudents; track student.id) {
+        <div class="col-md-6 col-lg-4 mb-4">
+          <div class="card student-card h-100">
+            <div class="card-header d-flex justify-content-between align-items-center">
+              <div class="d-flex align-items-center">
+                <img src="/avatar.png" alt="Student Avatar" class="student-avatar me-2">
+                <div>
+                  <h6 class="mb-0">
+                    {{ student.firstname }} {{ student.lastname }}
+                  </h6>
+                  <small class="text-muted">{{ student.email }}</small>
+                </div>
+              </div>
+              <span 
+                class="badge"
+                [ngClass]="getStatusBadgeClass(getStudentStatus(student))"
+              >
+                {{ getStatusText(getStudentStatus(student)) | translate }}
+              </span>
+            </div>
+            
+            <div class="card-body">
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <small class="text-muted">{{ 'students.card.university' | translate }}</small>
+                </div>
+                <p class="mb-0 fw-semibold">{{ student.university || 'N/A' }}</p>
+              </div>
+              
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <small class="text-muted">{{ 'students.card.major' | translate }}</small>
+                </div>
+                <p class="mb-0">{{ student.major || 'N/A' }}</p>
+              </div>
+              
+              <div class="row text-center mb-3">
+                <div class="col-6">
+                  <div class="border-end">
+                    <div class="fs-5 fw-bold text-primary">{{ getTotalHours(student) | number:'1.1-1' }}h</div>
+                    <small class="text-muted">{{ 'students.card.completed_hours' | translate }}</small>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="fs-5 fw-bold text-warning">{{ getPendingHours(student) | number:'1.1-1' }}h</div>
+                  <small class="text-muted">{{ 'students.card.pending_hours' | translate }}</small>
+                </div>
+              </div>
+              
+              <!-- Progress Bar -->
+              <div class="mb-3">
+                <div class="d-flex justify-content-between align-items-center mb-1">
+                  <small class="text-muted">{{ 'students.card.progress' | translate }}</small>
+                  <small class="text-muted">{{ getTotalHours(student) | number:'1.0-0' }}/180h</small>
+                </div>
+                <div class="progress" style="height: 8px;">
+                  <div 
+                    class="progress-bar" 
+                    role="progressbar" 
+                    [style.width.%]="(getTotalHours(student) / 180) * 100"
+                    [ngClass]="{
+                      'bg-success': getTotalHours(student) >= 180,
+                      'bg-warning': getTotalHours(student) >= 90 && getTotalHours(student) < 180,
+                      'bg-info': getTotalHours(student) < 90
+                    }"
+                  ></div>
+                </div>
+              </div>
+            </div>
+            
+            <div class="card-footer bg-transparent">
+              <div class="d-flex gap-2">
+                <button 
+                  class="btn btn-outline-primary btn-sm flex-fill"
+                  (click)="viewStudentDetails(student.id)"
+                >
+                  <i class="bi bi-eye me-1"></i>
+                  {{ 'students.actions.view_details' | translate }}
+                </button>
+                @if (getPendingHours(student) > 0) {
+                  <button 
+                    class="btn btn-warning btn-sm flex-fill"
+                    (click)="approveHours(student.id)"
+                  >
+                    <i class="bi bi-check-circle me-1"></i>
+                    {{ 'students.actions.approve_hours' | translate }}
+                  </button>
+                }
+              </div>
+            </div>
+          </div>
+        </div>
+      }
+    </div>
+  }
+
+  <!-- Empty State -->
+  @if (!isLoading && filteredStudents.length === 0 && students.length === 0) {
+    <div class="text-center py-5">
+      <i class="bi bi-people fs-1 text-muted d-block mb-3"></i>
+      <h5 class="text-muted">{{ 'students.empty.no_students' | translate }}</h5>
+      <p class="text-muted">{{ 'students.empty.no_students_desc' | translate }}</p>
+    </div>
+  }
+
+  <!-- No Search Results -->
+  @if (!isLoading && filteredStudents.length === 0 && students.length > 0) {
+    <div class="text-center py-5">
+      <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>
+      <h5 class="text-muted">{{ 'students.empty.no_results' | translate }}</h5>
+      <p class="text-muted">{{ 'students.empty.no_results_desc' | translate }}</p>
+      <button class="btn btn-outline-secondary" (click)="searchTerm = ''">
+        {{ 'students.actions.clear_search' | translate }}
+      </button>
+    </div>
+  }
+</div>

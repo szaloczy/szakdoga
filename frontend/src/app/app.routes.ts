@@ -4,6 +4,7 @@ import { LoginComponent } from './pages/login/login.component';
 import { MainLayoutComponent } from './layout/main-layout/main-layout.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { StudentProfileComponent } from './pages/student-profile/student-profile.component';
+import { StudentsComponent } from './pages/students/students.component';
 import { AuthService } from './services/auth.service';
 import { inject } from '@angular/core';
 import { AdminComponent } from './admin-panel/admin/admin.component';
@@ -38,6 +39,7 @@ export const routes: Routes = [
         children: [
             { path: 'dashboard', component: DashboardComponent },
             { path: 'profile', component: StudentProfileComponent },
+            { path: 'students', component: StudentsComponent, canActivate: [() => inject(AuthService).mentorAccess()] },
             { path: 'internship-hours', component: InternshipHoursComponent },
             { path: '', redirectTo: 'dashboard', pathMatch:'full' },
         ]

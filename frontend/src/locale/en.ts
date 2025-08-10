@@ -293,5 +293,93 @@ export const en: NestedI18n = {
                 text: "Reset"
             }
         }
+    },
+    students: {
+        page: {
+            title: {
+                text: "My Students"
+            }
+        },
+        search: {
+            placeholder: {
+                text: "Search by name or university..."
+            }
+        },
+        stats: {
+            total: {
+                text: "Total Students"
+            },
+            completed: {
+                text: "Completed"
+            },
+            pending: {
+                text: "Pending Approval"
+            },
+            active: {
+                text: "Active"
+            }
+        },
+        status: {
+            pending_approval: {
+                text: "Pending"
+            },
+            completed: {
+                text: "Completed"
+            },
+            active: {
+                text: "Active"
+            },
+            unknown: {
+                text: "Unknown"
+            }
+        },
+        card: {
+            university: {
+                text: "University"
+            },
+            major: {
+                text: "Major"
+            },
+            completed_hours: {
+                text: "Completed"
+            },
+            pending_hours: {
+                text: "Pending"
+            },
+            progress: {
+                text: "Progress"
+            }
+        },
+        actions: {
+            refresh: {
+                text: "Refresh"
+            },
+            view_details: {
+                text: "View Details"
+            },
+            approve_hours: {
+                text: "Approve Hours"
+            },
+            clear_search: {
+                text: "Clear Search"
+            }
+        },
+        loading: {
+            text: "Loading students..."
+        },
+        empty: {
+            no_students: {
+                text: "No Students Found"
+            },
+            no_students_desc: {
+                text: "You don't have any assigned students yet."
+            },
+            no_results: {
+                text: "No Search Results"
+            },
+            no_results_desc: {
+                text: "No students match your search criteria."
+            }
+        }
     }
 }

@@ -293,5 +293,93 @@ export const hu: NestedI18n = {
                 text: "Visszaállítás"
             }
         }
+    },
+    students: {
+        page: {
+            title: {
+                text: "Hallgatóim"
+            }
+        },
+        search: {
+            placeholder: {
+                text: "Keresés név vagy egyetem alapján..."
+            }
+        },
+        stats: {
+            total: {
+                text: "Összes Hallgató"
+            },
+            completed: {
+                text: "Befejezett"
+            },
+            pending: {
+                text: "Jóváhagyásra vár"
+            },
+            active: {
+                text: "Aktív"
+            }
+        },
+        status: {
+            pending_approval: {
+                text: "Függőben"
+            },
+            completed: {
+                text: "Befejezett"
+            },
+            active: {
+                text: "Aktív"
+            },
+            unknown: {
+                text: "Ismeretlen"
+            }
+        },
+        card: {
+            university: {
+                text: "Egyetem"
+            },
+            major: {
+                text: "Szak"
+            },
+            completed_hours: {
+                text: "Teljesített"
+            },
+            pending_hours: {
+                text: "Függőben"
+            },
+            progress: {
+                text: "Haladás"
+            }
+        },
+        actions: {
+            refresh: {
+                text: "Frissítés"
+            },
+            view_details: {
+                text: "Részletek"
+            },
+            approve_hours: {
+                text: "Órák jóváhagyása"
+            },
+            clear_search: {
+                text: "Keresés törlése"
+            }
+        },
+        loading: {
+            text: "Hallgatók betöltése..."
+        },
+        empty: {
+            no_students: {
+                text: "Nincsenek Hallgatók"
+            },
+            no_students_desc: {
+                text: "Még nincsenek hozzád rendelt hallgatók."
+            },
+            no_results: {
+                text: "Nincs Találat"
+            },
+            no_results_desc: {
+                text: "Nincs olyan hallgató, aki megfelelne a keresési feltételeknek."
+            }
+        }
     }
 }

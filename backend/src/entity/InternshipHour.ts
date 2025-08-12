@@ -4,6 +4,7 @@ import {
   Entity,
   ManyToOne,
   PrimaryGeneratedColumn,
+  UpdateDateColumn,
 } from "typeorm";
 import { Internship } from "./Internship";
 import { Mentor } from "./Mentor";
@@ -38,4 +39,10 @@ export class InternshipHour {
 
   @CreateDateColumn()
   createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @Column({ nullable: true })
+  rejectionReason?: string;
 }

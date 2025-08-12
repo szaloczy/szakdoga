@@ -76,7 +76,13 @@ router.delete("/mentor/:id", authMiddleware, mentorController.deactivate);
 const internshipHourController = new InternshipHourController();
 
 router.get("/internship-hour", internshipHourController.getAll);
-router.get("/internship-hour/mine", authMiddleware, internshipHourController.getById);
+router.get("/internship-hour/mine", authMiddleware, internshipHourController.getMyHours);
+router.get("/internship-hour/mentor", authMiddleware, internshipHourController.getMentorHours);
+router.post("/internship-hour/:id/approve", authMiddleware, internshipHourController.approve);
+router.post("/internship-hour/:id/reject", authMiddleware, internshipHourController.reject);
+router.post("/internship-hour/bulk-approve", authMiddleware, internshipHourController.bulkApprove);
+router.post("/internship-hour/student/:studentId/approve-all", authMiddleware, internshipHourController.approveAllStudentHours);
+router.get("/internship-hour/student/:studentId/details", authMiddleware, internshipHourController.getStudentHourDetails);
 router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post("/internship-hour", authMiddleware, internshipHourController.create);
 router.put("/internship-hour/:id", authMiddleware, internshipHourController.update);

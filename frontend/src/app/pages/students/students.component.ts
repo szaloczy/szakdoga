@@ -18,7 +18,10 @@ interface StudentResponseDTO {
   email: string;
   major: string | null;
   university: string | null;
-  hours: number;
+  hours: number; // Total approved hours
+  pendingHours?: number; // Pending hours awaiting approval
+  rejectedHours?: number; // Rejected hours
+  totalSubmittedHours?: number; // Total hours ever submitted
 }
 
 @Component({
@@ -44,6 +47,9 @@ export class StudentsComponent implements OnInit {
   selectedFilter = 'all'; // all, active, pending, completed
   sortBy = 'name'; // name, hours, university, status
 
+  // Configuration: set to true if you want to reload data from backend after each approval
+  private REFRESH_AFTER_APPROVAL = false;
+
   ngOnInit(): void {
     if (!this.authService.mentorAccess()) {
       this.router.navigate(['/dashboard']);
@@ -57,30 +63,30 @@ export class StudentsComponent implements OnInit {
     
     this.mentorService.getStudents().subscribe({
       next: (data: any) => {
-        // Convert the backend response to our expected format
+        console.log('Backend response:', data);
+        
+        // Handle the new backend response format
         if (Array.isArray(data)) {
-          // If data is already in the simple format we expect
+          // Direct array of StudentResponseDTO objects
           this.students = data as StudentResponseDTO[];
         } else if (data && Array.isArray(data.students)) {
-          // If data is wrapped in another object
+          // Wrapped in students property
           this.students = data.students as StudentResponseDTO[];
+        } else if (data && Array.isArray(data.data)) {
+          // Wrapped in data property
+          this.students = data.data as StudentResponseDTO[];
         } else {
-          // Fallback: transform InternshipWithHours to StudentResponseDTO
-          this.students = (data as InternshipWithHours[]).map(item => ({
-            id: item.student.id,
-            firstname: item.student.user?.firstname || '',
-            lastname: item.student.user?.lastname || '',
-            email: item.student.user?.email || '',
-            major: item.student.major,
-            university: item.student.university,
-            hours: item.hours.reduce((sum, h) => sum + (h.status === 'approved' ? 1 : 0), 0) * 8 // Rough calculation
-          }));
+          console.error('Unexpected response format:', data);
+          this.students = [];
+          this.toastService.showError('Invalid data format received from server');
         }
+        
         this.isLoading = false;
       },
       error: (err) => {
         console.error('Error loading students:', err);
         this.toastService.showError('Failed to load students');
+        this.students = [];
         this.isLoading = false;
       }
     });
@@ -183,12 +189,8 @@ export class StudentsComponent implements OnInit {
   }
 
   getPendingHours(student: StudentResponseDTO): number {
-    // For now, we don't have pending hours data from backend
-    // We'll return some pending hours based on student status
-    const status = this.getStudentStatus(student);
-    if (status === 'completed') return 0;
-    if (status === 'active') return Math.floor(student.hours * 0.15); // 15% of current hours as pending
-    return 8; // Default pending hours for new students
+    // Backend should provide this data in the StudentResponseDTO
+    return student.pendingHours || 0;
   }
 
   viewStudentDetails(studentId: number): void {
@@ -224,7 +226,7 @@ export class StudentsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#ffc107',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Approve Hours',
+      confirmButtonText: 'Approve All Pending Hours',
       cancelButtonText: 'Cancel',
       customClass: {
         popup: 'larger-swal'
@@ -234,7 +236,7 @@ export class StudentsComponent implements OnInit {
         // Show loading
         Swal.fire({
           title: 'Processing...',
-          text: 'Approving student hours',
+          text: 'Approving all pending hours for student',
           allowOutsideClick: false,
           showConfirmButton: false,
           didOpen: () => {
@@ -242,115 +244,238 @@ export class StudentsComponent implements OnInit {
           }
         });
 
-        // Simulate API call
-        setTimeout(() => {
-          // Update the student's approved hours
-          student.hours = totalAfterApproval;
-          
-          if (totalAfterApproval >= 180) {
-            Swal.fire({
-              title: 'Congratulations!',
-              html: `
-                <div class="text-center">
-                  <i class="bi bi-trophy" style="font-size: 3rem; color: #ffc107;"></i>
-                  <h4>${student.firstname} ${student.lastname}</h4>
-                  <p>has completed their <strong>180-hour</strong> internship requirement!</p>
-                  <div class="alert alert-success mt-3">
-                    Hours approved successfully!
+        // Call the new backend API
+        this.internshipHourService.approveAllStudentHours(studentId).subscribe({
+          next: (response) => {
+            console.log('Hours approved successfully:', response);
+            
+            // Update the student's hours in the local array
+            const studentIndex = this.students.findIndex(s => s.id === studentId);
+            if (studentIndex !== -1) {
+              // If backend returns updated student data, use that; otherwise calculate locally
+              if (response && response.newTotalHours !== undefined) {
+                this.students[studentIndex] = {
+                  ...this.students[studentIndex],
+                  hours: response.newTotalHours,
+                  pendingHours: 0
+                };
+              } else {
+                // Fallback to local calculation
+                this.students[studentIndex] = {
+                  ...this.students[studentIndex],
+                  hours: totalAfterApproval,
+                  pendingHours: 0
+                };
+              }
+            }
+            
+            if (totalAfterApproval >= 180) {
+              Swal.fire({
+                title: 'Congratulations!',
+                html: `
+                  <div class="text-center">
+                    <i class="bi bi-trophy" style="font-size: 3rem; color: #ffc107;"></i>
+                    <h4>${student.firstname} ${student.lastname}</h4>
+                    <p>has completed their <strong>180-hour</strong> internship requirement!</p>
+                    <div class="alert alert-success mt-3">
+                      All pending hours approved successfully!
+                    </div>
                   </div>
-                </div>
-              `,
-              icon: 'success',
-              confirmButtonColor: '#28a745',
-              confirmButtonText: 'Excellent!'
-            });
-          } else {
-            Swal.fire({
-              title: 'Hours Approved!',
-              text: `Successfully approved ${pendingHours.toFixed(1)} hours for ${student.firstname} ${student.lastname}`,
-              icon: 'success',
-              confirmButtonColor: '#28a745'
-            });
-          }
+                `,
+                icon: 'success',
+                confirmButtonColor: '#28a745',
+                confirmButtonText: 'Excellent!'
+              });
+            } else {
+              Swal.fire({
+                title: 'Hours Approved!',
+                text: `Successfully approved all pending hours for ${student.firstname} ${student.lastname}`,
+                icon: 'success',
+                confirmButtonColor: '#28a745'
+              });
+            }
 
-          this.toastService.showSuccess('Hours approved successfully!');
-        }, 1500);
+            this.toastService.showSuccess('All pending hours approved successfully!');
+            
+            // Optional: Refresh data from backend to ensure accuracy
+            if (this.REFRESH_AFTER_APPROVAL) {
+              this.loadStudents();
+            }
+          },
+          error: (error) => {
+            console.error('Error approving hours:', error);
+            Swal.fire({
+              title: 'Error!',
+              text: 'Failed to approve hours. Please try again.',
+              icon: 'error',
+              confirmButtonColor: '#dc3545'
+            });
+            this.toastService.showError('Failed to approve hours');
+          }
+        });
       }
     });
   }
 
   viewHoursDetails(student: StudentResponseDTO): void {
-    // Open hours details in a modal
+    // Show loading
     Swal.fire({
-      title: `Hours History - ${student.firstname} ${student.lastname}`,
-      html: `
-        <div class="text-start">
-          <div class="row mb-3">
-            <div class="col-6">
-              <div class="card bg-light">
-                <div class="card-body text-center">
-                  <h6 class="card-title">Total Hours</h6>
-                  <h4 class="text-primary">${student.hours.toFixed(1)}</h4>
+      title: 'Loading...',
+      text: 'Fetching hours details',
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Fetch real data from backend
+    this.internshipHourService.getStudentHourDetails(student.id).subscribe({
+      next: (response: any) => {
+        console.log('Student hours details:', response);
+        
+        const data = response.data || response;
+        const totalHours = data.totalHours || student.hours;
+        const approvedHours = data.approvedHours || student.hours;
+        const pendingHours = data.pendingHours || this.getPendingHours(student);
+        const rejectedHours = data.rejectedHours || 0;
+        const hoursList = data.hours || [];
+
+        Swal.fire({
+          title: `Hours History - ${student.firstname} ${student.lastname}`,
+          html: `
+            <div class="text-start">
+              <div class="row mb-3">
+                <div class="col-3">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Total Hours</h6>
+                      <h4 class="text-primary">${totalHours.toFixed(1)}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Approved</h6>
+                      <h4 class="text-success">${approvedHours.toFixed(1)}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Pending</h6>
+                      <h4 class="text-warning">${pendingHours.toFixed(1)}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-3">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Remaining</h6>
+                      <h4 class="text-info">${Math.max(0, 180 - totalHours).toFixed(1)}</h4>
+                    </div>
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-6">
-              <div class="card bg-light">
-                <div class="card-body text-center">
-                  <h6 class="card-title">Remaining</h6>
-                  <h4 class="text-warning">${Math.max(0, 180 - student.hours).toFixed(1)}</h4>
+              
+              <div class="progress mb-3" style="height: 20px;">
+                <div class="progress-bar bg-success" role="progressbar" 
+                     style="width: ${Math.min(100, (approvedHours / 180) * 100)}%">
+                  Approved: ${((approvedHours / 180) * 100).toFixed(1)}%
+                </div>
+                <div class="progress-bar bg-warning" role="progressbar" 
+                     style="width: ${Math.min(100 - (approvedHours / 180) * 100, (pendingHours / 180) * 100)}%">
+                  Pending: ${((pendingHours / 180) * 100).toFixed(1)}%
                 </div>
               </div>
-            </div>
-          </div>
-          
-          <div class="progress mb-3" style="height: 20px;">
-            <div class="progress-bar" role="progressbar" 
-                 style="width: ${Math.min(100, (student.hours / 180) * 100)}%">
-              ${((student.hours / 180) * 100).toFixed(1)}%
-            </div>
-          </div>
-          
-          <hr>
-          
-          <h6>Recent Activity:</h6>
-          <div class="list-group">
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>Week 1-2</strong><br>
-                <small class="text-muted">Company orientation & training</small>
+              
+              <hr>
+              
+              <h6>Recent Hour Entries:</h6>
+              <div class="list-group" style="max-height: 300px; overflow-y: auto;">
+                ${hoursList.length > 0 ? 
+                  hoursList.slice(0, 10).map((hour: any) => `
+                    <div class="list-group-item d-flex justify-content-between align-items-center">
+                      <div>
+                        <strong>${new Date(hour.date).toLocaleDateString()}</strong><br>
+                        <small class="text-muted">${hour.description || 'Work activity'}</small>
+                      </div>
+                      <div class="text-end">
+                        <span class="badge ${hour.status === 'approved' ? 'bg-success' : hour.status === 'pending' ? 'bg-warning' : 'bg-danger'} rounded-pill">
+                          ${hour.hours}h - ${hour.status}
+                        </span>
+                      </div>
+                    </div>
+                  `).join('') :
+                  '<div class="text-center text-muted py-3">No hour entries found</div>'
+                }
               </div>
-              <span class="badge bg-success rounded-pill">40h</span>
-            </div>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>Week 3-4</strong><br>
-                <small class="text-muted">Project work & development</small>
+              
+              <div class="mt-3 text-center">
+                <small class="text-muted">
+                  <i class="bi bi-info-circle"></i>
+                  Showing recent hour entries for this student
+                </small>
               </div>
-              <span class="badge bg-success rounded-pill">35h</span>
             </div>
-            <div class="list-group-item d-flex justify-content-between align-items-center">
-              <div>
-                <strong>Week 5-6</strong><br>
-                <small class="text-muted">Research & documentation</small>
+          `,
+          width: '700px',
+          confirmButtonText: 'Close',
+          confirmButtonColor: '#6c757d',
+          customClass: {
+            popup: 'larger-swal'
+          }
+        });
+      },
+      error: (error: any) => {
+        console.error('Error fetching student hours details:', error);
+        
+        // Fallback to basic view
+        Swal.fire({
+          title: `Hours History - ${student.firstname} ${student.lastname}`,
+          html: `
+            <div class="text-start">
+              <div class="row mb-3">
+                <div class="col-6">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Total Hours</h6>
+                      <h4 class="text-primary">${student.hours.toFixed(1)}</h4>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="card bg-light">
+                    <div class="card-body text-center">
+                      <h6 class="card-title">Remaining</h6>
+                      <h4 class="text-warning">${Math.max(0, 180 - student.hours).toFixed(1)}</h4>
+                    </div>
+                  </div>
+                </div>
               </div>
-              <span class="badge bg-warning rounded-pill">Pending</span>
+              
+              <div class="progress mb-3" style="height: 20px;">
+                <div class="progress-bar" role="progressbar" 
+                     style="width: ${Math.min(100, (student.hours / 180) * 100)}%">
+                  ${((student.hours / 180) * 100).toFixed(1)}%
+                </div>
+              </div>
+              
+              <div class="alert alert-warning mt-3">
+                <i class="bi bi-exclamation-triangle"></i>
+                Could not load detailed hours data. Showing basic information only.
+              </div>
             </div>
-          </div>
-          
-          <div class="mt-3 text-center">
-            <small class="text-muted">
-              <i class="bi bi-info-circle"></i>
-              Detailed timesheet data would be loaded from the backend
-            </small>
-          </div>
-        </div>
-      `,
-      width: '600px',
-      confirmButtonText: 'Close',
-      confirmButtonColor: '#6c757d',
-      customClass: {
-        popup: 'larger-swal'
+          `,
+          width: '600px',
+          confirmButtonText: 'Close',
+          confirmButtonColor: '#6c757d',
+          customClass: {
+            popup: 'larger-swal'
+          }
+        });
       }
     });
   }
@@ -387,18 +512,132 @@ export class StudentsComponent implements OnInit {
   }
 
   bulkApproveHours(): void {
-    const pendingStudents = this.students.filter(student => 
-      this.getStudentStatus(student) === 'pending'
-    );
-
-    if (pendingStudents.length === 0) {
-      this.toastService.showError('No pending hours to approve');
+    const studentsWithPending = this.students.filter(s => this.getPendingHours(s) > 0);
+    
+    if (studentsWithPending.length === 0) {
+      this.toastService.showError('No students have pending hours to approve');
       return;
     }
 
-    if (confirm(`Are you sure you want to approve pending hours for ${pendingStudents.length} students?`)) {
-      // Here you would implement the bulk approval logic
-      this.toastService.showSuccess(`Bulk approval initiated for ${pendingStudents.length} students`);
+    Swal.fire({
+      title: 'Bulk Approve All Pending Hours',
+      html: `
+        <div class="text-start">
+          <p>This will approve all pending hours for the following students:</p>
+          <ul class="list-unstyled">
+            ${studentsWithPending.map(s => `
+              <li class="mb-2">
+                <strong>${s.firstname} ${s.lastname}</strong><br>
+                <small class="text-muted">Pending: ${this.getPendingHours(s).toFixed(1)} hours</small>
+              </li>
+            `).join('')}
+          </ul>
+          <div class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle"></i>
+            This action cannot be undone!
+          </div>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#ffc107',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: `Approve All (${studentsWithPending.length} students)`,
+      cancelButtonText: 'Cancel',
+      customClass: {
+        popup: 'larger-swal'
+      }
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        this.performBulkApproval(studentsWithPending);
+      }
+    });
+  }
+
+  private performBulkApproval(students: StudentResponseDTO[]): void {
+    Swal.fire({
+      title: 'Processing...',
+      text: `Approving hours for ${students.length} students`,
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    // Process each student sequentially
+    let processedCount = 0;
+    const errors: string[] = [];
+
+    const processNext = (index: number) => {
+      if (index >= students.length) {
+        // All done
+        this.handleBulkApprovalComplete(processedCount, errors);
+        return;
+      }
+
+      const student = students[index];
+      this.internshipHourService.approveAllStudentHours(student.id).subscribe({
+        next: (response: any) => {
+          console.log(`Approved hours for ${student.firstname} ${student.lastname}:`, response);
+          
+          // Update local data
+          const studentIndex = this.students.findIndex(s => s.id === student.id);
+          if (studentIndex !== -1) {
+            const pendingHours = this.getPendingHours(student);
+            this.students[studentIndex] = {
+              ...this.students[studentIndex],
+              hours: this.students[studentIndex].hours + pendingHours,
+              pendingHours: 0  // Reset pending hours to 0 after approval
+            };
+          }
+          
+          processedCount++;
+          processNext(index + 1);
+        },
+        error: (error: any) => {
+          console.error(`Error approving hours for ${student.firstname} ${student.lastname}:`, error);
+          errors.push(`${student.firstname} ${student.lastname}: ${error.message || 'Unknown error'}`);
+          processNext(index + 1);
+        }
+      });
+    };
+
+    processNext(0);
+  }
+
+  private handleBulkApprovalComplete(successCount: number, errors: string[]): void {
+    if (errors.length === 0) {
+      Swal.fire({
+        title: 'Bulk Approval Complete!',
+        text: `Successfully approved hours for ${successCount} students`,
+        icon: 'success',
+        confirmButtonColor: '#28a745'
+      });
+      this.toastService.showSuccess(`Bulk approval complete: ${successCount} students processed`);
+      
+      // Refresh data after bulk approval if configured
+      if (this.REFRESH_AFTER_APPROVAL) {
+        this.loadStudents();
+      }
+    } else {
+      Swal.fire({
+        title: 'Bulk Approval Complete with Errors',
+        html: `
+          <div class="text-start">
+            <p><strong>Successfully processed:</strong> ${successCount} students</p>
+            <p><strong>Errors:</strong> ${errors.length}</p>
+            <hr>
+            <h6>Error Details:</h6>
+            <div class="alert alert-danger">
+              ${errors.map(error => `<small>${error}</small>`).join('<br>')}
+            </div>
+          </div>
+        `,
+        icon: 'warning',
+        confirmButtonColor: '#ffc107'
+      });
+      this.toastService.showError(`Bulk approval completed with ${errors.length} errors`);
     }
   }
 

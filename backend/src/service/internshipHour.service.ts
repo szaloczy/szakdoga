@@ -7,6 +7,7 @@ import { mapInternshipHourToDTO } from "../dto/internshipHour.dto";
 import { User } from "../entity/User";
 import { stat } from "fs";
 import { Mentor } from "../entity/Mentor";
+import { In } from "typeorm";
 
 export class InternshipHourService {
   private hourRepo = AppDataSource.getRepository(InternshipHour);
@@ -251,7 +252,7 @@ export class InternshipHourService {
     return await this.hourRepo.save(hour);
   }
 
-  async rejectHour(hourId: number, mentorUserId: number, reason?: string): Promise<InternshipHour> {
+   async rejectHour(hourId: number, mentorUserId: number, reason?: string): Promise<InternshipHour> {
     const hour = await this.hourRepo.findOne({
       where: { id: hourId },
       relations: ["internship", "internship.mentor", "internship.mentor.user"],
@@ -282,8 +283,7 @@ export class InternshipHourService {
 
     hour.status = "rejected";
     hour.approvedBy = mentor; // Itt most a Mentor entitást használjuk
-    //hour.approvedAt = new Date();
-    //if (reason) hour.rejectionReason = reason;
+    if (reason) hour.rejectionReason = reason;
 
     return await this.hourRepo.save(hour);
   }
@@ -316,17 +316,248 @@ export class InternshipHourService {
     return hours.map(mapInternshipHourToDTO);
   }
 
-  async getTotalHoursForStudent(userId: number): Promise<number> {
-    const result = await this.hourRepo
-      .createQueryBuilder("hour")
-      .leftJoin("hour.internship", "internship")
-      .leftJoin("internship.student", "student")
-      .leftJoin("student.user", "user")
-      .select("SUM(EXTRACT(EPOCH FROM (hour.endTime::time - hour.startTime::time))/3600)", "totalHours")
-      .where("user.id = :userId", { userId })
-      .andWhere("hour.status = :status", { status: "approved" })
-      .getRawOne();
+  async getTotalHoursForStudent(studentUserId: number): Promise<number> {
+    // Lekérjük a student adatait
+    const student = await this.studentRepo.findOne({
+      where: { user: { id: studentUserId } },
+      relations: ["user"]
+    });
 
-    return parseFloat(result.totalHours) || 0;
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    // Lekérjük a hallgató internship-jét
+    const internship = await this.internshipRepo.findOne({
+      where: { 
+        student: { id: student.id },
+        isApproved: true
+      }
+    });
+
+    if (!internship) {
+      return 0; // Nincs jóváhagyott internship
+    }
+
+    // Számoljuk az approved órák összegét
+    const hours = await this.hourRepo.find({
+      where: {
+        internship: { id: internship.id },
+        status: "approved"
+      }
+    });
+
+    let totalHours = 0;
+    for (const hour of hours) {
+      const start = new Date(`2000-01-01 ${hour.startTime}`);
+      const end = new Date(`2000-01-01 ${hour.endTime}`);
+      const diffMs = end.getTime() - start.getTime();
+      totalHours += diffMs / (1000 * 60 * 60);
+    }
+
+    return Math.round(totalHours * 100) / 100;
+  }
+
+  async bulkApproveHours(hourIds: number[], mentorUserId: number): Promise<InternshipHour[]> {
+    const hours = await this.hourRepo.find({
+      where: { id: In(hourIds) },
+      relations: ["internship", "internship.mentor", "internship.mentor.user"],
+    });
+
+    if (hours.length === 0) {
+      throw new Error("No hours found with the provided IDs");
+    }
+
+    // Lekérjük a Mentor entitást
+    const mentor = await this.mentorRepo.findOne({ 
+      where: { user: { id: mentorUserId } },
+      relations: ["user"]
+    });
+    
+    if (!mentor) {
+      throw new Error("Mentor not found");
+    }
+
+    const approvedHours: InternshipHour[] = [];
+
+    for (const hour of hours) {
+      // Ellenőrizzük, hogy a mentor jogosult-e jóváhagyni
+      if (hour.internship.mentor.user.id !== mentorUserId) {
+        throw new Error(`You can only approve hours for your own students. Hour ID: ${hour.id}`);
+      }
+
+      if (hour.status !== "pending") {
+        continue; // Skip non-pending hours
+      }
+
+      hour.status = "approved";
+      hour.approvedBy = mentor;
+      approvedHours.push(hour);
+    }
+
+    if (approvedHours.length === 0) {
+      throw new Error("No pending hours found to approve");
+    }
+
+    return await this.hourRepo.save(approvedHours);
+  }
+
+  async approveAllStudentPendingHours(studentUserId: number, mentorUserId: number): Promise<InternshipHour[]> {
+    // Lekérjük a student adatait
+    const student = await this.studentRepo.findOne({
+      where: { user: { id: studentUserId } },
+      relations: ["user"]
+    });
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    // Lekérjük a hallgató internship-jét
+    const internship = await this.internshipRepo.findOne({
+      where: { 
+        student: { id: student.id },
+        mentor: { user: { id: mentorUserId } },
+        isApproved: true
+      },
+      relations: ["mentor", "mentor.user"]
+    });
+
+    if (!internship) {
+      throw new Error("No approved internship found for this student under your mentorship");
+    }
+
+    // Lekérjük az összes pending órát
+    const pendingHours = await this.hourRepo.find({
+      where: {
+        internship: { id: internship.id },
+        status: "pending"
+      },
+      relations: ["internship"]
+    });
+
+    if (pendingHours.length === 0) {
+      throw new Error("No pending hours found for this student");
+    }
+
+    // Lekérjük a Mentor entitást
+    const mentor = await this.mentorRepo.findOne({ 
+      where: { user: { id: mentorUserId } },
+      relations: ["user"]
+    });
+    
+    if (!mentor) {
+      throw new Error("Mentor not found");
+    }
+
+    // Jóváhagyjuk az összes pending órát
+    for (const hour of pendingHours) {
+      hour.status = "approved";
+      hour.approvedBy = mentor;
+    }
+
+    return await this.hourRepo.save(pendingHours);
+  }
+
+  async getStudentHourDetails(studentUserId: number, mentorUserId: number): Promise<any> {
+    // Lekérjük a student adatait
+    const student = await this.studentRepo.findOne({
+      where: { user: { id: studentUserId } },
+      relations: ["user"]
+    });
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    // Lekérjük a hallgató internship-jét
+    const internship = await this.internshipRepo.findOne({
+      where: { 
+        student: { id: student.id },
+        mentor: { user: { id: mentorUserId } },
+        isApproved: true
+      },
+      relations: ["mentor", "mentor.user", "student", "student.user"]
+    });
+
+    if (!internship) {
+      throw new Error("No approved internship found for this student under your mentorship");
+    }
+
+    // Lekérjük az összes órát
+    const hours = await this.hourRepo.find({
+      where: { internship: { id: internship.id } },
+      relations: ["approvedBy", "approvedBy.user"],
+      order: { date: "DESC", startTime: "ASC" }
+    });
+
+    // Összegzés készítése
+    let totalHours = 0;
+    let approvedHours = 0;
+    let pendingHours = 0;
+    let rejectedHours = 0;
+
+    for (const hour of hours) {
+      const start = new Date(`2000-01-01 ${hour.startTime}`);
+      const end = new Date(`2000-01-01 ${hour.endTime}`);
+      const diffMs = end.getTime() - start.getTime();
+      const duration = diffMs / (1000 * 60 * 60);
+
+      totalHours += duration;
+      
+      switch (hour.status) {
+        case "approved":
+          approvedHours += duration;
+          break;
+        case "pending":
+          pendingHours += duration;
+          break;
+        case "rejected":
+          rejectedHours += duration;
+          break;
+      }
+    }
+
+    return {
+      student: {
+        id: student.user.id,
+        firstname: student.user.firstname,
+        lastname: student.user.lastname,
+        email: student.user.email,
+        major: student.major,
+        university: student.university
+      },
+      internship: {
+        id: internship.id,
+        startDate: internship.startDate,
+        endDate: internship.endDate
+      },
+      summary: {
+        totalHours: Math.round(totalHours * 100) / 100,
+        approvedHours: Math.round(approvedHours * 100) / 100,
+        pendingHours: Math.round(pendingHours * 100) / 100,
+        rejectedHours: Math.round(rejectedHours * 100) / 100,
+        completionPercentage: Math.round((approvedHours / 180) * 100),
+        remainingHours: Math.max(0, 180 - approvedHours)
+      },
+      hours: hours.map(hour => ({
+        id: hour.id,
+        date: hour.date,
+        startTime: hour.startTime,
+        endTime: hour.endTime,
+        description: hour.description,
+        status: hour.status,
+        duration: Math.round(((new Date(`2000-01-01 ${hour.endTime}`).getTime() - 
+                              new Date(`2000-01-01 ${hour.startTime}`).getTime()) / (1000 * 60 * 60)) * 100) / 100,
+        submittedAt: hour.createdAt.toISOString(),
+        reviewedAt: hour.status !== 'pending' && hour.updatedAt ? hour.updatedAt.toISOString() : undefined,
+        rejectionReason: hour.rejectionReason,
+        approvedBy: hour.approvedBy ? {
+          id: hour.approvedBy.id,
+          firstname: hour.approvedBy.user?.firstname,
+          lastname: hour.approvedBy.user?.lastname
+        } : null
+      }))
+    };
   }
 }

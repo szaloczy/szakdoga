@@ -218,14 +218,32 @@ export class MentorService {
     const studentsWithHours: StudentWithHoursDto[] = [];
     
     for (const internship of internships) {
-      const approvedHours = internship.hours?.filter(hour => hour.status === 'approved') || [];
+      const allHours = internship.hours || [];
       
-      let totalHours = 0;
-      for (const hour of approvedHours) {
+      let approvedHours = 0;
+      let pendingHours = 0;
+      let rejectedHours = 0;
+      let totalSubmittedHours = 0;
+      
+      for (const hour of allHours) {
         const start = new Date(`2000-01-01 ${hour.startTime}`);
         const end = new Date(`2000-01-01 ${hour.endTime}`);
         const diffMs = end.getTime() - start.getTime();
-        totalHours += diffMs / (1000 * 60 * 60); // ms to hours
+        const duration = diffMs / (1000 * 60 * 60); // ms to hours
+        
+        totalSubmittedHours += duration;
+        
+        switch (hour.status) {
+          case 'approved':
+            approvedHours += duration;
+            break;
+          case 'pending':
+            pendingHours += duration;
+            break;
+          case 'rejected':
+            rejectedHours += duration;
+            break;
+        }
       }
 
       studentsWithHours.push({
@@ -235,7 +253,10 @@ export class MentorService {
         email: internship.student.user.email,
         major: internship.student.major,
         university: internship.student.university,
-        hours: totalHours
+        hours: Math.round(approvedHours * 100) / 100,                    // Jóváhagyott órák
+        pendingHours: Math.round(pendingHours * 100) / 100,              // Pending órák
+        rejectedHours: Math.round(rejectedHours * 100) / 100,            // Elutasított órák
+        totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100 // Összes beküldött
       });
     }
 

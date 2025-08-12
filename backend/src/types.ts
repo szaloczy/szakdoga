@@ -90,7 +90,46 @@ export interface StudentWithHoursDto {
   email: string;
   major?: string | null;
   university?: string | null;
-  hours: number;
+  hours: number;                    // Jóváhagyott órák összesen
+  pendingHours: number;             // Jóváhagyásra váró órák
+  rejectedHours: number;            // Elutasított órák
+  totalSubmittedHours: number;      // Összes beküldött óra
+}
+
+export interface ApproveAllHoursResponse {
+  success: boolean;
+  message: string;
+  approvedHours: number;
+  newTotalHours: number;
+}
+
+export interface StudentHourDetailsResponse {
+  studentId: number;
+  statistics: {
+    totalHours: number;
+    approvedHours: number;
+    pendingHours: number;
+    rejectedHours: number;
+  };
+  hours: HourEntryDTO[];
+}
+
+export interface HourEntryDTO {
+  id: number;
+  date: string;                     // ISO date string
+  hours: number;                    // Órák száma (pl. 8, 4.5)
+  description: string;              // Munka leírása
+  status: 'pending' | 'approved' | 'rejected';
+  submittedAt: string;              // ISO datetime
+  reviewedAt?: string;              // ISO datetime (ha reviewed)
+  reviewedBy?: string;              // Mentor email/név
+  rejectionReason?: string;         // Ha rejected
+}
+
+export interface BulkApproveResponse {
+  success: boolean;
+  processedCount: number;
+  errors: string[];
 }
 
 export interface createMentorDTO {

@@ -26,4 +26,25 @@ export class InternshipHourService {
   update(id: number, hour: InternshipHourDTO) { return this.http.put<InternshipHourDTO>(`/api/internship-hour/${id}`, hour) };
 
   delete(id: number) { return this.http.delete<any>(`/api/internship-hour/${id}`) };
+
+  // New methods for mentor functionality
+  approveHour(id: number) { 
+    return this.http.post<any>(`/api/internship-hour/${id}/approve`, {}) 
+  };
+
+  rejectHour(id: number, reason?: string) { 
+    return this.http.post<any>(`/api/internship-hour/${id}/reject`, { reason }) 
+  };
+
+  bulkApprove(hourIds: number[]) {
+    return this.http.post<any>(`/api/internship-hour/bulk-approve`, { hourIds })
+  };
+
+  approveAllStudentHours(studentId: number) {
+    return this.http.post<any>(`/api/internship-hour/student/${studentId}/approve-all`, {})
+  };
+
+  getStudentHourDetails(studentId: number) {
+    return this.http.get<any>(`/api/internship-hour/student/${studentId}/details`)
+  };
 }

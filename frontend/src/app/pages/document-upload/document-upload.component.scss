@@ -1,0 +1,119 @@
+
+.simple-upload-container {
+  max-width: 500px;
+  margin: 40px auto;
+  padding: 24px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+  h2 {
+    margin-bottom: 16px;
+    font-size: 1.3rem;
+    color: #333;
+  }
+  h3 {
+    margin-top: 32px;
+    font-size: 1.1rem;
+    color: #222;
+  }
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    input[type="file"] {
+      border: 1px solid #ccc;
+      padding: 8px;
+      border-radius: 6px;
+    }
+    button {
+      background: #1976d2;
+      color: #fff;
+      border: none;
+      padding: 8px 0;
+      border-radius: 6px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: background 0.2s;
+      &:hover:not(:disabled) {
+        background: #1565c0;
+      }
+      &:disabled {
+        background: #eee;
+        color: #aaa;
+        cursor: not-allowed;
+      }
+    }
+  }
+  .error {
+    color: #d32f2f;
+    margin-top: 10px;
+  }
+  .success {
+    color: #388e3c;
+    margin-top: 10px;
+  }
+  .loading {
+    color: #1976d2;
+    margin-top: 10px;
+  }
+  .empty {
+    color: #888;
+    margin-top: 10px;
+  }
+  .doc-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-top: 12px;
+    .doc-item {
+      padding: 12px 0;
+      border-bottom: 1px solid #eee;
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+      .doc-main {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        .doc-name {
+          font-weight: 500;
+          color: #222;
+        }
+        .doc-date {
+          color: #888;
+          font-size: 0.95em;
+        }
+        .doc-status {
+          margin-left: auto;
+        }
+        .badge {
+          padding: 2px 10px;
+          border-radius: 8px;
+          font-size: 0.9em;
+          font-weight: 500;
+          &.pending {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
+          }
+          &.approved {
+            background: #e6f4ea;
+            color: #388e3c;
+            border: 1px solid #c8e6c9;
+          }
+          &.rejected {
+            background: #ffebee;
+            color: #d32f2f;
+            border: 1px solid #ffcdd2;
+          }
+        }
+      }
+      .review-note {
+        font-size: 0.95em;
+        color: #555;
+        margin-left: 4px;
+        margin-top: 2px;
+      }
+    }
+  }
+}

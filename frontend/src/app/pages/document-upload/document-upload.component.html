@@ -1,0 +1,32 @@
+
+<div class="simple-upload-container">
+  <h2>Dokumentum feltöltése (PDF)</h2>
+  <form (submit)="$event.preventDefault(); uploadFile()">
+    <input type="file" accept="application/pdf" (change)="onFileSelected($event)" [disabled]="uploading" />
+    <button type="submit" [disabled]="!selectedFile || uploading">Feltöltés</button>
+  </form>
+  <div *ngIf="uploadError" class="error">{{ uploadError }}</div>
+  <div *ngIf="uploadSuccess" class="success">Sikeres feltöltés!</div>
+  <div *ngIf="uploading" class="loading">Feltöltés folyamatban...</div>
+
+  <hr />
+  <h3>Feltöltött dokumentumok</h3>
+  <div *ngIf="loadingDocs" class="loading">Dokumentumok betöltése...</div>
+  <div *ngIf="!loadingDocs && documents.length === 0" class="empty">Nincs feltöltött dokumentum.</div>
+  <ul *ngIf="!loadingDocs && documents.length > 0" class="doc-list">
+    <li *ngFor="let doc of documents" class="doc-item">
+      <div class="doc-main">
+        <span class="doc-name">{{ doc.originalName }}</span>
+        <span class="doc-date">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>
+        <span class="doc-status" [ngClass]="doc.status">
+          <ng-container [ngSwitch]="doc.status">
+            <span *ngSwitchCase="'pending'" class="badge pending">Függőben</span>
+            <span *ngSwitchCase="'approved'" class="badge approved">Elfogadva</span>
+            <span *ngSwitchCase="'rejected'" class="badge rejected">Elutasítva</span>
+          </ng-container>
+        </span>
+      </div>
+      <div *ngIf="doc.reviewNote" class="review-note">{{ doc.reviewNote }}</div>
+    </li>
+  </ul>
+</div>

@@ -6,6 +6,8 @@ import { InternshipController } from "./controller/internship.controller";
 import { MentorController } from "./controller/mentor.controller";
 import { InternshipHourController } from "./controller/internshipHour.controller";
 import { authMiddleware } from "./middleware/auth.middleware";
+import { DocumentController } from "./controller/document.controller";
+import { documentUpload } from "./middleware/multer.middleware";
 
 export const router = express.Router();
 
@@ -87,3 +89,12 @@ router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post("/internship-hour", authMiddleware, internshipHourController.create);
 router.put("/internship-hour/:id", authMiddleware, internshipHourController.update);
 router.delete("/internship-hour/:id", authMiddleware, internshipHourController.delete);
+
+// Document routes
+const documentController = new DocumentController();
+
+router.post("/documents/upload", authMiddleware, documentUpload.single("file"), documentController.upload);
+router.get("/documents/student", authMiddleware, documentController.getStudentDocuments);
+router.post("/documents/:id/review", authMiddleware, documentController.review);
+router.get("/documents/:id/download", authMiddleware, documentController.download);
+router.delete("/documents/:id", authMiddleware, documentController.delete);

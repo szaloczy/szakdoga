@@ -1,8 +1,12 @@
 import { NgClass } from '@angular/common';
+import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { I18nService } from '../../shared/i18n.pipe';
-import { UserDTO, UserRole, InternshipWithHours, MentorProfileDTO } from '../../../types';
+import { UserDTO, UserRole, InternshipWithHours, MentorProfileDTO, StudentDTO, InternshipHourDTO } from '../../../types';
+import { StudentService } from '../../services/student.service';
+import { InternshipHourService } from '../../services/internship-hour.service';
+import { DocumentService, UploadedDocument } from '../../services/document.service';
 import { UserService } from '../../services/user.service';
 import { MentorService } from '../../services/mentor.service';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
@@ -12,8 +16,12 @@ import { StudentListComponent } from '../../components/student-list/student-list
   imports: [
     I18nService,
     NgClass,
-    StudentListComponent
+    StudentListComponent,
+    CommonModule,
+    DatePipe,
+    TitleCasePipe
   ],
+
   templateUrl: './dashboard.component.html',
   styleUrl: './dashboard.component.scss'
 })
@@ -22,57 +30,122 @@ export class DashboardComponent implements OnInit{
   userService = inject(UserService);
   mentorService = inject(MentorService);
   authService = inject(AuthService);
+  studentService = inject(StudentService);
+  internshipHourService = inject(InternshipHourService);
+  documentService = inject(DocumentService);
 
-  user: UserDTO = {
-      id: 0,
-      firstname: '',
-      lastname: '',
-      email: '',
-      active: true,
-      role: UserRole.STUDENT,
-    }
+  user: UserDTO | null = null;
+  studentProfile: StudentDTO | null = null;
+  internshipInfo: any = null;
+  studentHours: InternshipHourDTO[] = [];
+  studentHourStats = { approved: 0, pending: 0, rejected: 0 };
+  studentDocuments: UploadedDocument[] = [];
+  mentorProfile: MentorProfileDTO | null = null;
+  mentorStudents: StudentDTO[] = [];
+  mentorStudentHourStats: { [studentId: number]: { approved: number; pending: number; rejected: number; total: number } } = {};
+  mentorDocuments: UploadedDocument[] = [];
+  mentorStats = { totalStudents: 0, activeStudents: 0, totalHours: 0, pendingHours: 0, documents: { pending: 0, approved: 0, rejected: 0 } };
+  notifications: any[] = [];
 
   // Student dashboard data
-  summaryCards = [
-    { title: 'Gyakorlat állapota', value: 'Elfogadva', bg: 'bg-success' },
-    { title: 'Teljesített órák', value: '120 / 180', bg: 'bg-info' },
-    { title: 'Helyszín', value: 'Minta Kft., Budapest', bg: 'bg-dark' },
-    { title: 'Konzulens', value: 'Dr. Példa László', bg: 'bg-secondary' },
-  ];
-
-  nextDeadline = {
-    label: 'Szakmai beszámoló',
-    date: '2025. május 20.'
-  };
+  summaryCards: any[] = [];
+  nextDeadline: { label: string; date: string } | null = null;
 
   // Mentor dashboard data
   mentorCards: any[] = [];
-  mentorStudents: InternshipWithHours[] = [];
-  mentorProfile: MentorProfileDTO | null = null;
   isLoadingMentorData = false;
 
   // Mentor quick actions
   mentorActions = [
     { label: 'Órák jóváhagyása', icon: 'bi-check-circle', action: 'approveHours', count: 0 },
-    { label: 'Dokumentumok áttekintése', icon: 'bi-file-text', action: 'reviewDocs', count: 0 },
-    { label: 'Hallgatók üzenetek', icon: 'bi-chat-dots', action: 'messages', count: 0 },
-    { label: 'Értékelések', icon: 'bi-star', action: 'evaluations', count: 0 }
+    { label: 'Dokumentumok áttekintése', icon: 'bi-file-text', action: 'reviewDocs', count: 0 }
+    // További műveletek API-ból tölthetők
   ];
 
   ngOnInit(): void {
-     this.userService.getOne(this.authService.getUserId()).subscribe({
+    const userId = this.authService.getUserId();
+    this.userService.getOne(userId).subscribe({
       next: (userData) => {
         this.user = userData;
-        
-        // Load mentor-specific data if user is a mentor
+        if (this.authService.getRole() === 'student') {
+          this.loadStudentDashboard(userId);
+        }
         if (this.authService.getRole() === 'mentor') {
-          this.loadMentorData();
+          this.loadMentorDashboard(userId);
         }
       },
       error: (err) => {
         console.error(err);
       }
     });
+  }
+
+  private loadStudentDashboard(userId: number) {
+    // Személyes adatok
+    this.studentService.getByUserId(userId).subscribe({
+      next: (profile: StudentDTO) => {
+        this.studentProfile = profile;
+        // Gyakornoki státusz, mentor, cég, időszak
+        this.internshipInfo = (profile as any).internship || null;
+      }
+    });
+    // Saját órák
+    this.internshipHourService.getMine().subscribe({
+      next: (hours: InternshipHourDTO[]) => {
+        this.studentHours = hours;
+        this.studentHourStats = {
+          approved: hours.filter((h: InternshipHourDTO) => h.status === 'approved').length,
+          pending: hours.filter((h: InternshipHourDTO) => h.status === 'pending').length,
+          rejected: hours.filter((h: InternshipHourDTO) => h.status === 'rejected').length
+        };
+      }
+    });
+    // Dokumentumok
+    this.documentService.getStudentDocuments().subscribe({
+      next: (docs) => {
+        this.studentDocuments = docs;
+      }
+    });
+    // TODO: értesítések
+  }
+
+  private loadMentorDashboard(userId: number) {
+    // Mentor profil
+    this.mentorService.getByUserId(userId).subscribe({
+      next: (profile) => {
+        this.mentorProfile = profile;
+      }
+    });
+    // Hallgatók listája
+    this.mentorService.getStudents().subscribe({
+      next: (students: StudentDTO[]) => {
+        this.mentorStudents = students;
+        this.mentorStats.totalStudents = students.length;
+        // Statisztikák aggregálása minden hallgatóhoz tartozó órákból
+        students.forEach(student => {
+          this.internshipHourService.getStudentHourDetails(student.id).subscribe({
+            next: (details: any) => {
+              const hours = details.hours || [];
+              this.mentorStudentHourStats[student.id] = {
+                approved: hours.filter((h: InternshipHourDTO) => h.status === 'approved').length,
+                pending: hours.filter((h: InternshipHourDTO) => h.status === 'pending').length,
+                rejected: hours.filter((h: InternshipHourDTO) => h.status === 'rejected').length,
+                total: hours.length
+              };
+            }
+          });
+        });
+      }
+    });
+    // Hallgatók órái
+  // Összesített statisztikák aggregálása a mentorStudentHourStats-ból (async, ezért csak megjelenítéskor aggregáld)
+    // Dokumentumok
+    // TODO: mentor dokumentumok végpont
+    // this.documentService.getMentorDocuments().subscribe(...)
+    // Statisztikák
+    // TODO: mentor statisztika végpont
+    // Értesítések
+    // TODO: mentor notification végpont
   }
 
   private loadMentorData(): void {
@@ -103,23 +176,9 @@ export class DashboardComponent implements OnInit{
 
   private updateMentorCards(): void {
     const totalStudents = this.mentorStudents.length;
-    const studentsWithHours = this.mentorStudents.filter(s => s.hours && s.hours.length > 0).length;
-    
-    // Calculate total hours by calculating duration for each hour entry
-    const totalHours = this.mentorStudents.reduce((sum, s) => {
-      return sum + (s.hours ? s.hours.reduce((hourSum, h) => {
-        // Calculate hours from startTime and endTime
-        const start = new Date(`2000-01-01T${h.startTime}`);
-        const end = new Date(`2000-01-01T${h.endTime}`);
-        const diffMs = end.getTime() - start.getTime();
-        const diffHours = diffMs / (1000 * 60 * 60);
-        return hourSum + (diffHours > 0 ? diffHours : 0);
-      }, 0) : 0);
-    }, 0);
-    
-    const pendingApprovals = this.mentorStudents.reduce((sum, s) => {
-      return sum + (s.hours ? s.hours.filter(h => h.status === 'pending').length : 0);
-    }, 0);
+    const studentsWithHours = Object.values(this.mentorStudentHourStats).filter(stats => stats.total > 0).length;
+    const totalHours = Object.values(this.mentorStudentHourStats).reduce((sum, stats) => sum + stats.approved, 0);
+    const pendingApprovals = Object.values(this.mentorStudentHourStats).reduce((sum, stats) => sum + stats.pending, 0);
 
     this.mentorCards = [
       { 

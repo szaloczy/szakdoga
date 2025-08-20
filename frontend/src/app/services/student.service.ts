@@ -12,4 +12,6 @@ export class StudentService {
   getAll() { return this.http.get<StudentDTO[]>(`/api/student`)};
 
   getById(id: number) { return this.http.get<StudentDTO>(`/api/student/${id}`)};
+
+  getByUserId(userId: number) { return this.http.get<StudentDTO>(`/api/student/user/${userId}`); }
 }

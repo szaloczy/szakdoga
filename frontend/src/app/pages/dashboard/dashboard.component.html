@@ -1,30 +1,101 @@
 <div class="container mt-4">
-  <h2>{{ 'dashboard.title' | translate }} {{user.firstname}} {{user.lastname}}!</h2>
+  <h2>{{ 'dashboard.title' | translate }} {{user?.firstname}} {{user?.lastname}}!</h2>
 
   @if (authService.getRole() === "student") {
-    <!-- Student Dashboard -->
-    <div class="row my-4">
-      @for(card of summaryCards; track card) {
-      <div class="col-md-3">
-        <div class="card text-white mb-3" [ngClass]="card.bg">
-          <div class="card-body">
-            <h5 class="card-title">{{ card.title }}</h5>
-            <p class="card-text">{{ card.value }}</p>
+    <!-- Student Dashboard - Modern Design -->
+    <div class="row g-4 my-4">
+      <div class="col-12 col-md-6 col-lg-3" *ngFor="let card of summaryCards">
+        <div class="card shadow-lg border-0 h-100 animate__animated animate__fadeInUp" [ngClass]="card.bg">
+          <div class="card-body d-flex flex-column justify-content-center align-items-center">
+            <i class="bi bi-star-fill fs-1 mb-2 text-warning"></i>
+            <h5 class="card-title text-white">{{ card.title }}</h5>
+            <p class="card-text display-6 fw-bold text-white mb-0">{{ card.value }}</p>
           </div>
         </div>
       </div>
-      }
     </div>
 
-    <div class="alert alert-warning d-flex align-items-center" role="alert">
-      <i class="bi bi-exclamation-triangle-fill me-2"></i>
-      Következő határidő: <strong> {{ nextDeadline.label }} </strong> – {{ nextDeadline.date }}
+    <div class="d-flex gap-3 mt-3 flex-wrap justify-content-center">
+      <button class="btn btn-gradient-primary px-4 py-2 rounded-pill shadow"><i class="bi bi-upload me-2"></i>Dokumentumok feltöltése</button>
+      <button class="btn btn-gradient-secondary px-4 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Új gyakorlat rögzítése</button>
+      <button class="btn btn-gradient-info px-4 py-2 rounded-pill shadow"><i class="bi bi-clock-history me-2"></i>Korábbi gyakorlatok</button>
     </div>
 
-    <div class="d-flex gap-3 mt-3 flex-wrap">
-      <button class="btn btn-primary">Dokumentumok feltöltése</button>
-      <button class="btn btn-outline-secondary">Új gyakorlat rögzítése</button>
-      <button class="btn btn-outline-info">Korábbi gyakorlatok</button>
+    <div class="row g-4 mt-4">
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-lg animate__animated animate__fadeInLeft">
+          <div class="card-header bg-primary text-white">
+            <h5 class="mb-0"><i class="bi bi-person me-2"></i>Személyes adatok</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Név:</strong> {{ studentProfile?.user?.firstname }} {{ studentProfile?.user?.lastname }}</li>
+              <li class="list-group-item"><strong>Neptun kód:</strong> {{ studentProfile?.neptun }}</li>
+              <li class="list-group-item"><strong>Egyetem:</strong> {{ studentProfile?.university }}</li>
+              <li class="list-group-item"><strong>Telefonszám:</strong> {{ studentProfile?.phone }}</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-lg-6">
+        <div class="card border-0 shadow-lg animate__animated animate__fadeInRight" *ngIf="internshipInfo">
+          <div class="card-header bg-info text-white">
+            <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>Gyakornoki információk</h5>
+          </div>
+          <div class="card-body">
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item"><strong>Cég:</strong> {{ internshipInfo.company?.name }}</li>
+              <li class="list-group-item"><strong>Mentor:</strong> {{ internshipInfo.mentor?.firstname }} {{ internshipInfo.mentor?.lastname }}</li>
+              <li class="list-group-item"><strong>Időszak:</strong> {{ internshipInfo.startDate | date:'yyyy.MM.dd' }} - {{ internshipInfo.endDate | date:'yyyy.MM.dd' }}</li>
+              <li class="list-group-item"><strong>Státusz:</strong> <span [ngClass]="internshipInfo.isApproved ? 'text-success' : 'text-warning'">{{ internshipInfo.isApproved ? 'Jóváhagyva' : 'Függőben' }}</span></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp">
+      <div class="card-header bg-success text-white">
+        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Órák összesítése</h5>
+      </div>
+      <div class="card-body">
+        <div class="mb-3">
+          <label class="form-label">Jóváhagyott órák</label>
+          <div class="progress">
+            <div class="progress-bar bg-success" role="progressbar" [style.width]="(studentHourStats.approved / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.approved" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.approved }}</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Függő órák</label>
+          <div class="progress">
+            <div class="progress-bar bg-warning" role="progressbar" [style.width]="(studentHourStats.pending / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.pending" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.pending }}</div>
+          </div>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Elutasított órák</label>
+          <div class="progress">
+            <div class="progress-bar bg-danger" role="progressbar" [style.width]="(studentHourStats.rejected / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.rejected" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.rejected }}</div>
+          </div>
+        </div>
+        <p class="mt-3"><strong>Összes óra:</strong> {{ studentHours.length }}</p>
+      </div>
+    </div>
+
+    <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp" *ngIf="studentDocuments.length > 0">
+      <div class="card-header bg-secondary text-white">
+        <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Feltöltött dokumentumok</h5>
+      </div>
+      <div class="card-body">
+        <ul class="list-group">
+          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of studentDocuments">
+            <div>
+              <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ doc.status | titlecase }}</span>
+              <span *ngIf="doc.reviewNote" class="ms-2 text-muted"> (Megjegyzés: {{ doc.reviewNote }})</span>
+            </div>
+            <span class="text-muted">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>
+          </li>
+        </ul>
+      </div>
     </div>
 
   } @else if (authService.getRole() === "mentor") {
@@ -113,12 +184,12 @@
               @for(student of mentorStudents.slice(0, 5); track student) {
               <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
-                  <h6 class="mb-1">{{ student.student.user?.firstname || 'N/A' }} {{ student.student.user?.lastname || '' }}</h6>
-                  <p class="mb-1 text-muted">{{ student.student.university || 'Egyetem nem megadva' }}</p>
-                  <small>Órák száma: {{ student.hours.length || 0 }}</small>
+                  <h6 class="mb-1">{{ student.user?.firstname || 'N/A' }} {{ student.user?.lastname || '' }}</h6>
+                  <p class="mb-1 text-muted">{{ student.university || 'Egyetem nem megadva' }}</p>
+                  <small>Órák száma: {{ mentorStudentHourStats[student.id] ? mentorStudentHourStats[student.id].total : 0 }}</small>
                 </div>
                 <div class="text-end">
-                  @if (hasPendingHours(student)) {
+                  @if (mentorStudentHourStats[student.id] && mentorStudentHourStats[student.id].pending > 0) {
                     <span class="badge bg-warning">Jóváhagyásra vár</span>
                   } @else {
                     <span class="badge bg-success">Naprakész</span>

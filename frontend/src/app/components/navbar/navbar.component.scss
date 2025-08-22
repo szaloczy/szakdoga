@@ -1,27 +1,57 @@
+
 .navbar {
   height: 56px;
-  background-color: #343a40;
-  color: white;
+  background: linear-gradient(135deg, #1976d2 0%, #2196f3 100%);
+  color: #fff;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 0 1rem;
+  gap: 16px;
+  padding: 0 2rem;
   position: fixed;
   width: 100%;
   top: 0;
   z-index: 1000;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.12);
+  transition: background 0.3s, box-shadow 0.3s;
 
   .brand {
     text-transform: uppercase;
+    font-weight: 600;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
   }
 
   .hamburger {
     cursor: pointer;
     font-size: 25px;
+    border-radius: 8px;
+    padding: 6px;
+    transition: background 0.2s;
+    &:hover {
+      background: rgba(255,255,255,0.12);
+    }
   }
+}
 
-  .hamburger:hover {
-    background-color: rgb(79, 79, 80);
+.navbar input {
+  margin-left: auto;
+  margin-right: 0.5rem;
+  padding: 0.4rem 0.8rem;
+  border-radius: 8px;
+  border: none;
+  font-size: 1rem;
+}
+
+.profile-icon {
+  font-size: 1.5rem;
+  margin-left: 1rem;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.12);
+  padding: 6px;
+  transition: background 0.2s;
+  &:hover {
+    background: #e3f2fd;
+    color: #1976d2;
   }
 }
 

@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { MentorService } from '../../services/mentor.service';
-import { InternshipWithHours } from '../../../types';
+import { InternshipWithHours, extendedStudentDTO } from '../../../types';
 
 @Component({
   selector: 'app-student-list',
@@ -12,7 +12,7 @@ export class StudentListComponent {
 
   mentorService = inject(MentorService);
 
-  students: InternshipWithHours[] = [];
+  students: extendedStudentDTO[] = [];
 
   ngOnInit(): void {
     this.loadStudents();

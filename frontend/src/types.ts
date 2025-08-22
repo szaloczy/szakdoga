@@ -61,6 +61,18 @@ export interface StudentDTO {
     user: UserDTO | null;
 }
 
+export interface extendedStudentDTO {
+    id: number;
+    firstname: string;
+    lastname: string;
+    hours: number;
+    major: string;
+    pendingHours: number;
+    rejectedHours: number;
+    totalSubmittedHours: number;
+    university: string;
+}
+
 export interface ProfileDTO {
     id: number;
     email: string;

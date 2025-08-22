@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { InternshipWithHours, MentorDTO, CreateMentorDTO, UpdateMentorDTO, MentorProfileDTO } from '../../types';
+import { InternshipWithHours, MentorDTO, CreateMentorDTO, UpdateMentorDTO, MentorProfileDTO, extendedStudentDTO } from '../../types';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +21,7 @@ export class MentorService {
 
   deactivate(id: number) { return this.http.delete<any>(`/api/mentor/${id}`)};
 
-  getStudents() { return this.http.get<any>(`/api/mentor/students`)};  // Returns StudentResponseDTO[]
+  getStudents() { return this.http.get<extendedStudentDTO[]>(`/api/mentor/students`)};  // Returns StudentResponseDTO[]
 
   getByCompany(companyId: number) { return this.http.get<MentorDTO[]>(`/api/mentor/company/${companyId}`)};
 

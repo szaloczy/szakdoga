@@ -7,6 +7,67 @@ export class StudentService {
   private studentRepository = AppDataSource.getRepository(Student);
   private userRepository = AppDataSource.getRepository(User);
 
+  async getStudentHoursForExport(studentId: number) {
+    // Lekérjük a hallgatóhoz tartozó internship-et és annak óráit
+    const student = await this.studentRepository.findOne({
+      where: { id: studentId },
+      relations: ["internship", "internship.hours"]
+    });
+    if (!student || !student.internship) return [];
+    const hours = student.internship.hours || [];
+    // DTO mapping
+    return hours.map(hour => ({
+      date: hour.date,
+      startTime: hour.startTime,
+      endTime: hour.endTime,
+      description: hour.description,
+      status: hour.status
+    }));
+  }
+
+  async getStudentsForExport(filters: { status?: string, university?: string, name?: string }) {
+    const query = this.studentRepository.createQueryBuilder("student")
+      .leftJoinAndSelect("student.user", "user")
+      .leftJoinAndSelect("student.internship", "internship")
+      .leftJoinAndSelect("internship.hours", "hour");
+
+    if (filters.status) {
+      query.andWhere("student.status = :status", { status: filters.status });
+    }
+    if (filters.university) {
+      query.andWhere("student.university = :university", { university: filters.university });
+    }
+    if (filters.name) {
+      query.andWhere("(user.firstname ILIKE :name OR user.lastname ILIKE :name)", { name: `%${filters.name}%` });
+    }
+
+    const students = await query.getMany();
+
+    // Formázás CSV-hez, órák összesítése
+    return students.map(s => {
+      let completedHours = 0;
+      let pendingHours = 0;
+      if (s.internship && s.internship.hours) {
+        for (const hour of s.internship.hours) {
+          const start = new Date(`2000-01-01T${hour.startTime}`);
+          const end = new Date(`2000-01-01T${hour.endTime}`);
+          const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+          if (hour.status === "approved") completedHours += diff;
+          if (hour.status === "pending") pendingHours += diff;
+        }
+      }
+      return {
+        firstname: s.user?.firstname ?? "",
+        lastname: s.user?.lastname ?? "",
+        email: s.user?.email ?? "",
+        university: s.university ?? "",
+  // status: s.status ?? "", // kihagyva
+        completedHours: Math.round(completedHours * 100) / 100,
+        pendingHours: Math.round(pendingHours * 100) / 100
+      };
+    });
+  }
+
   async getAllActiveStudents(): Promise<StudentDTO[]> {
     const students = await this.studentRepository.find({
       relations: ["user"],

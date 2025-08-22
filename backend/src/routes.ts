@@ -31,6 +31,12 @@ router.get("/student/user/:userId", authMiddleware, studentController.getByUserI
 //router.get("/student/neptun/:neptun", studentController.getByNeptun);
 //router.get("/student/search", studentController.searchStudents);
 
+// CSV export route
+router.get("/students/export-csv", authMiddleware, studentController.exportCsv);
+
+// Saját órák exportja hallgatónak
+router.get("/students/export-csv/mine", authMiddleware, studentController.exportMyCsv);
+
 // Company routes
 const companyController = new CompanyController();
 

@@ -145,26 +145,31 @@
             <i class="bi bi-x-lg"></i> Clear
           </button>
         </div>
-        <div class="col-md-3 text-end">
-          <div class="btn-group">
-            <button
-              type="button"
-              class="btn btn-outline-primary"
-              (click)="refreshData()"
-              [disabled]="isLoading"
-            >
-              <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
-              Refresh
-            </button>
-            <button
-              type="button"
-              class="btn btn-outline-success"
-              (click)="exportToCSV()"
-              [disabled]="filteredEntries.length === 0"
-            >
-              <i class="bi bi-download"></i> Export CSV
-            </button>
-          </div>
+        <div class="col-md-3 text-end d-flex justify-content-end gap-2">
+          <button
+            type="button"
+            class="btn btn-outline-primary"
+            (click)="refreshData()"
+            [disabled]="isLoading"
+          >
+            <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+            Refresh
+          </button>
+          <button
+            type="button"
+            class="btn btn-success"
+            (click)="exportToCSV()"
+            [disabled]="filteredEntries.length === 0"
+          >
+            <i class="bi bi-download"></i> Export to CSV
+          </button>
+          <button
+            type="button"
+            class="btn btn-primary"
+            (click)="addHour()"
+          >
+            <i class="bi bi-plus-lg"></i> Óra hozzáadása
+          </button>
         </div>
       </div>
 

@@ -1,8 +1,45 @@
 import { StudentService } from "../service/student.service";
 import { Controller } from "./base.controller";
+import { parse } from "json2csv";
 
 export class StudentController extends Controller {
   private service = new StudentService();
+
+    exportMyCsv = async (req, res) => {
+      try {
+        const user = (req as any).user;
+        if (!user) return res.status(401).json({ error: "Unauthorized" });
+
+        // Lekérjük a hallgató rekordot
+        const student = await this.service.getStudentByUserId(user.id);
+        if (!student) return res.status(404).json({ error: "Student not found" });
+
+        // Lekérjük az órákat
+        const hours = await this.service.getStudentHoursForExport(student.id);
+
+        if (!hours || hours.length === 0) {
+          return res.status(404).json({ error: "No hours found" });
+        }
+
+        // CSV generálás
+        const fields = [
+          { label: "Dátum", value: "date" },
+          { label: "Kezdés", value: "startTime" },
+          { label: "Végzés", value: "endTime" },
+          { label: "Leírás", value: "description" },
+          { label: "Státusz", value: "status" }
+        ];
+        const opts = { fields, delimiter: "," };
+        const csv = parse(hours, opts);
+
+        const fileName = `my_hours_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+        res.setHeader("Content-Type", "text/csv");
+        res.setHeader("Content-Disposition", `attachment; filename=\"${fileName}\"`);
+        res.status(200).send(csv);
+      } catch (err) {
+        res.status(500).json({ error: err.message });
+      }
+    };
 
   getAll = async (req, res) => {
     try {
@@ -10,6 +47,40 @@ export class StudentController extends Controller {
       res.json(students);
     } catch (error) {
       this.handleError(res, error);
+    }
+  };
+
+  exportCsv = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const { status, university, name } = req.query;
+      const students = await this.service.getStudentsForExport({ status, university, name });
+
+      if (!students || students.length === 0) {
+        return res.status(404).json({ error: "No students found" });
+      }
+
+      const fields = [
+        { label: "Név", value: row => `${row.firstname} ${row.lastname}` },
+        { label: "Email", value: "email" },
+        { label: "Egyetem", value: "university" },
+        { label: "Státusz", value: "status" },
+        { label: "Teljesített órák", value: "completedHours" },
+        { label: "Függő órák", value: "pendingHours" }
+      ];
+      const opts = { fields, delimiter: "," };
+      const csv = parse(students, opts);
+
+      const fileName = `students_export_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+      res.setHeader("Content-Type", "text/csv");
+      res.setHeader("Content-Disposition", `attachment; filename=\"${fileName}\"`);
+      res.status(200).send(csv);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
     }
   };
 

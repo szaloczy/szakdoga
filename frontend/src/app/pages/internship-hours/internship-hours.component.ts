@@ -16,6 +16,9 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './internship-hours.component.scss'
 })
 export class InternshipHoursComponent implements OnInit {
+addHour() {
+throw new Error('Method not implemented.');
+}
 
   internshipHoursService = inject(InternshipHourService);
   toastService = inject(ToastService);

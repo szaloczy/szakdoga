@@ -30,6 +30,15 @@ export class WeekViewComponent implements OnInit {
 
   isModalOpen = false;
 
+  /**
+   * Visszaadja a hét napjának nevét i18n kulcs alapján
+   */
+  getDayName(date: Date): string {
+    // Mindig en-US rövidítésből generálunk kulcsot: pl. Mon, Tue, stb.
+    const short = date.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
+    return this.i18nService.transform('days.' + short);
+  }
+
   ngOnInit(): void {
     this.selectedDate.setHours(0, 0, 0, 0);
 
@@ -114,7 +123,11 @@ export class WeekViewComponent implements OnInit {
 
     const h = Math.floor(totalMinutes / 60);
     const m = totalMinutes % 60;
-    return h > 0 ? `${h} óra ${m > 0 ? m + ' perc' : ''}` : `${m} perc`;
+    if (h > 0) {
+      return `${h} ${this.i18nService.transform('time.hour')}${m > 0 ? ' ' + m + ' ' + this.i18nService.transform('time.minute') : ''}`;
+    } else {
+      return `${m} ${this.i18nService.transform('time.minute')}`;
+    }
   }
 
   getDuration(start: string, end: string): string {
@@ -123,7 +136,11 @@ export class WeekViewComponent implements OnInit {
     const mins = (eh * 60 + em) - (sh * 60 + sm);
     const h = Math.floor(mins / 60);
     const m = mins % 60;
-    return h > 0 ? `${h} ó ${m > 0 ? m + ' p' : ''}` : `${m} perc`;
+    if (h > 0) {
+      return `${h} ${this.i18nService.transform('time.hour')}${m > 0 ? ' ' + m + ' ' + this.i18nService.transform('time.minute') : ''}`;
+    } else {
+      return `${m} ${this.i18nService.transform('time.minute')}`;
+    }
   }
 
   formatDate(date: Date): string {

@@ -6,7 +6,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
-              <h6 class="card-title">Approved Hours</h6>
+              <h6 class="card-title">{{ 'internship_hours.stats.approved' | translate }}</h6>
               <h4>{{ formatDuration(approvedHours) }}</h4>
             </div>
             <i class="bi bi-check-circle-fill fs-1"></i>
@@ -19,7 +19,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
-              <h6 class="card-title">Pending Hours</h6>
+              <h6 class="card-title">{{ 'internship_hours.stats.pending' | translate }}</h6>
               <h4>{{ formatDuration(pendingHours) }}</h4>
             </div>
             <i class="bi bi-hourglass-split fs-1"></i>
@@ -32,7 +32,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
-              <h6 class="card-title">Rejected Hours</h6>
+              <h6 class="card-title">{{ 'internship_hours.stats.rejected' | translate }}</h6>
               <h4>{{ formatDuration(rejectedHours) }}</h4>
             </div>
             <i class="bi bi-x-circle-fill fs-1"></i>
@@ -45,7 +45,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <div>
-              <h6 class="card-title">Total Hours</h6>
+              <h6 class="card-title">{{ 'internship_hours.stats.total' | translate }}</h6>
               <h4>{{ formatDuration(totalHours) }}</h4>
             </div>
             <i class="bi bi-clock-fill fs-1"></i>
@@ -64,7 +64,7 @@
         (click)="handleTabChange('week')"
         href="javascript:void(0)"
       >
-        <i class="bi bi-calendar-week me-1"></i> Week View
+        <i class="bi bi-calendar-week me-1"></i> {{ 'internship_hours.tabs.week' | translate }}
       </a>
     </li>
     <li class="nav-item">
@@ -74,7 +74,7 @@
         (click)="handleTabChange('approved')"
         href="javascript:void(0)"
       >
-        <i class="bi bi-check-circle me-1"></i> Approved Hours
+        <i class="bi bi-check-circle me-1"></i> {{ 'internship_hours.tabs.approved' | translate }}
         @if (approvedHours > 0) {
           <span class="badge bg-success ms-1">{{ formatDuration(approvedHours) }}</span>
         }
@@ -87,7 +87,7 @@
         (click)="handleTabChange('pending')"
         href="javascript:void(0)"
       >
-        <i class="bi bi-hourglass-split me-1"></i> Pending Hours
+        <i class="bi bi-hourglass-split me-1"></i> {{ 'internship_hours.tabs.pending' | translate }}
         @if (pendingHours > 0) {
           <span class="badge bg-warning ms-1">{{ formatDuration(pendingHours) }}</span>
         }
@@ -100,7 +100,7 @@
         (click)="handleTabChange('rejected')"
         href="javascript:void(0)"
       >
-        <i class="bi bi-x-circle me-1"></i> Rejected Hours
+        <i class="bi bi-x-circle me-1"></i> {{ 'internship_hours.tabs.rejected' | translate }}
         @if (rejectedHours > 0) {
           <span class="badge bg-danger ms-1">{{ formatDuration(rejectedHours) }}</span>
         }
@@ -121,7 +121,7 @@
             <input
               type="text"
               class="form-control"
-              placeholder="Search descriptions..."
+              placeholder="{{ 'internship_hours.filters.search_placeholder' | translate }}"
               [(ngModel)]="searchTerm"
               (input)="onSearchChange()"
             />
@@ -142,7 +142,7 @@
             (click)="clearFilters()"
             [disabled]="!searchTerm && !dateFilter"
           >
-            <i class="bi bi-x-lg"></i> Clear
+            <i class="bi bi-x-lg"></i> {{ 'internship_hours.filters.clear' | translate }}
           </button>
         </div>
         <div class="col-md-3 text-end d-flex justify-content-end gap-2">
@@ -153,7 +153,7 @@
             [disabled]="isLoading"
           >
             <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
-            Refresh
+            {{ 'internship_hours.actions.refresh' | translate }}
           </button>
           <button
             type="button"
@@ -161,14 +161,14 @@
             (click)="exportToCSV()"
             [disabled]="filteredEntries.length === 0"
           >
-            <i class="bi bi-download"></i> Export to CSV
+            <i class="bi bi-download"></i> {{ 'internship_hours.actions.export_csv' | translate }}
           </button>
           <button
             type="button"
             class="btn btn-primary"
             (click)="addHour()"
           >
-            <i class="bi bi-plus-lg"></i> Óra hozzáadása
+            <i class="bi bi-plus-lg"></i> {{ 'internship_hours.actions.add_hour' | translate }}
           </button>
         </div>
       </div>
@@ -177,9 +177,9 @@
       @if (isLoading) {
         <div class="text-center py-5">
           <div class="spinner-border text-primary" role="status">
-            <span class="visually-hidden">Loading...</span>
+            <span class="visually-hidden">{{ 'dashboard.loading' | translate }}</span>
           </div>
-          <p class="mt-2">Loading internship hours...</p>
+          <p class="mt-2">{{ 'internship_hours.loading' | translate }}</p>
         </div>
       }
 
@@ -190,7 +190,7 @@
           <div>
             {{ error }}
             <button class="btn btn-sm btn-outline-danger ms-2" (click)="refreshData()">
-              Try Again
+              {{ 'internship_hours.actions.try_again' | translate }}
             </button>
           </div>
         </div>
@@ -203,11 +203,11 @@
           <div class="alert alert-info d-flex justify-content-between align-items-center">
             <span>
               <i class="bi bi-info-circle me-2"></i>
-              Showing {{ filteredEntries.length }} of {{ entries.length }} entries
-              ({{ formatDuration(calculateTotalHours(filteredEntries)) }} total)
+              {{ 'internship_hours.entries.showing' | translate }} {{ filteredEntries.length }} {{ 'internship_hours.entries.of' | translate }} {{ entries.length }} {{ 'internship_hours.entries.entries' | translate }}
+              ({{ formatDuration(calculateTotalHours(filteredEntries)) }} {{ 'internship_hours.entries.total' | translate }})
             </span>
             @if (searchTerm || dateFilter) {
-              <small class="text-muted">Filters applied</small>
+              <small class="text-muted">{{ 'internship_hours.entries.filters_applied' | translate }}</small>
             }
           </div>
 
@@ -234,7 +234,7 @@
                   <p class="mb-0 text-muted">{{ entry.description }}</p>
                 </div>
                 <div class="text-end">
-                  <button class="btn btn-sm btn-outline-primary" (click)="editEntry(entry)" title="Edit">
+                  <button class="btn btn-sm btn-outline-primary" (click)="editEntry(entry)" title="{{ 'internship_hours.actions.edit' | translate }}">
                     <i class="bi bi-pencil"></i>
                   </button>
                 </div>
@@ -244,14 +244,14 @@
         } @else {
           <div class="alert alert-light text-center py-5">
             <i class="bi bi-calendar-x fs-1 text-muted"></i>
-            <h5 class="mt-3">No entries found</h5>
+            <h5 class="mt-3">{{ 'internship_hours.entries.no_entries_found' | translate }}</h5>
             @if (searchTerm || dateFilter) {
-              <p class="text-muted">Try adjusting your filters or clearing them.</p>
+              <p class="text-muted">{{ 'internship_hours.entries.try_adjusting_filters' | translate }}</p>
               <button class="btn btn-outline-secondary" (click)="clearFilters()">
-                Clear Filters
+                {{ 'internship_hours.filters.clear' | translate }}
               </button>
             } @else {
-              <p class="text-muted">No {{ selectedTab }} internship hours yet.</p>
+              <p class="text-muted">{{ 'internship_hours.entries.no_hours_yet' | translate:{tab: selectedTab} }}</p>
             }
           </div>
         }

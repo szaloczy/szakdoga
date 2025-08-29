@@ -33,7 +33,7 @@
           'text-muted': !isSameDay(date, selectedDate)
         }"
       >
-        {{ date | date: 'EEE' }} - {{date | date: 'MM.dd' }}<br />
+        {{ getDayName(date) }} - {{date | date: 'MM.dd'}}<br />
         <small>{{ getTotalForDay(date) }}</small>
       </div>
     </div>

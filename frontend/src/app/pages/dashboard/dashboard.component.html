@@ -8,7 +8,7 @@
         <div class="card shadow-lg border-0 h-100 animate__animated animate__fadeInUp" [ngClass]="card.bg">
           <div class="card-body d-flex flex-column justify-content-center align-items-center">
             <i class="bi bi-star-fill fs-1 mb-2 text-warning"></i>
-            <h5 class="card-title text-white">{{ card.title }}</h5>
+            <h5 class="card-title text-white">{{ card.title | translate }}</h5>
             <p class="card-text display-6 fw-bold text-white mb-0">{{ card.value }}</p>
           </div>
         </div>
@@ -16,23 +16,23 @@
     </div>
 
     <div class="d-flex gap-3 mt-3 flex-wrap justify-content-center">
-      <button class="btn btn-gradient-primary px-4 py-2 rounded-pill shadow"><i class="bi bi-upload me-2"></i>Dokumentumok feltöltése</button>
-      <button class="btn btn-gradient-secondary px-4 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>Új gyakorlat rögzítése</button>
-      <button class="btn btn-gradient-info px-4 py-2 rounded-pill shadow"><i class="bi bi-clock-history me-2"></i>Korábbi gyakorlatok</button>
+      <button class="btn btn-gradient-primary px-4 py-2 rounded-pill shadow"><i class="bi bi-upload me-2"></i>{{ 'dashboard.student.upload_documents' | translate }}</button>
+      <button class="btn btn-gradient-secondary px-4 py-2 rounded-pill shadow"><i class="bi bi-plus-circle me-2"></i>{{ 'dashboard.student.add_internship' | translate }}</button>
+      <button class="btn btn-gradient-info px-4 py-2 rounded-pill shadow"><i class="bi bi-clock-history me-2"></i>{{ 'dashboard.student.previous_internships' | translate }}</button>
     </div>
 
     <div class="row g-4 mt-4">
       <div class="col-12 col-lg-6">
         <div class="card border-0 shadow-lg animate__animated animate__fadeInLeft">
           <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-person me-2"></i>Személyes adatok</h5>
+            <h5 class="mb-0"><i class="bi bi-person me-2"></i>{{ 'dashboard.student.personal_data' | translate }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Név:</strong> {{ studentProfile?.user?.firstname }} {{ studentProfile?.user?.lastname }}</li>
-              <li class="list-group-item"><strong>Neptun kód:</strong> {{ studentProfile?.neptun }}</li>
-              <li class="list-group-item"><strong>Egyetem:</strong> {{ studentProfile?.university }}</li>
-              <li class="list-group-item"><strong>Telefonszám:</strong> {{ studentProfile?.phone }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.name' | translate }}:</strong> {{ studentProfile?.user?.firstname }} {{ studentProfile?.user?.lastname }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.neptun' | translate }}:</strong> {{ studentProfile?.neptun }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.university' | translate }}:</strong> {{ studentProfile?.university }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.phone' | translate }}:</strong> {{ studentProfile?.phone }}</li>
             </ul>
           </div>
         </div>
@@ -40,14 +40,14 @@
       <div class="col-12 col-lg-6">
         <div class="card border-0 shadow-lg animate__animated animate__fadeInRight" *ngIf="internshipInfo">
           <div class="card-header bg-info text-white">
-            <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>Gyakornoki információk</h5>
+            <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>{{ 'dashboard.student.internship_info' | translate }}</h5>
           </div>
           <div class="card-body">
             <ul class="list-group list-group-flush">
-              <li class="list-group-item"><strong>Cég:</strong> {{ internshipInfo.company?.name }}</li>
-              <li class="list-group-item"><strong>Mentor:</strong> {{ internshipInfo.mentor?.firstname }} {{ internshipInfo.mentor?.lastname }}</li>
-              <li class="list-group-item"><strong>Időszak:</strong> {{ internshipInfo.startDate | date:'yyyy.MM.dd' }} - {{ internshipInfo.endDate | date:'yyyy.MM.dd' }}</li>
-              <li class="list-group-item"><strong>Státusz:</strong> <span [ngClass]="internshipInfo.isApproved ? 'text-success' : 'text-warning'">{{ internshipInfo.isApproved ? 'Jóváhagyva' : 'Függőben' }}</span></li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.company' | translate }}:</strong> {{ internshipInfo.company?.name }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.mentor' | translate }}:</strong> {{ internshipInfo.mentor?.firstname }} {{ internshipInfo.mentor?.lastname }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.period' | translate }}:</strong> {{ internshipInfo.startDate | date:'yyyy.MM.dd' }} - {{ internshipInfo.endDate | date:'yyyy.MM.dd' }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.status' | translate }}:</strong> <span [ngClass]="internshipInfo.isApproved ? 'text-success' : 'text-warning'">{{ internshipInfo.isApproved ? ('dashboard.student.approved' | translate) : ('dashboard.student.pending' | translate) }}</span></li>
             </ul>
           </div>
         </div>
@@ -56,41 +56,41 @@
 
     <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp">
       <div class="card-header bg-success text-white">
-        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>Órák összesítése</h5>
+        <h5 class="mb-0"><i class="bi bi-clock-history me-2"></i>{{ 'dashboard.student.hours_summary' | translate }}</h5>
       </div>
       <div class="card-body">
         <div class="mb-3">
-          <label class="form-label">Jóváhagyott órák</label>
+          <label class="form-label">{{ 'dashboard.student.approved_hours' | translate }}</label>
           <div class="progress">
             <div class="progress-bar bg-success" role="progressbar" [style.width]="(studentHourStats.approved / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.approved" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.approved }}</div>
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Függő órák</label>
+          <label class="form-label">{{ 'dashboard.student.pending_hours' | translate }}</label>
           <div class="progress">
             <div class="progress-bar bg-warning" role="progressbar" [style.width]="(studentHourStats.pending / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.pending" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.pending }}</div>
           </div>
         </div>
         <div class="mb-3">
-          <label class="form-label">Elutasított órák</label>
+          <label class="form-label">{{ 'dashboard.student.rejected_hours' | translate }}</label>
           <div class="progress">
             <div class="progress-bar bg-danger" role="progressbar" [style.width]="(studentHourStats.rejected / (studentHours.length || 1)) * 100 + '%'" aria-valuenow="studentHourStats.rejected" aria-valuemin="0" aria-valuemax="studentHours.length">{{ studentHourStats.rejected }}</div>
           </div>
         </div>
-        <p class="mt-3"><strong>Összes óra:</strong> {{ studentHours.length }}</p>
+        <p class="mt-3"><strong>{{ 'dashboard.student.total_hours' | translate }}:</strong> {{ studentHours.length }}</p>
       </div>
     </div>
 
     <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp" *ngIf="studentDocuments.length > 0">
       <div class="card-header bg-secondary text-white">
-        <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Feltöltött dokumentumok</h5>
+        <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ 'dashboard.student.uploaded_documents' | translate }}</h5>
       </div>
       <div class="card-body">
         <ul class="list-group">
           <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of studentDocuments">
             <div>
               <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ doc.status | titlecase }}</span>
-              <span *ngIf="doc.reviewNote" class="ms-2 text-muted"> (Megjegyzés: {{ doc.reviewNote }})</span>
+              <span *ngIf="doc.reviewNote" class="ms-2 text-muted"> ({{ 'dashboard.student.note' | translate }}: {{ doc.reviewNote }})</span>
             </div>
             <span class="text-muted">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>
           </li>
@@ -100,15 +100,13 @@
 
   } @else if (authService.getRole() === "mentor") {
     <!-- Mentor Dashboard -->
-    
     @if (isLoadingMentorData) {
       <div class="d-flex justify-content-center my-5">
         <div class="spinner-border" role="status">
-          <span class="visually-hidden">Loading...</span>
+          <span class="visually-hidden">{{ 'dashboard.loading' | translate }}</span>
         </div>
       </div>
     } @else {
-      
       <!-- Mentor Statistics Cards -->
       <div class="row my-4">
         @for(card of mentorCards; track card) {
@@ -116,7 +114,7 @@
           <div class="card text-white mb-3" [ngClass]="card.bg">
             <div class="card-body d-flex align-items-center">
               <div class="flex-grow-1">
-                <h5 class="card-title">{{ card.title }}</h5>
+                <h5 class="card-title">{{ card.title | translate }}</h5>
                 <p class="card-text fs-4 fw-bold mb-0">{{ card.value }}</p>
               </div>
               <i class="{{card.icon}} fs-1 opacity-75"></i>
@@ -130,17 +128,17 @@
       @if (mentorProfile) {
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
-            <h5 class="mb-0"><i class="bi bi-building me-2"></i>Cég információk</h5>
+            <h5 class="mb-0"><i class="bi bi-building me-2"></i>{{ 'dashboard.mentor.company_info' | translate }}</h5>
           </div>
           <div class="card-body">
             <div class="row">
               <div class="col-md-6">
-                <p><strong>Cég neve:</strong> {{ mentorProfile.mentor.company.name }}</p>
-                <p><strong>Pozíció:</strong> {{ mentorProfile.mentor.position }}</p>
+                <p><strong>{{ 'dashboard.mentor.company_name' | translate }}:</strong> {{ mentorProfile.mentor.company.name }}</p>
+                <p><strong>{{ 'dashboard.mentor.position' | translate }}:</strong> {{ mentorProfile.mentor.position }}</p>
               </div>
               <div class="col-md-6">
-                <p><strong>Város:</strong> {{ mentorProfile.mentor.company.city }}</p>
-                <p><strong>Email:</strong> {{ mentorProfile.mentor.company.email }}</p>
+                <p><strong>{{ 'dashboard.mentor.city' | translate }}:</strong> {{ mentorProfile.mentor.company.city }}</p>
+                <p><strong>{{ 'dashboard.mentor.email' | translate }}:</strong> {{ mentorProfile.mentor.company.email }}</p>
               </div>
             </div>
           </div>
@@ -150,7 +148,7 @@
       <!-- Quick Actions -->
       <div class="card mb-4">
         <div class="card-header bg-secondary text-white">
-          <h5 class="mb-0"><i class="bi bi-lightning-fill me-2"></i>Gyors műveletek</h5>
+          <h5 class="mb-0"><i class="bi bi-lightning-fill me-2"></i>{{ 'dashboard.mentor.quick_actions' | translate }}</h5>
         </div>
         <div class="card-body">
           <div class="row">
@@ -160,7 +158,7 @@
                 class="btn btn-outline-primary w-100 h-100 position-relative" 
                 (click)="handleMentorAction(action.action)">
                 <i class="{{action.icon}} fs-4 d-block mb-2"></i>
-                <span class="d-block">{{ action.label }}</span>
+                <span class="d-block">{{ action.label | translate }}</span>
                 @if (action.count > 0) {
                   <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
                     {{ action.count }}
@@ -176,7 +174,7 @@
       <!-- Recent Students Activity -->
       <div class="card">
         <div class="card-header bg-info text-white">
-          <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>Legutóbbi hallgatói aktivitás</h5>
+          <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>{{ 'dashboard.mentor.recent_students_activity' | translate }}</h5>
         </div>
         <div class="card-body">
           @if (mentorStudents.length > 0) {
@@ -185,14 +183,14 @@
               <div class="list-group-item d-flex justify-content-between align-items-center">
                 <div>
                   <h6 class="mb-1">{{ student.firstname }} {{ student.lastname }}</h6>
-                  <p class="mb-1 text-muted">{{ student.university || 'Egyetem nem megadva' }}</p>
-                  <small>Órák száma: {{ mentorStudentHourStats[student.id] ? mentorStudentHourStats[student.id].total : 0 }}</small>
+                  <p class="mb-1 text-muted">{{ student.university || ('dashboard.mentor.university_not_provided' | translate) }}</p>
+                  <small>{{ 'dashboard.mentor.hours_count' | translate }}: {{ mentorStudentHourStats[student.id] ? mentorStudentHourStats[student.id].total : 0 }}</small>
                 </div>
                 <div class="text-end">
                   @if (mentorStudentHourStats[student.id] && mentorStudentHourStats[student.id].pending > 0) {
-                    <span class="badge bg-warning">Jóváhagyásra vár</span>
+                    <span class="badge bg-warning">{{ 'dashboard.mentor.pending_approval' | translate }}</span>
                   } @else {
-                    <span class="badge bg-success">Naprakész</span>
+                    <span class="badge bg-success">{{ 'dashboard.mentor.up_to_date' | translate }}</span>
                   }
                 </div>
               </div>
@@ -201,13 +199,13 @@
             
             @if (mentorStudents.length > 5) {
               <div class="text-center mt-3">
-                <button class="btn btn-outline-primary">Összes hallgató megtekintése ({{ mentorStudents.length }})</button>
+                <button class="btn btn-outline-primary">{{ 'dashboard.mentor.view_all_students' | translate }} ({{ mentorStudents.length }})</button>
               </div>
             }
           } @else {
             <div class="text-center text-muted py-4">
               <i class="bi bi-people fs-1 d-block mb-3"></i>
-              <p>Még nincsenek hozzárendelt hallgatók.</p>
+              <p>{{ 'dashboard.mentor.no_students_assigned' | translate }}</p>
             </div>
           }
         </div>

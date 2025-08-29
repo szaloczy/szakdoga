@@ -11,7 +11,7 @@ import { AuthService } from '../../services/auth.service';
 @Component({
   selector: 'app-internship-hours',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, FormsModule, WeekViewComponent],
+  imports: [ReactiveFormsModule, CommonModule, FormsModule, WeekViewComponent, I18nService],
   templateUrl: './internship-hours.component.html',
   styleUrl: './internship-hours.component.scss'
 })

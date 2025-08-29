@@ -140,97 +140,118 @@ export const hu: NestedI18n = {
         }
     },
     dashboard: {
-        title: {
-            text: "Üdvözlünk, "
+        title: { text: "Üdvözlünk, " },
+        loading: { text: "Betöltés..." },
+        student: {
+            upload_documents: { text: "Dokumentumok feltöltése" },
+            add_internship: { text: "Új gyakorlat rögzítése" },
+            previous_internships: { text: "Korábbi gyakorlatok" },
+            personal_data: { text: "Személyes adatok" },
+            name: { text: "Név" },
+            neptun: { text: "Neptun kód" },
+            university: { text: "Egyetem" },
+            phone: { text: "Telefonszám" },
+            internship_info: { text: "Gyakornoki információk" },
+            company: { text: "Cég" },
+            mentor: { text: "Mentor" },
+            period: { text: "Időszak" },
+            status: { text: "Státusz" },
+            approved: { text: "Jóváhagyva" },
+            pending: { text: "Függőben" },
+            hours_summary: { text: "Órák összesítése" },
+            approved_hours: { text: "Jóváhagyott órák" },
+            pending_hours: { text: "Függő órák" },
+            rejected_hours: { text: "Elutasított órák" },
+            total_hours: { text: "Összes óra" },
+            uploaded_documents: { text: "Feltöltött dokumentumok" },
+            note: { text: "Megjegyzés" }
+        },
+        mentor: {
+            company_info: { text: "Cég információk" },
+            company_name: { text: "Cég neve" },
+            position: { text: "Pozíció" },
+            city: { text: "Város" },
+            email: { text: "Email" },
+            quick_actions: { text: "Gyors műveletek" },
+            recent_students_activity: { text: "Legutóbbi hallgatói aktivitás" },
+            university_not_provided: { text: "Egyetem nem megadva" },
+            hours_count: { text: "Órák száma" },
+            pending_approval: { text: "Jóváhagyásra vár" },
+            up_to_date: { text: "Naprakész" },
+            view_all_students: { text: "Összes hallgató megtekintése" },
+            no_students_assigned: { text: "Még nincsenek hozzárendelt hallgatók." }
         }
     },
     profile: {
+        student_info: {
+            title: { text: "Hallgatói információk" },
+            internship: { text: "Gyakorlat" },
+            status: { text: "Státusz" },
+            approved: { text: "Jóváhagyva" },
+            pending: { text: "Függőben" },
+            no_active_internship: { text: "Nincs aktív gyakorlat" }
+        },
         student_details: {
-            title: {
-                text: "Hallgatói adatok"
-            },
+            title: { text: "Hallgatói adatok" },
+            firstname: { text: "Keresztnév" },
+            lastname: { text: "Vezetéknév" },
+            phone: { text: "Telefonszám" },
+            email: { text: "Email cím" },
+            university: { text: "Egyetem" },
+            major: { text: "Szak" },
+            neptun: { text: "Neptun kód" },
+            optional: { text: "opcionális" },
+            unsaved_changes: { text: "Vannak mentetlen módosítások. Mentsd vagy állítsd vissza a folytatáshoz." },
             placeholder: {
-                firstname: {
-                    text: "Keresztnév"
-                },
-                lastname: {
-                    text: "Vezetéknév"
-                },
-                phone: {
-                    text: "Telefonszám"
-                },
-                email: {
-                    text: "Email cím"
-                },
-                uni: {
-                    text: "Egyetem"
-                },
-                major: {
-                    text: "Szak"
-                },
-                neptun: {
-                    text: "Neptun"
-                }
+                firstname: { text: "Keresztnév" },
+                lastname: { text: "Vezetéknév" },
+                phone: { text: "Telefonszám" },
+                email: { text: "Email cím" },
+                uni: { text: "Egyetem" },
+                major: { text: "Szak" },
+                neptun: { text: "Neptun kód" }
             }
         },
         mentor_details: {
-            title: {
-                text: "Mentor adatok"
-            },
-            placeholder: {
-                firstname: {
-                    text: "Firstname"
-                },
-                lastname: {
-                    text: "Lastname"
-                },
-                phone: {
-                    text: "Phone"
-                },
-                email: {
-                    text: "Email"
-                },
-                company: {
-                    text: "Cég"
-                },
-                role: {
-                    text: "Beosztás"
-                },
-            }
+            title: { text: "Mentor adatok" },
+            firstname: { text: "Keresztnév" },
+            lastname: { text: "Vezetéknév" },
+            position: { text: "Beosztás" },
+            email: { text: "Email" },
+            company: { text: "Cég" },
+            company_location: { text: "Cég település" },
+            company_address: { text: "Cég cím" },
+            company_contact: { text: "Cég elérhetőség" },
+            quick_actions: { text: "Gyors műveletek" },
+            contact_company: { text: "Cég email küldése" },
+            view_stats: { text: "Statisztikák megtekintése" },
+            role_info: { text: "Szerepkör információ" },
+            mentor_id: { text: "Mentor ID" },
+            status: { text: "Státusz" },
+            active: { text: "Aktív" },
+            inactive: { text: "Inaktív" },
+            company_status: { text: "Cég státusz" },
+            open_in_maps: { text: "Megnyitás térképen" },
+            copy_email: { text: "Email másolása" },
+            copy_phone: { text: "Telefonszám másolása" }
         },
         company_details: {
-            title: {
-                text: "Céges adatok"
+            title: { text: "Céges adatok" },
+            start_date: { text: "Kezdés dátuma" },
+            end_date: { text: "Befejezés dátuma" },
+            message: {
+                data: { text: "Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem módosíthatók." },
+                no_data: { text: "Még nincs jóváhagyott gyakorlati adat." }
             },
             placeholder: {
-                company_name: {
-                    text: "Cég neve"
-                },
-                mentor_name: {
-                    text: "Mentor neve"
-                },
-                company_address: {
-                    text: "Cím"
-                },
-                company_email: {
-                    text: "Cég email címe"
-                },
-                mentor_email: {
-                    text: "Mentor email címe"
-                },
-                city: {
-                    text: "Település"
-                }
-            },
-            message: {
-                data: {
-                    text: "Az adatok az admin által jóváhagyott gyakorlathoz tartoznak, nem módosíthatók."
-                },
-                no_date: {
-                    text: "Még nincs jóváhagyott gyakorlati adat."
-                }
+                company_name: { text: "Cég neve" },
+                mentor_name: { text: "Mentor neve" },
+                company_email: { text: "Cég email címe" },
+                mentor_email: { text: "Mentor email címe" },
+                city: { text: "Település" },
+                company_address: { text: "Cím" }
             }
-    },
+        }
     },
     internship_hours:{
         title: {
@@ -255,6 +276,40 @@ export const hu: NestedI18n = {
         },
         zero_hour: {
             text: "Nincs rögzített óra ehez a naphoz"
+        },
+        stats: {
+            approved: { text: "Jóváhagyott órák" },
+            pending: { text: "Függő órák" },
+            rejected: { text: "Elutasított órák" },
+            total: { text: "Összes óra" }
+        },
+        tabs: {
+            week: { text: "Heti nézet" },
+            approved: { text: "Jóváhagyott órák" },
+            pending: { text: "Függő órák" },
+            rejected: { text: "Elutasított órák" }
+        },
+        filters: {
+            search_placeholder: { text: "Leírás keresése..." },
+            clear: { text: "Törlés" }
+        },
+        actions: {
+            refresh: { text: "Frissítés" },
+            export_csv: { text: "Exportálás CSV-be" },
+            add_hour: { text: "Óra hozzáadása" },
+            try_again: { text: "Újra" },
+            edit: { text: "Szerkesztés" }
+        },
+        loading: { text: "Gyakorlati órák betöltése..." },
+        entries: {
+            showing: { text: "Megjelenítve" },
+            of: { text: "a" },
+            entries: { text: "bejegyzésből" },
+            total: { text: "összesen" },
+            filters_applied: { text: "Szűrők aktívak" },
+            no_entries_found: { text: "Nincs találat" },
+            try_adjusting_filters: { text: "Próbálja módosítani a szűrőket vagy törölje őket." },
+            no_hours_yet: { text: "Nincs még {{tab}} gyakorlati óra." }
         }
     },
     admin_panel: {
@@ -381,5 +436,18 @@ export const hu: NestedI18n = {
                 text: "Nincs olyan hallgató, aki megfelelne a keresési feltételeknek."
             }
         }
+    },
+    days: {
+        mon: { text: 'Hétfő' },
+        tue: { text: 'Kedd' },
+        wed: { text: 'Szerda' },
+        thu: { text: 'Csütörtök' },
+        fri: { text: 'Péntek' },
+        sat: { text: 'Szombat' },
+        sun: { text: 'Vasárnap' },
+    },
+    time: {
+        hour: { text: 'óra' },
+        minute: { text: 'perc' },
     }
 }

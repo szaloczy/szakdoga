@@ -1,11 +1,9 @@
-// services/internship-hour.service.ts
 import { AppDataSource } from "../data-source";
 import { InternshipHour } from "../entity/InternshipHour";
 import { Internship } from "../entity/Internship";
 import { Student } from "../entity/Student";
 import { mapInternshipHourToDTO } from "../dto/internshipHour.dto";
 import { User } from "../entity/User";
-import { stat } from "fs";
 import { Mentor } from "../entity/Mentor";
 import { In } from "typeorm";
 
@@ -14,7 +12,7 @@ export class InternshipHourService {
   private internshipRepo = AppDataSource.getRepository(Internship);
   private studentRepo = AppDataSource.getRepository(Student);
   private userRepo = AppDataSource.getRepository(User);
-    private mentorRepo = AppDataSource.getRepository(Mentor);
+  private mentorRepo = AppDataSource.getRepository(Mentor);
 
 
   async createHourForStudent(
@@ -169,22 +167,19 @@ export class InternshipHourService {
       throw new Error("Hour entry not found");
     }
 
-    // Ellenőrizzük, hogy a felhasználó tulajdonosa-e az órának
     if (hour.internship.student.user.id !== userId) {
       throw new Error("You can only update your own hour entries");
     }
 
-    // Csak pending státuszú órákat lehet módosítani
     if (hour.status !== "pending") {
       throw new Error("Can only update pending hour entries");
     }
 
-    // Validációk
+    
     if (data.startTime && data.endTime && data.startTime >= data.endTime) {
       throw new Error("Start time must be earlier than end time");
     }
 
-    // Frissítés
     if (data.date) hour.date = data.date;
     if (data.startTime) hour.startTime = data.startTime;
     if (data.endTime) hour.endTime = data.endTime;
@@ -203,12 +198,10 @@ export class InternshipHourService {
       throw new Error("Hour entry not found");
     }
 
-    // Ellenőrizzük, hogy a felhasználó tulajdonosa-e az órának
     if (hour.internship.student.user.id !== userId) {
       throw new Error("You can only delete your own hour entries");
     }
 
-    // Csak pending státuszú órákat lehet törölni
     if (hour.status !== "pending") {
       throw new Error("Can only delete pending hour entries");
     }
@@ -226,7 +219,6 @@ export class InternshipHourService {
       throw new Error("Hour entry not found");
     }
 
-    // Ellenőrizzük, hogy a mentor jogosult-e jóváhagyni
     if (hour.internship.mentor.user.id !== mentorUserId) {
       throw new Error("You can only approve hours for your own students");
     }
@@ -235,7 +227,6 @@ export class InternshipHourService {
       throw new Error("Can only approve pending hour entries");
     }
 
-    // Lekérjük a Mentor entitást a User ID alapján
     const mentor = await this.mentorRepo.findOne({ 
       where: { user: { id: mentorUserId } },
       relations: ["user"]
@@ -246,8 +237,7 @@ export class InternshipHourService {
     }
 
     hour.status = "approved";
-    hour.approvedBy = mentor; // Itt most a Mentor entitást használjuk
-    //hour.approvedAt = new Date();
+    hour.approvedBy = mentor;
 
     return await this.hourRepo.save(hour);
   }
@@ -262,7 +252,6 @@ export class InternshipHourService {
       throw new Error("Hour entry not found");
     }
 
-    // Ellenőrizzük, hogy a mentor jogosult-e elutasítani
     if (hour.internship.mentor.user.id !== mentorUserId) {
       throw new Error("You can only reject hours for your own students");
     }
@@ -271,7 +260,6 @@ export class InternshipHourService {
       throw new Error("Can only reject pending hour entries");
     }
 
-    // Lekérjük a Mentor entitást a User ID alapján
     const mentor = await this.mentorRepo.findOne({ 
       where: { user: { id: mentorUserId } },
       relations: ["user"]
@@ -282,7 +270,7 @@ export class InternshipHourService {
     }
 
     hour.status = "rejected";
-    hour.approvedBy = mentor; // Itt most a Mentor entitást használjuk
+    hour.approvedBy = mentor;
     if (reason) hour.rejectionReason = reason;
 
     return await this.hourRepo.save(hour);
@@ -317,7 +305,6 @@ export class InternshipHourService {
   }
 
   async getTotalHoursForStudent(studentUserId: number): Promise<number> {
-    // Lekérjük a student adatait
     const student = await this.studentRepo.findOne({
       where: { user: { id: studentUserId } },
       relations: ["user"]
@@ -327,7 +314,6 @@ export class InternshipHourService {
       throw new Error("Student not found");
     }
 
-    // Lekérjük a hallgató internship-jét
     const internship = await this.internshipRepo.findOne({
       where: { 
         student: { id: student.id },
@@ -336,10 +322,9 @@ export class InternshipHourService {
     });
 
     if (!internship) {
-      return 0; // Nincs jóváhagyott internship
+      return 0;
     }
 
-    // Számoljuk az approved órák összegét
     const hours = await this.hourRepo.find({
       where: {
         internship: { id: internship.id },
@@ -368,7 +353,6 @@ export class InternshipHourService {
       throw new Error("No hours found with the provided IDs");
     }
 
-    // Lekérjük a Mentor entitást
     const mentor = await this.mentorRepo.findOne({ 
       where: { user: { id: mentorUserId } },
       relations: ["user"]
@@ -381,13 +365,12 @@ export class InternshipHourService {
     const approvedHours: InternshipHour[] = [];
 
     for (const hour of hours) {
-      // Ellenőrizzük, hogy a mentor jogosult-e jóváhagyni
       if (hour.internship.mentor.user.id !== mentorUserId) {
         throw new Error(`You can only approve hours for your own students. Hour ID: ${hour.id}`);
       }
 
       if (hour.status !== "pending") {
-        continue; // Skip non-pending hours
+        continue; 
       }
 
       hour.status = "approved";
@@ -403,7 +386,7 @@ export class InternshipHourService {
   }
 
   async approveAllStudentPendingHours(studentUserId: number, mentorUserId: number): Promise<InternshipHour[]> {
-    // Lekérjük a student adatait
+    
     const student = await this.studentRepo.findOne({
       where: { user: { id: studentUserId } },
       relations: ["user"]
@@ -413,7 +396,7 @@ export class InternshipHourService {
       throw new Error("Student not found");
     }
 
-    // Lekérjük a hallgató internship-jét
+    
     const internship = await this.internshipRepo.findOne({
       where: { 
         student: { id: student.id },
@@ -427,7 +410,7 @@ export class InternshipHourService {
       throw new Error("No approved internship found for this student under your mentorship");
     }
 
-    // Lekérjük az összes pending órát
+    
     const pendingHours = await this.hourRepo.find({
       where: {
         internship: { id: internship.id },
@@ -440,7 +423,6 @@ export class InternshipHourService {
       throw new Error("No pending hours found for this student");
     }
 
-    // Lekérjük a Mentor entitást
     const mentor = await this.mentorRepo.findOne({ 
       where: { user: { id: mentorUserId } },
       relations: ["user"]
@@ -450,7 +432,6 @@ export class InternshipHourService {
       throw new Error("Mentor not found");
     }
 
-    // Jóváhagyjuk az összes pending órát
     for (const hour of pendingHours) {
       hour.status = "approved";
       hour.approvedBy = mentor;
@@ -460,7 +441,6 @@ export class InternshipHourService {
   }
 
   async getStudentHourDetails(studentUserId: number, mentorUserId: number): Promise<any> {
-    // Lekérjük a student adatait
     const student = await this.studentRepo.findOne({
       where: { user: { id: studentUserId } },
       relations: ["user"]
@@ -470,7 +450,6 @@ export class InternshipHourService {
       throw new Error("Student not found");
     }
 
-    // Lekérjük a hallgató internship-jét
     const internship = await this.internshipRepo.findOne({
       where: { 
         student: { id: student.id },
@@ -484,14 +463,12 @@ export class InternshipHourService {
       throw new Error("No approved internship found for this student under your mentorship");
     }
 
-    // Lekérjük az összes órát
     const hours = await this.hourRepo.find({
       where: { internship: { id: internship.id } },
       relations: ["approvedBy", "approvedBy.user"],
       order: { date: "DESC", startTime: "ASC" }
     });
 
-    // Összegzés készítése
     let totalHours = 0;
     let approvedHours = 0;
     let pendingHours = 0;

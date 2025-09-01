@@ -30,11 +30,9 @@ export class WeekViewComponent implements OnInit {
 
   isModalOpen = false;
 
-  /**
-   * Visszaadja a hét napjának nevét i18n kulcs alapján
-   */
+  @Input() internships: InternshipListDTO[] = [];
+
   getDayName(date: Date): string {
-    // Mindig en-US rövidítésből generálunk kulcsot: pl. Mon, Tue, stb.
     const short = date.toLocaleDateString('en-US', { weekday: 'short' }).toLowerCase();
     return this.i18nService.transform('days.' + short);
   }
@@ -176,8 +174,16 @@ export class WeekViewComponent implements OnInit {
         this.loadHours();
       },
       error: (err) => {
+        console.error(err.error);
         this.toastService.showError(this.i18nService.transform('response.hour_invalid'+ `: ${err.error.message}`));
       }
     });
+  }
+
+  /**
+   * Returns true if user has at least one approved internship
+   */
+  get hasApprovedInternship(): boolean {
+    return this.internships.some((i: InternshipListDTO) => i.isApproved === true);
   }
 }

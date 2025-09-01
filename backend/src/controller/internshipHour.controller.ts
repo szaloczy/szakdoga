@@ -4,7 +4,6 @@ import { InternshipHourService } from "../service/internshipHour.service";
 export class InternshipHourController extends Controller {
   private service = new InternshipHourService();
 
-  // Összes óra lekérdezése (admin/mentor számára)
   getAll = async (req, res) => {
     try {
       const status = req.query.status as string;
@@ -15,7 +14,6 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Egy óra lekérdezése ID alapján
   getOne = async (req, res) => {
     try {
       const hourId = Number(req.params["id"]);
@@ -36,7 +34,6 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Saját órák lekérdezése (hallgató számára)
   getMyHours = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -53,7 +50,6 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Mentor órái (mentor számára)
   getMentorHours = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -70,7 +66,6 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Új óra létrehozása
   create = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -80,7 +75,7 @@ export class InternshipHourController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Validáció
+      
       if (!data.date || !data.startTime || !data.endTime || !data.description) {
         return this.handleError(res, null, 400, "All fields are required");
       }
@@ -92,7 +87,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Óra módosítása
+ 
   update = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -114,7 +109,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Óra törlése
+  
   delete = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -135,7 +130,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Óra jóváhagyása (mentor számára)
+  
   approve = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -156,7 +151,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Óra elutasítása (mentor számára)
+  
   reject = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -178,7 +173,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Hallgató összes órája
+  
   getTotalHours = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -194,13 +189,13 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Deprecated metódus - használd getMyHours-t helyette
+  
   getById = async (req, res) => {
     console.warn("getById method is deprecated, use getMyHours instead");
     return this.getMyHours(req, res);
   };
 
-  // Tömeges óra jóváhagyás (mentor számára)
+  
   bulkApprove = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -221,7 +216,7 @@ export class InternshipHourController extends Controller {
         errors: []
       });
     } catch (error) {
-      // Részleges sikerek kezelése
+      
       if (error.message.includes("No pending hours found")) {
         res.json({
           success: false,
@@ -234,7 +229,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Hallgató összes pending órájának jóváhagyása
+  
   approveAllStudentHours = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -250,7 +245,7 @@ export class InternshipHourController extends Controller {
 
       const result = await this.service.approveAllStudentPendingHours(studentId, user.id);
       
-      // Számoljuk ki az órák számát
+      
       const approvedHoursCount = result.reduce((sum, hour) => {
         const start = new Date(`2000-01-01 ${hour.startTime}`);
         const end = new Date(`2000-01-01 ${hour.endTime}`);
@@ -258,7 +253,7 @@ export class InternshipHourController extends Controller {
         return sum + (diffMs / (1000 * 60 * 60));
       }, 0);
 
-      // Számoljuk ki az új összes órát
+      
       const newTotalHours = await this.service.getTotalHoursForStudent(studentId);
 
       res.json({
@@ -272,7 +267,7 @@ export class InternshipHourController extends Controller {
     }
   };
 
-  // Hallgató részletes óra adatai
+  
   getStudentHourDetails = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -288,7 +283,7 @@ export class InternshipHourController extends Controller {
 
       const hourDetails = await this.service.getStudentHourDetails(studentId, user.id);
       
-      // Átalakítjuk a frontend elvárásainak megfelelően
+      
       const response = {
         studentId: hourDetails.student.id,
         statistics: {

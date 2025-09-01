@@ -277,6 +277,9 @@ export const hu: NestedI18n = {
         zero_hour: {
             text: "Nincs rögzített óra ehez a naphoz"
         },
+        no_internship: {
+            text: "Nem tudsz órát regisztrálni amíg nincs jóváhagyott gyakorlati helyed"
+        },
         stats: {
             approved: { text: "Jóváhagyott órák" },
             pending: { text: "Függő órák" },

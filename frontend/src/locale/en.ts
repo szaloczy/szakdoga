@@ -310,6 +310,9 @@ export const en: NestedI18n = {
             no_entries_found: { text: "No entries found" },
             try_adjusting_filters: { text: "Try adjusting your filters or clearing them." },
             no_hours_yet: { text: "No {{tab}} internship hours yet." }
+        },
+        no_internship: {
+            text: "You cannot register hours until you have an approved internship"
         }
     },
     admin_panel: {

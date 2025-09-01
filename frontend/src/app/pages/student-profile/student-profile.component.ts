@@ -29,13 +29,11 @@ export class StudentProfileComponent implements OnInit{
   profileForm!: FormGroup;
   companyForm!: FormGroup;
 
-  // Loading states
   isLoading = false;
   isProfileLoading = false;
   isInternshipLoading = false;
   isMentorLoading = false;
 
-  // Additional state management
   originalFormValues: any = {};
   hasUnsavedChanges = false;
 
@@ -100,7 +98,6 @@ export class StudentProfileComponent implements OnInit{
     });
 
     this.companyForm = this.fb.group({
-      // Add company form fields if needed
     });
   }
   
@@ -133,8 +130,7 @@ export class StudentProfileComponent implements OnInit{
     
     this.profileForm.patchValue(formValues);
     this.originalFormValues = { ...formValues };
-    
-    // Watch for form changes
+
     this.profileForm.valueChanges.subscribe(() => {
       this.hasUnsavedChanges = !this.isFormEqualToOriginal();
     });
@@ -154,7 +150,6 @@ export class StudentProfileComponent implements OnInit{
       },
       error: (err) => {
         console.error('Error loading internship:', err);
-        // Don't show error toast for missing internship - it's normal
         this.isInternshipLoading = false;
       }
     });
@@ -182,16 +177,16 @@ export class StudentProfileComponent implements OnInit{
         firstname: this.mentorProfile.firstname,
         lastname: this.mentorProfile.lastname,
         email: this.mentorProfile.email,
-        university: this.mentorProfile.mentor.company.name, // Company name instead of university
-        major: this.mentorProfile.mentor.position, // Position instead of major
-        phone: '', // Mentors might not have phone in this structure
-        neptun: '' // Mentors don't have neptun
+        university: this.mentorProfile.mentor.company.name, 
+        major: this.mentorProfile.mentor.position, 
+        phone: '', 
+        neptun: '' 
       });
     }
   }
 
   onSubmitProfile() {
-    // Only check required fields (firstname, lastname, email)
+   
     const requiredFields = ['firstname', 'lastname', 'email'];
     const hasRequiredFieldErrors = requiredFields.some(field => {
       const control = this.profileForm.get(field);
@@ -207,7 +202,7 @@ export class StudentProfileComponent implements OnInit{
     this.isLoading = true;
     const formValue = this.profileForm.value;
 
-    // Create the complete user data structure as expected by the backend
+  
     const userData = {
       id: this.profile.id,
       email: formValue.email,
@@ -224,17 +219,15 @@ export class StudentProfileComponent implements OnInit{
       }
     };
 
-    console.log('Sending user data:', userData); // Debug log
 
     this.userService.updateUser(this.authService.getUserId(), userData).subscribe({
       next: (response) => {
         this.toastService.showSuccess('Profile updated successfully!');
-        this.loadStudentData(); // Reload data to reflect changes
+        this.loadStudentData();
         this.hasUnsavedChanges = false;
         this.isLoading = false;
       },
       error: (err) => {
-        console.error('Error updating profile:', err);
         this.toastService.showError('Failed to update profile');
         this.isLoading = false;
       }
@@ -250,7 +243,7 @@ export class StudentProfileComponent implements OnInit{
 
   resetProfile() {
     this.profileForm.reset();
-    this.populateForm(); // Reload original data
+    this.populateForm();
     this.hasUnsavedChanges = false;
     this.toastService.showSuccess('Form reset to original values');
   }
@@ -276,42 +269,34 @@ export class StudentProfileComponent implements OnInit{
   }
 
   onSubmitCompanyForm() {
-    // Implement company form submission if needed
     console.log('Company form submission not implemented yet');
   }
 
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (file) {
-      // Validate file type
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
       if (!allowedTypes.includes(file.type)) {
         this.toastService.showError('Please select a valid image file (JPEG, PNG, or GIF)');
         return;
       }
-      
-      // Validate file size (max 5MB)
+    
       const maxSize = 5 * 1024 * 1024; // 5MB in bytes
       if (file.size > maxSize) {
         this.toastService.showError('File size must be less than 5MB');
         return;
       }
       
-      // Here you would typically upload the file to your server
-      console.log('File selected:', file.name);
       this.toastService.showSuccess('File selected successfully! Upload functionality to be implemented.');
       
-      // For now, just show a preview
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        // You could update the avatar image src here
         console.log('File loaded:', e.target.result);
       };
       reader.readAsDataURL(file);
     }
   }
 
-  // Utility method to get current user info
   getCurrentUserInfo() {
     return {
       id: this.authService.getUserId(),
@@ -320,14 +305,11 @@ export class StudentProfileComponent implements OnInit{
     };
   }
 
-  // Mentor specific functionality
   getMentorStats() {
     if (this.authService.getRole() === 'mentor') {
-      // Get mentor's students and statistics
       this.mentorService.getStudents().subscribe({
         next: (students) => {
           console.log('Mentor students:', students);
-          // This could be stored in a property to display
         },
         error: (err) => {
           console.error('Error loading mentor students:', err);
@@ -336,7 +318,6 @@ export class StudentProfileComponent implements OnInit{
     }
   }
 
-  // Copy company info to clipboard
   copyToClipboard(text: string, label: string) {
     navigator.clipboard.writeText(text).then(() => {
       this.toastService.showSuccess(`${label} copied to clipboard!`);
@@ -345,7 +326,6 @@ export class StudentProfileComponent implements OnInit{
     });
   }
 
-  // Contact company directly
   contactCompany() {
     if (this.mentorProfile.mentor?.company) {
       const email = this.mentorProfile.mentor.company.email;
@@ -354,7 +334,6 @@ export class StudentProfileComponent implements OnInit{
     }
   }
 
-  // Get company location for maps
   openLocationInMaps() {
     if (this.mentorProfile.mentor?.company) {
       const address = `${this.mentorProfile.mentor.company.address}, ${this.mentorProfile.mentor.company.city}`;

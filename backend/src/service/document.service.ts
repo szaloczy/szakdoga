@@ -10,6 +10,13 @@ export class DocumentService {
   private userRepo = AppDataSource.getRepository(User);
   private uploadDir = path.resolve(__dirname, "../../uploads");
 
+  async getAllDocuments(): Promise<Document[]> {
+    return await this.documentRepo.find({
+      relations: ["user"],
+      order: { uploadedAt: "DESC" }
+    });
+  }
+
   async saveDocument(userId: number, originalName: string, filename: string): Promise<Document> {
     const user = await this.userRepo.findOne({ where: { id: userId } });
     if (!user) throw new Error("User not found");

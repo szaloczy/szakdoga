@@ -1,0 +1,37 @@
+<div class="container py-4">
+	<h2 class="mb-4 text-primary fw-bold">{{ 'admin_panel.document_management.title.text' | translate }}</h2>
+	<div class="table-responsive">
+		<table class="table table-bordered align-middle">
+			<thead class="table-light">
+				<tr>
+					<th>{{ 'admin_panel.document_management.table_headers.uploader.text' | translate }}</th>
+					<th>{{ 'admin_panel.document_management.table_headers.document_name.text' | translate }}</th>
+					<th>{{ 'admin_panel.document_management.table_headers.upload_date.text' | translate }}</th>
+					<th>{{ 'admin_panel.document_management.table_headers.status.text' | translate }}</th>
+					<th>{{ 'admin_panel.document_management.table_headers.actions.text' | translate }}</th>
+				</tr>
+			</thead>
+			<tbody>
+				@for(doc of documents; track doc) {
+				<tr>
+					<td>{{ doc.user.firstname }} {{ doc.user.lastname }}</td>
+					<td>{{ doc.originalName }}</td>
+					<td>{{ doc.uploadedAt | date:'yyyy.MM.dd' }}</td>
+					<td>
+						<span [ngClass]="{
+							'text-warning': doc.status === 'pending',
+							'text-success': doc.status === 'approved',
+							'text-danger': doc.status === 'rejected'
+						}">{{ 'admin_panel.document_management.states.' + doc.status + '.text' | translate }}</span>
+					</td>
+					<td>
+						<button class="btn btn-sm btn-primary me-2" (click)="viewDocument(doc)"><i class="bi bi-eye"></i> {{ 'admin_panel.document_management.actions.download.text' | translate }}</button>
+						<button class="btn btn-sm btn-success me-2" (click)="acceptDocument(doc)" [disabled]="doc.status !== 'pending'"><i class="bi bi-check-lg"></i> {{ 'admin_panel.document_management.actions.approve.text' | translate }}</button>
+						<button class="btn btn-sm btn-danger" (click)="rejectDocument(doc)" [disabled]="doc.status !== 'pending'"><i class="bi bi-x-lg"></i> {{ 'admin_panel.document_management.actions.reject.text' | translate }}</button>
+					</td>
+				</tr>
+				}
+			</tbody>
+		</table>
+	</div>
+</div>

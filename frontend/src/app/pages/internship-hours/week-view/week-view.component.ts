@@ -180,9 +180,6 @@ export class WeekViewComponent implements OnInit {
     });
   }
 
-  /**
-   * Returns true if user has at least one approved internship
-   */
   get hasApprovedInternship(): boolean {
     return this.internships.some((i: InternshipListDTO) => i.isApproved === true);
   }

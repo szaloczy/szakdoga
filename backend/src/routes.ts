@@ -100,6 +100,7 @@ router.delete("/internship-hour/:id", authMiddleware, internshipHourController.d
 const documentController = new DocumentController();
 
 router.post("/documents/upload", authMiddleware, documentUpload.single("file"), documentController.upload);
+router.get("/documents", authMiddleware, documentController.getAll);
 router.get("/documents/student", authMiddleware, documentController.getStudentDocuments);
 router.post("/documents/:id/review", authMiddleware, documentController.review);
 router.get("/documents/:id/download", authMiddleware, documentController.download);

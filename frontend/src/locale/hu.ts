@@ -333,10 +333,57 @@ export const hu: NestedI18n = {
                 button: {
                     text: "Kezelés"
                 },
+                documents: {
+                    text: "Dokumentumok"
+                }
             }
         },
         user_management: {
 
+        },
+        document_management: {
+            title: {
+                text: "Dokumentum kezelés"
+            },
+            table_headers: {
+                uploader: {
+                    text: "Feltöltő"
+                },
+                document_name: {
+                    text: "Dokumentum neve"
+                },
+                upload_date: {
+                    text: "Feltöltés dátuma"
+                },
+                status: {
+                    text: "Státusz"
+                },
+                actions: {
+                    text: "Műveletek"
+                }
+            },
+            states: {
+                pending: {
+                    text: "Függőben"
+                },
+                approved: {
+                    text: "Jóváhagyva"
+                },
+                rejected: {
+                    text: "Elutasítva"
+                }
+            },
+            actions: {
+                approve: {
+                    text: "Jóváhagyás"
+                },
+                reject: {
+                    text: "Elutasítás"
+                },
+                download: {
+                    text: "Letöltés"
+                }
+            }
         }
     },
     buttons: {

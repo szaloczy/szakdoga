@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { DocumentService, UploadedDocument } from '../../services/document.service';
+import { DocumentService } from '../../services/document.service';
+import { UploadedDocument } from '../../models/document.model';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 

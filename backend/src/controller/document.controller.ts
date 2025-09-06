@@ -25,6 +25,15 @@ export class DocumentController {
     }
   };
 
+  getAll = async (req: Request, res: Response) => {
+    try {
+      const docs = await this.service.getAllDocuments();
+      res.json(docs);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  }
+
   getStudentDocuments = async (req: Request, res: Response) => {
     try {
       const user = (req as any).user;

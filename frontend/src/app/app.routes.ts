@@ -13,6 +13,7 @@ import { CompanyManagementComponent } from './admin-panel/company-management/com
 import { InternshipManagementComponent } from './admin-panel/internship-management/internship-management.component';
 import { InternshipHoursComponent } from './pages/internship-hours/internship-hours.component';
 import { DocumentUploadComponent } from './pages/document-upload/document-upload.component';
+import { DocumentManagementComponent } from './admin-panel/document-management/document-management.component';
 
 export const routes: Routes = [
     {
@@ -32,6 +33,9 @@ export const routes: Routes = [
     },
     {
         path: 'internships', component: InternshipManagementComponent, canActivate: [() => inject(AuthService).adminAccess()]
+    },
+    {
+        path: 'manage-documents', component: DocumentManagementComponent, canActivate: [() => inject(AuthService).adminAccess()]
     },
     {
         path: '',

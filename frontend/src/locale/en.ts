@@ -333,10 +333,57 @@ export const en: NestedI18n = {
                 button: {
                     text: "Manage"
                 },
+                documents: {
+                    text: "Documents"
+                }
             }
         },
         user_management: {
 
+        },
+        document_management: {
+            title: {
+                text: "Document management"
+            },
+            table_headers: {
+                uploader: {
+                    text: "Uploader"
+                },
+                document_name: {
+                    text: "Document Name"
+                },
+                upload_date: {
+                    text: "Upload Date"
+                },
+                status: {
+                    text: "Status"
+                },
+                actions: {
+                    text: "Actions"
+                }
+            },
+             states: {
+                pending: {
+                    text: "Pending"
+                },
+                approved: {
+                    text: "Approved"
+                },
+                rejected: {
+                    text: "Rejected"
+                }
+            },
+            actions: {
+                approve: {
+                    text: "Approve"
+                },
+                reject: {
+                    text: "Reject"
+                },
+                download: {
+                    text: "Download"
+                }
+            }
         }
     },
     buttons: {

@@ -1,32 +1,50 @@
 
 <div class="simple-upload-container">
-  <h2>Dokumentum feltöltése (PDF)</h2>
+  <h2>{{ 'document_upload.title.text' | translate }}</h2>
   <form (submit)="$event.preventDefault(); uploadFile()">
     <input type="file" accept="application/pdf" (change)="onFileSelected($event)" [disabled]="uploading" />
-    <button type="submit" [disabled]="!selectedFile || uploading">Feltöltés</button>
+    <button type="submit" [disabled]="!selectedFile || uploading">{{ 'document_upload.upload_section.upload_button.text' | translate }}</button>
   </form>
-  <div *ngIf="uploadError" class="error">{{ uploadError }}</div>
-  <div *ngIf="uploadSuccess" class="success">Sikeres feltöltés!</div>
-  <div *ngIf="uploading" class="loading">Feltöltés folyamatban...</div>
+  @if(uploadError){
+  <div class="error">{{ uploadError }}</div>
+  }
+  @if (uploadSuccess) {
+  <div class="success">{{ 'document_upload.upload_section.success.text' | translate }}</div>
+  }
+  @if (uploading) {
+    <div class="loading">{{ 'document_upload.upload_section.uploading.text' | translate }}</div>
+  }
 
   <hr />
-  <h3>Feltöltött dokumentumok</h3>
-  <div *ngIf="loadingDocs" class="loading">Dokumentumok betöltése...</div>
-  <div *ngIf="!loadingDocs && documents.length === 0" class="empty">Nincs feltöltött dokumentum.</div>
-  <ul *ngIf="!loadingDocs && documents.length > 0" class="doc-list">
-    <li *ngFor="let doc of documents" class="doc-item">
+  <h3>{{ 'document_upload.documents_section.title.text' | translate }}</h3>
+  @if (loadingDocs) {
+  <div class="loading">{{ 'document_upload.uploaded_documents.loading.text' | translate }}</div>
+  }
+  @if (!loadingDocs && documents.length === 0) {
+    <div class="empty">{{ 'document_upload.uploaded_documents.empty.text' | translate }}</div>
+  }
+  @if (!loadingDocs && documents.length > 0) {
+  <ul class="doc-list">
+    @for (doc of documents; track doc) {
+    <li class="doc-item">
       <div class="doc-main">
         <span class="doc-name">{{ doc.originalName }}</span>
         <span class="doc-date">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>
         <span class="doc-status" [ngClass]="doc.status">
           <ng-container [ngSwitch]="doc.status">
-            <span *ngSwitchCase="'pending'" class="badge pending">Függőben</span>
-            <span *ngSwitchCase="'approved'" class="badge approved">Elfogadva</span>
-            <span *ngSwitchCase="'rejected'" class="badge rejected">Elutasítva</span>
+            @switch (doc.status) {
+              @case('pending'){<span class="badge pending">{{ 'admin_panel.document_management.states.pending.text' | translate }}</span>}
+              @case('approved'){<span *ngSwitchCase="'approved'" class="badge approved">{{ 'admin_panel.document_management.states.approved.text' | translate }}</span>}
+              @case('rejected'){<span *ngSwitchCase="'rejected'" class="badge rejected">{{ 'admin_panel.document_management.states.rejected.text' | translate }}</span>}
+            }
           </ng-container>
         </span>
       </div>
-      <div *ngIf="doc.reviewNote" class="review-note">{{ doc.reviewNote }}</div>
+      @if (doc.reviewNote) {
+      <div class="review-note">{{ doc.reviewNote }}</div>
+      }
     </li>
+    }
   </ul>
+  }
 </div>

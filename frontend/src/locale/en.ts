@@ -315,6 +315,34 @@ export const en: NestedI18n = {
             text: "You cannot register hours until you have an approved internship"
         }
     },
+    document_upload: {
+        title: { text: "Document Upload (PDF)" },
+        upload_section: {
+            title: { text: "Upload Documents (PDF)" },
+            select_file: { text: "Select File" },
+            no_file: { text: "No file selected" },
+            upload_button: { text: "Upload" },
+            uploading: { text: "Uploading..." },
+            success: { text: "File uploaded successfully!" },
+            error: { text: "Error uploading file. Please try again." },
+            invalid_file: { text: "Invalid file type. Please upload a PDF." }
+        },
+        documents_section: {
+            title: { text: "Uploaded Documents" },
+            no_documents: { text: "No documents uploaded yet." },
+        },
+        upload_error: {
+            error1: {
+                text: "Only PDF files are allowed!"
+            },
+            error2: {
+                text: "File size must be less than 10MB!"
+            },
+            error3: {
+                text: "File upload failed. Please try again."
+            }
+        }
+    },
     admin_panel: {
         dashboard: {
             title: {

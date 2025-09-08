@@ -315,6 +315,34 @@ export const hu: NestedI18n = {
             no_hours_yet: { text: "Nincs még {{tab}} gyakorlati óra." }
         }
     },
+    document_upload: {
+        title: { text: "Dokumentum feltöltése (PDF)" },
+        upload_section: {
+            title: { text: "Dokumentumok feltöltése (PDF)" },
+            select_file: { text: "Fájl kiválasztása" },
+            no_file: { text: "Nincs fájl kiválasztva" },
+            upload_button: { text: "Feltöltés" },
+            uploading: { text: "Feltöltés folyamatban..." },
+            success: { text: "Fájl sikeresen feltöltve!" },
+            error: { text: "Hiba a fájl feltöltésekor. Kérjük, próbálja újra." },
+            invalid_file: { text: "Érvénytelen fájltípus. Kérjük, töltsön fel egy PDF-et." }
+        },
+        documents_section: {
+            title: { text: "Feltöltött dokumentumok" },
+            no_documents: { text: "Még nincs feltöltött dokumentum." },
+        },
+        upload_error: {
+            error1: {
+                text: "Csak PDF fájlok tölthetők fel!"
+            },
+            error2: {
+                text: "A fájl mérete maximum 10MB lehet!"
+            },
+            error3: {
+                text: "A fájl feltöltése sikertelen. Kérjük, próbálja újra."
+            }
+        }
+    },
     admin_panel: {
         dashboard: {
             title: {

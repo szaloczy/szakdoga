@@ -89,7 +89,7 @@
         <ul class="list-group">
           <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of studentDocuments">
             <div>
-              <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ doc.status | titlecase }}</span>
+              <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ 'admin_panel.document.management.states' | translate }}</span>
               <span *ngIf="doc.reviewNote" class="ms-2 text-muted"> ({{ 'dashboard.student.note' | translate }}: {{ doc.reviewNote }})</span>
             </div>
             <span class="text-muted">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>

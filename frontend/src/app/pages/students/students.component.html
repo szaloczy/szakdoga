@@ -25,16 +25,16 @@
       </div>
       <div class="d-flex gap-2">
         <select class="form-select" [(ngModel)]="selectedFilter">
-          <option value="all">All Students</option>
-          <option value="active">Active</option>
-          <option value="pending">Pending</option>
-          <option value="completed">Completed</option>
+          <option value="all">{{ 'mentor_students.filters.by_status.all' | translate }}</option>
+          <option value="active">{{ 'mentor_students.filters.by_status.active' | translate }}</option>
+          <option value="pending">{{ 'mentor_students.filters.by_status.pending' | translate }}</option>
+          <option value="completed">{{ 'mentor_students.filters.by_status.completed' | translate }}</option>
         </select>
         <select class="form-select" [(ngModel)]="sortBy" (change)="sortStudents(sortBy)">
-          <option value="name">Sort by Name</option>
-          <option value="hours">Sort by Hours</option>
-          <option value="university">Sort by University</option>
-          <option value="status">Sort by Status</option>
+          <option value="name">{{ 'mentor_students.sorting.sort_by_name' | translate }}</option>
+          <option value="hours">{{ 'mentor_students.sorting.sort_by_hours' | translate }}</option>
+          <option value="university">{{ 'mentor_students.sorting.sort_by_university' | translate }}</option>
+          <option value="status">{{ 'mentor_students.sorting.sort_by_status' | translate }}</option>
         </select>
       </div>
       <button class="btn btn-outline-primary" (click)="loadStudents()">
@@ -48,7 +48,8 @@
         title="Export students to CSV"
       >
         <i class="bi bi-download me-1"></i>
-        Export to CSV
+        <!-- Le nyiló lista a mentornak - minden hallgató - hallgatónkénti -->
+        {{ 'mentor_students.export.to_csv' | translate }}
       </button>
     </div>
   </div>
@@ -204,7 +205,7 @@
                 } @else {
                   <div class="text-center text-muted py-2">
                     <i class="bi bi-check-circle-fill me-1 text-success"></i>
-                    All hours approved
+                    {{ 'mentor_students.label.no_pending_hours' | translate }}
                   </div>
                 }
                 <button 
@@ -212,7 +213,7 @@
                   (click)="viewHoursDetails(student)"
                 >
                   <i class="bi bi-clock-history me-1"></i>
-                  View Hours History
+                  {{  'mentor_students.actions.view_hours' | translate }}
                 </button>
               </div>
             </div>

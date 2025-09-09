@@ -174,12 +174,14 @@ export const hu: NestedI18n = {
             email: { text: "Email" },
             quick_actions: { text: "Gyors műveletek" },
             recent_students_activity: { text: "Legutóbbi hallgatói aktivitás" },
-            university_not_provided: { text: "Egyetem nem megadva" },
+            university_not_provided: { text: "Egyetem nincs megadva" },
             hours_count: { text: "Órák száma" },
             pending_approval: { text: "Jóváhagyásra vár" },
             up_to_date: { text: "Naprakész" },
             view_all_students: { text: "Összes hallgató megtekintése" },
-            no_students_assigned: { text: "Még nincsenek hozzárendelt hallgatók." }
+            no_students_assigned: { text: "Még nincsenek hozzárendelt hallgatók." },
+            approve_hour: { text: "Óra jóváhagyása" },
+            upload_documents: { text: "Dokumentumok feltöltése" },
         }
     },
     profile: {
@@ -313,6 +315,31 @@ export const hu: NestedI18n = {
             no_entries_found: { text: "Nincs találat" },
             try_adjusting_filters: { text: "Próbálja módosítani a szűrőket vagy törölje őket." },
             no_hours_yet: { text: "Nincs még {{tab}} gyakorlati óra." }
+        }
+    },
+    mentor_students: {
+        filters:{
+            by_status:{
+                all: { text: "Összes diák" },
+                active: { text: "Aktív" },
+                pending: { text: "Függő" },
+                completed: { text: "Teljesített" }
+            }
+        },
+        sorting:{
+            sort_by_name: { text: "Rendezés név szerint" },
+            sort_by_hours: { text: "Rendezés órák szerint" },
+            sort_by_university: { text: "Rendezés egyetem szerint" },
+            sort_by_status: { text: "Rendezés státusz szerint" }
+        },
+        actions: {
+            view_hours: { text: "Órák megtekintése" }
+        },
+        label: {
+            no_pending_hours: { text: "Minden óra jóváhagyva" }
+        },
+        export: {
+            to_csv: { text: "Exportálás CSV-be" }
         }
     },
     document_upload: {

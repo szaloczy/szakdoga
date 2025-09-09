@@ -20,7 +20,6 @@ import { StudentListComponent } from '../../components/student-list/student-list
     StudentListComponent,
     CommonModule,
     DatePipe,
-    TitleCasePipe
   ],
 
   templateUrl: './dashboard.component.html',
@@ -48,20 +47,11 @@ export class DashboardComponent implements OnInit{
   mentorStats = { totalStudents: 0, activeStudents: 0, totalHours: 0, pendingHours: 0, documents: { pending: 0, approved: 0, rejected: 0 } };
   notifications: any[] = [];
 
-  // Student dashboard data
   summaryCards: any[] = [];
   nextDeadline: { label: string; date: string } | null = null;
 
-  // Mentor dashboard data
   mentorCards: any[] = [];
   isLoadingMentorData = false;
-
-  // Mentor quick actions
-  mentorActions = [
-    { label: 'Órák jóváhagyása', icon: 'bi-check-circle', action: 'approveHours', count: 0 },
-    { label: 'Dokumentumok áttekintése', icon: 'bi-file-text', action: 'reviewDocs', count: 0 }
-    // További műveletek API-ból tölthetők
-  ];
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -82,15 +72,12 @@ export class DashboardComponent implements OnInit{
   }
 
   private loadStudentDashboard(userId: number) {
-    // Személyes adatok
     this.studentService.getByUserId(userId).subscribe({
       next: (profile: StudentDTO) => {
         this.studentProfile = profile;
-        // Gyakornoki státusz, mentor, cég, időszak
         this.internshipInfo = (profile as any).internship || null;
       }
     });
-    // Saját órák
     this.internshipHourService.getMine().subscribe({
       next: (hours: InternshipHourDTO[]) => {
         this.studentHours = hours;
@@ -101,29 +88,24 @@ export class DashboardComponent implements OnInit{
         };
       }
     });
-    // Dokumentumok
     this.documentService.getStudentDocuments().subscribe({
       next: (docs) => {
         this.studentDocuments = docs;
       }
     });
-    // TODO: értesítések
   }
 
   private loadMentorDashboard(userId: number) {
-    // Mentor profil
     this.mentorService.getByUserId(userId).subscribe({
       next: (profile) => {
         this.mentorProfile = profile;
       }
     });
-    // Hallgatók listája
     this.mentorService.getStudents().subscribe({
       next: (students: extendedStudentDTO[]) => {
         console.log(students);
         this.mentorStudents = students;
         this.mentorStats.totalStudents = students.length;
-        // Statisztikák aggregálása minden hallgatóhoz tartozó órákból
         students.forEach(student => {
           console.log(student.id)
           this.internshipHourService.getStudentHourDetails(student.id).subscribe({
@@ -140,21 +122,11 @@ export class DashboardComponent implements OnInit{
         });
       }
     });
-    // Hallgatók órái
-  // Összesített statisztikák aggregálása a mentorStudentHourStats-ból (async, ezért csak megjelenítéskor aggregáld)
-    // Dokumentumok
-    // TODO: mentor dokumentumok végpont
-    // this.documentService.getMentorDocuments().subscribe(...)
-    // Statisztikák
-    // TODO: mentor statisztika végpont
-    // Értesítések
-    // TODO: mentor notification végpont
   }
 
   private loadMentorData(): void {
     this.isLoadingMentorData = true;
 
-    // Load mentor profile
     this.mentorService.getByUserId(this.authService.getUserId()).subscribe({
       next: (mentorData) => {
         this.mentorProfile = mentorData;
@@ -163,7 +135,6 @@ export class DashboardComponent implements OnInit{
       error: (err) => console.error('Error loading mentor profile:', err)
     });
 
-    // Load mentor's students
     this.mentorService.getStudents().subscribe({
       next: (students) => {
         this.mentorStudents = students;
@@ -209,34 +180,8 @@ export class DashboardComponent implements OnInit{
         icon: 'bi-check-circle-fill'
       }
     ];
-
-    // Update action counts
-    this.mentorActions[0].count = pendingApprovals; // Órák jóváhagyása
   }
 
-  // Mentor action handlers
-  handleMentorAction(action: string): void {
-    switch(action) {
-      case 'approveHours':
-        // Navigate to hours approval page
-        console.log('Navigate to hours approval');
-        break;
-      case 'reviewDocs':
-        // Navigate to document review page
-        console.log('Navigate to document review');
-        break;
-      case 'messages':
-        // Navigate to messages page
-        console.log('Navigate to messages');
-        break;
-      case 'evaluations':
-        // Navigate to evaluations page
-        console.log('Navigate to evaluations');
-        break;
-    }
-  }
-
-  // Helper method to check if student has pending hours
   hasPendingHours(student: InternshipWithHours): boolean {
     return student.hours ? student.hours.some(h => h.status === 'pending') : false;
   }

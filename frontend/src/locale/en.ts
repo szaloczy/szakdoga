@@ -179,7 +179,9 @@ export const en: NestedI18n = {
             pending_approval: { text: "Pending approval" },
             up_to_date: { text: "Up to date" },
             view_all_students: { text: "View all students" },
-            no_students_assigned: { text: "No students assigned yet." }
+            no_students_assigned: { text: "No students assigned yet." },
+            approve_hour: { text: "Approve hour" },
+            upload_documents: { text: "Upload documents" },
         }
     },
     profile: {
@@ -313,6 +315,31 @@ export const en: NestedI18n = {
         },
         no_internship: {
             text: "You cannot register hours until you have an approved internship"
+        }
+    },
+    mentor_students: {
+        filters:{
+            by_status:{
+                all: { text: "All Students" },
+                active: { text: "Active" },
+                pending: { text: "Pending" },
+                completed: { text: "Completed" }
+            }
+        },
+        sorting:{
+            sort_by_name: { text: "Sort by Name" },
+            sort_by_hours: { text: "Sort by Hours" },
+            sort_by_university: { text: "Sort by University" },
+            sort_by_status: { text: "Sort by Status" }
+        },
+        actions: {
+            view_hours: { text: "View Hours History" }
+        },
+        label: {
+            no_pending_hours: { text: "All hours approved" }
+        },
+        export: {
+            to_csv: { text: "Export to CSV" }
         }
     },
     document_upload: {

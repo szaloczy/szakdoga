@@ -4,7 +4,8 @@
   @if (authService.getRole() === "student") {
     <!-- Student Dashboard - Modern Design -->
     <div class="row g-4 my-4">
-      <div class="col-12 col-md-6 col-lg-3" *ngFor="let card of summaryCards">
+      @for (card of summaryCards; track card) {
+      <div class="col-12 col-md-6 col-lg-3">
         <div class="card shadow-lg border-0 h-100 animate__animated animate__fadeInUp" [ngClass]="card.bg">
           <div class="card-body d-flex flex-column justify-content-center align-items-center">
             <i class="bi bi-star-fill fs-1 mb-2 text-warning"></i>
@@ -13,6 +14,7 @@
           </div>
         </div>
       </div>
+      }
     </div>
 
     <div class="d-flex gap-3 mt-3 flex-wrap justify-content-center">
@@ -38,7 +40,8 @@
         </div>
       </div>
       <div class="col-12 col-lg-6">
-        <div class="card border-0 shadow-lg animate__animated animate__fadeInRight" *ngIf="internshipInfo">
+        @if (internshipInfo) {
+        <div class="card border-0 shadow-lg animate__animated animate__fadeInRight">
           <div class="card-header bg-info text-white">
             <h5 class="mb-0"><i class="bi bi-briefcase me-2"></i>{{ 'dashboard.student.internship_info' | translate }}</h5>
           </div>
@@ -51,6 +54,7 @@
             </ul>
           </div>
         </div>
+        }
       </div>
     </div>
 
@@ -81,22 +85,28 @@
       </div>
     </div>
 
-    <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp" *ngIf="studentDocuments.length > 0">
+    @if (studentDocuments.length > 0) {
+    <div class="card mt-4 border-0 shadow-lg animate__animated animate__fadeInUp">
       <div class="card-header bg-secondary text-white">
         <h5 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>{{ 'dashboard.student.uploaded_documents' | translate }}</h5>
       </div>
       <div class="card-body">
         <ul class="list-group">
-          <li class="list-group-item d-flex justify-content-between align-items-center" *ngFor="let doc of studentDocuments">
+          @for (doc of studentDocuments; track doc) {
+          <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
               <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ 'admin_panel.document.management.states' | translate }}</span>
-              <span *ngIf="doc.reviewNote" class="ms-2 text-muted"> ({{ 'dashboard.student.note' | translate }}: {{ doc.reviewNote }})</span>
+              @if (doc.reviewNote) {
+              <span class="ms-2 text-muted"> ({{ 'dashboard.student.note' | translate }}: {{ doc.reviewNote }})</span>
+              }
             </div>
             <span class="text-muted">{{ doc.uploadedAt | date:'yyyy.MM.dd HH:mm' }}</span>
           </li>
+          }
         </ul>
       </div>
     </div>
+    }
 
   } @else if (authService.getRole() === "mentor") {
     <!-- Mentor Dashboard -->
@@ -152,21 +162,33 @@
         </div>
         <div class="card-body">
           <div class="row">
-            @for(action of mentorActions; track action) {
+            
             <div class="col-md-6 col-lg-3 mb-3">
               <button 
-                class="btn btn-outline-primary w-100 h-100 position-relative" 
-                (click)="handleMentorAction(action.action)">
-                <i class="{{action.icon}} fs-4 d-block mb-2"></i>
-                <span class="d-block">{{ action.label | translate }}</span>
-                @if (action.count > 0) {
-                  <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                    {{ action.count }}
-                  </span>
-                }
+                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                <i class="fs-4 d-block mb-2"></i>
+                <span class="d-block">{{ 'dashboard.mentor.approve_hour' | translate }}</span>
+                <i class="bi bi-hourglass me-2"></i>
               </button>
             </div>
-            }
+
+            <div class="col-md-6 col-lg-3 mb-3">
+              <button 
+                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                <i class="fs-4 d-block mb-2"></i>
+                <span class="d-block">{{ 'dashboard.mentor.upload_documents' | translate }}</span>
+                <i class="bi bi-upload me-2"></i>
+              </button>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-3">
+              <button 
+                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                <i class="fs-4 d-block mb-2"></i>
+                <span class="d-block">{{ 'dashboard.mentor.view_all_students' | translate }}</span>
+                <i class="bi bi-eye me-2"></i>
+              </button>
+            </div>
           </div>
         </div>
       </div>

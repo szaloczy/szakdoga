@@ -194,14 +194,23 @@
             <div class="card-footer bg-transparent">
               <div class="d-flex flex-column gap-2">
                 @if (getPendingHours(student) > 0) {
-                  <button 
-                    class="btn btn-warning"
-                    (click)="approveStudentHours(student.id)"
-                  >
-                    <i class="bi bi-check-circle me-1"></i>
-                    {{ 'students.actions.approve_hours' | translate }}
-                    <span class="badge bg-light text-dark ms-2">{{ getPendingHours(student) | number:'1.0-0' }}h</span>
-                  </button>
+                  <div class="d-flex gap-2">
+                    <button 
+                      class="btn btn-warning"
+                      (click)="approveStudentHours(student.id)"
+                    >
+                      <i class="bi bi-check-circle me-1"></i>
+                      {{ 'students.actions.approve_hours' | translate }}
+                      <span class="badge bg-light text-dark ms-2">{{ getPendingHours(student) | number:'1.0-0' }}h</span>
+                    </button>
+                    <button 
+                      class="btn btn-outline-danger"
+                      (click)="rejectStudentHours(student.id)"
+                    >
+                      <i class="bi bi-x-circle me-1"></i>
+                      {{ 'mentor_students.actions.reject_hours' | translate }}
+                    </button>
+                  </div>
                 } @else {
                   <div class="text-center text-muted py-2">
                     <i class="bi bi-check-circle-fill me-1 text-success"></i>

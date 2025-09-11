@@ -42,7 +42,7 @@
         } @else {
           <div class="card">
             <div class="card-body">
-              <h5 class="card-title">{{ authService.getUserRole() | translate }}</h5>
+              <h5 class="card-title">{{authService.getUserRole()}}</h5>
               @if (isMentorLoading) {
                 <div class="spinner-border spinner-border-sm" role="status"></div>
               } @else {
@@ -253,78 +253,13 @@
                 <div class="col">
                   <label class="form-label text-muted">{{ 'profile.mentor_details.company_contact' | translate }}</label>
                   <div class="form-control-plaintext">
-                    <div class="d-flex align-items-center mb-1">
-                      <a href="mailto:{{ mentorProfile.mentor.company.email }}" class="me-2">
-                        <i class="bi bi-envelope-fill"></i> {{ mentorProfile.mentor.company.email }}
-                      </a>
-                      <button 
-                        class="btn btn-sm btn-outline-secondary" 
-                        (click)="copyToClipboard(mentorProfile.mentor.company.email, 'Email')"
-                        title="{{ 'profile.mentor_details.copy_email' | translate }}">
-                        <i class="bi bi-copy"></i>
-                      </button>
-                    </div>
+                   
                     <div class="d-flex align-items-center">
                       <a href="tel:{{ mentorProfile.mentor.company.phone }}" class="me-2">
                         <i class="bi bi-telephone-fill"></i> {{ mentorProfile.mentor.company.phone }}
                       </a>
-                      <button 
-                        class="btn btn-sm btn-outline-secondary" 
-                        (click)="copyToClipboard(mentorProfile.mentor.company.phone, 'Phone')"
-                        title="{{ 'profile.mentor_details.copy_phone' | translate }}">
-                        <i class="bi bi-copy"></i>
-                      </button>
                     </div>
                   </div>
-                </div>
-              </div>
-
-              <!-- Quick Actions Row -->
-              <div class="row mb-3">
-                <div class="col">
-                  <label class="form-label text-muted">{{ 'profile.mentor_details.quick_actions' | translate }}</label>
-                  <div class="d-flex gap-2 flex-wrap">
-                    <button 
-                      class="btn btn-sm btn-primary" 
-                      (click)="contactCompany()"
-                      title="{{ 'profile.mentor_details.contact_company' | translate }}">
-                      <i class="bi bi-envelope"></i> {{ 'profile.mentor_details.contact_company' | translate }}
-                    </button>
-                    <button 
-                      class="btn btn-sm btn-info" 
-                      (click)="getMentorStats()"
-                      title="{{ 'profile.mentor_details.view_stats' | translate }}">
-                      <i class="bi bi-graph-up"></i> {{ 'profile.mentor_details.view_stats' | translate }}
-                    </button>
-                  </div>
-                </div>
-                <div class="col">
-                  <label class="form-label text-muted">{{ 'profile.mentor_details.role_info' | translate }}</label>
-                  <p class="form-control-plaintext">
-                    <span class="badge bg-info">{{ mentorProfile.role | titlecase }}</span>
-                    <small class="text-muted d-block mt-1">
-                      {{ 'profile.mentor_details.mentor_id' | translate }}: {{ mentorProfile.mentor.id }}
-                    </small>
-                  </p>
-                </div>
-              </div>
-
-              <div class="row mb-3">
-                <div class="col">
-                  <label class="form-label text-muted">{{ 'profile.mentor_details.status' | translate }}</label>
-                  <p class="form-control-plaintext">
-                    <span class="badge" [class]="mentorProfile.active ? 'bg-success' : 'bg-danger'">
-                      {{ mentorProfile.active ? ('profile.mentor_details.active' | translate) : ('profile.mentor_details.inactive' | translate) }}
-                    </span>
-                  </p>
-                </div>
-                <div class="col">
-                  <label class="form-label text-muted">{{ 'profile.mentor_details.company_status' | translate }}</label>
-                  <p class="form-control-plaintext">
-                    <span class="badge" [class]="mentorProfile.mentor.company.active ? 'bg-success' : 'bg-danger'">
-                      {{ mentorProfile.mentor.company.active ? ('profile.mentor_details.active' | translate) : ('profile.mentor_details.inactive' | translate) }}
-                    </span>
-                  </p>
                 </div>
               </div>
             </div>

@@ -69,18 +69,17 @@ router.get("/profile/internship/:id", internshipController.getByUserId);
 const mentorController = new MentorController();
 
 router.get("/mentor", mentorController.getAll);
-// Specifikus route-ok előbb
+
 router.get("/mentor/students", authMiddleware, mentorController.getStudents);
 router.get("/mentor/company/:companyId", mentorController.getByCompany);
 router.get("/mentor/search", mentorController.searchMentors);
 router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId);
-// Paraméterezett route-ok utoljára
+
 router.get("/mentor/:id", authMiddleware, mentorController.getById);
 router.post("/mentor", authMiddleware, mentorController.create);
 router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);
 router.delete("/mentor/:id", authMiddleware, mentorController.deactivate);
 
-// Internship Hour routes
 const internshipHourController = new InternshipHourController();
 
 router.get("/internship-hour", internshipHourController.getAll);
@@ -96,7 +95,6 @@ router.post("/internship-hour", authMiddleware, internshipHourController.create)
 router.put("/internship-hour/:id", authMiddleware, internshipHourController.update);
 router.delete("/internship-hour/:id", authMiddleware, internshipHourController.delete);
 
-// Document routes
 const documentController = new DocumentController();
 
 router.post("/documents/upload", authMiddleware, documentUpload.single("file"), documentController.upload);

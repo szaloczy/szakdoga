@@ -35,6 +35,7 @@ interface StudentResponseDTO {
   styleUrl: './students.component.scss'
 })
 export class StudentsComponent implements OnInit {
+
   private mentorService = inject(MentorService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
@@ -317,23 +318,86 @@ export class StudentsComponent implements OnInit {
     });
   }
 
+  
+
+  rejectStudentHours(studentId: number): void {
+    const student = this.students.find(s => s.id === studentId);
+    if (!student) return;
+
+    const pendingHours = this.getPendingHours(student);
+    if (pendingHours === 0) {
+      this.toastService.showError('Nincs elutasítható függő óra!');
+      return;
+    }
+
+    Swal.fire({
+      title: 'Elutasítás megerősítése',
+      html: `Biztosan elutasítod <strong>${student.firstname} ${student.lastname}</strong> összes függőben lévő óráját?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#dc3545',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Elutasítás',
+      cancelButtonText: 'Mégse',
+      customClass: { popup: 'larger-swal' }
+    }).then((result: any) => {
+      if (result.isConfirmed) {
+        Swal.fire({
+          title: 'Feldolgozás...',
+          text: 'Hallgató óráinak elutasítása folyamatban',
+          allowOutsideClick: false,
+          showConfirmButton: false,
+          didOpen: () => { Swal.showLoading(); }
+        });
+
+        this.internshipHourService.rejectHour(studentId).subscribe({
+          next: (response: any) => {
+            // Frissítsd a hallgató adatait
+            const studentIndex = this.students.findIndex(s => s.id === studentId);
+            if (studentIndex !== -1) {
+              this.students[studentIndex] = {
+                ...this.students[studentIndex],
+                pendingHours: 0,
+                rejectedHours: (this.students[studentIndex].rejectedHours || 0) + pendingHours
+              };
+            }
+            Swal.fire({
+              title: 'Elutasítva!',
+              text: `Sikeresen elutasítottad ${student.firstname} összes függőben lévő óráját!`,
+              icon: 'success',
+              confirmButtonColor: '#28a745'
+            });
+            this.toastService.showSuccess('Hallgató órái elutasítva!');
+            if (this.REFRESH_AFTER_APPROVAL) {
+              this.loadStudents();
+            }
+          },
+          error: (error: any) => {
+            console.error('Error rejecting hours:', error);
+            Swal.fire({
+              title: 'Hiba!',
+              text: 'Az órák elutasítása nem sikerült. Próbáld újra!',
+              icon: 'error',
+              confirmButtonColor: '#dc3545'
+            });
+            this.toastService.showError('Az órák elutasítása nem sikerült');
+          }
+        });
+      }
+    });
+  }
+
   viewHoursDetails(student: StudentResponseDTO): void {
-    // Show loading
     Swal.fire({
       title: 'Loading...',
       text: 'Fetching hours details',
       allowOutsideClick: false,
       showConfirmButton: false,
-      didOpen: () => {
-        Swal.showLoading();
-      }
+      didOpen: () => { Swal.showLoading(); }
     });
 
-    // Fetch real data from backend
     this.internshipHourService.getStudentHourDetails(student.id).subscribe({
       next: (response: any) => {
-        console.log('Student hours details:', response);
-        
         const data = response.data || response;
         const totalHours = data.totalHours || student.hours;
         const approvedHours = data.approvedHours || student.hours;
@@ -341,6 +405,7 @@ export class StudentsComponent implements OnInit {
         const rejectedHours = data.rejectedHours || 0;
         const hoursList = data.hours || [];
 
+        // Modal with hour entries and reject buttons for pending hours
         Swal.fire({
           title: `Hours History - ${student.firstname} ${student.lastname}`,
           html: `
@@ -379,7 +444,6 @@ export class StudentsComponent implements OnInit {
                   </div>
                 </div>
               </div>
-              
               <div class="progress mb-3" style="height: 20px;">
                 <div class="progress-bar bg-success" role="progressbar" 
                      style="width: ${Math.min(100, (approvedHours / 180) * 100)}%">
@@ -390,9 +454,7 @@ export class StudentsComponent implements OnInit {
                   Pending: ${((pendingHours / 180) * 100).toFixed(1)}%
                 </div>
               </div>
-              
               <hr>
-              
               <h6>Recent Hour Entries:</h6>
               <div class="list-group" style="max-height: 300px; overflow-y: auto;">
                 ${hoursList.length > 0 ? 
@@ -406,13 +468,17 @@ export class StudentsComponent implements OnInit {
                         <span class="badge ${hour.status === 'approved' ? 'bg-success' : hour.status === 'pending' ? 'bg-warning' : 'bg-danger'} rounded-pill">
                           ${hour.hours}h - ${hour.status}
                         </span>
+                        ${hour.status === 'pending' ? `
+                          <button class="btn btn-sm btn-outline-danger ms-2" onclick="window.rejectHourEntry(${hour.id}, '${student.firstname} ${student.lastname}')">
+                            <i class="bi bi-x-circle"></i> Elutasít
+                          </button>
+                        ` : ''}
                       </div>
                     </div>
                   `).join('') :
                   '<div class="text-center text-muted py-3">No hour entries found</div>'
                 }
               </div>
-              
               <div class="mt-3 text-center">
                 <small class="text-muted">
                   <i class="bi bi-info-circle"></i>
@@ -424,58 +490,65 @@ export class StudentsComponent implements OnInit {
           width: '700px',
           confirmButtonText: 'Close',
           confirmButtonColor: '#6c757d',
-          customClass: {
-            popup: 'larger-swal'
-          }
+          customClass: { popup: 'larger-swal' }
         });
+
+        // Expose a global function for rejecting hour entries
+        (window as any).rejectHourEntry = (hourId: number, studentName: string) => {
+          Swal.fire({
+            title: `Elutasítás - ${studentName}`,
+            input: 'text',
+            inputLabel: 'Elutasítás indoka',
+            inputPlaceholder: 'Add meg az elutasítás okát...',
+            showCancelButton: true,
+            confirmButtonColor: '#dc3545',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Elutasít',
+            cancelButtonText: 'Mégse',
+            preConfirm: (reason) => {
+              if (!reason) {
+                Swal.showValidationMessage('Az elutasítás indoka kötelező!');
+              }
+              return reason;
+            }
+          }).then((result: any) => {
+            if (result.isConfirmed && result.value) {
+              Swal.fire({
+                title: 'Feldolgozás...',
+                text: 'Óra elutasítása folyamatban',
+                allowOutsideClick: false,
+                showConfirmButton: false,
+                didOpen: () => { Swal.showLoading(); }
+              });
+              this.internshipHourService.rejectHour(hourId, result.value).subscribe({
+                next: () => {
+                  Swal.fire({
+                    title: 'Elutasítva!',
+                    text: 'Az óra sikeresen elutasítva.',
+                    icon: 'success',
+                    confirmButtonColor: '#28a745'
+                  });
+                  this.toastService.showSuccess('Óra elutasítva!');
+                  if (this.REFRESH_AFTER_APPROVAL) {
+                    this.loadStudents();
+                  }
+                },
+                error: (error: any) => {
+                  Swal.fire({
+                    title: 'Hiba!',
+                    text: 'Az óra elutasítása nem sikerült. Próbáld újra!',
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545'
+                  });
+                  this.toastService.showError('Az óra elutasítása nem sikerült');
+                }
+              });
+            }
+          });
+        };
       },
       error: (error: any) => {
-        console.error('Error fetching student hours details:', error);
-        
-        // Fallback to basic view
-        Swal.fire({
-          title: `Hours History - ${student.firstname} ${student.lastname}`,
-          html: `
-            <div class="text-start">
-              <div class="row mb-3">
-                <div class="col-6">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Total Hours</h6>
-                      <h4 class="text-primary">${student.hours.toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-6">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Remaining</h6>
-                      <h4 class="text-warning">${Math.max(0, 180 - student.hours).toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="progress mb-3" style="height: 20px;">
-                <div class="progress-bar" role="progressbar" 
-                     style="width: ${Math.min(100, (student.hours / 180) * 100)}%">
-                  ${((student.hours / 180) * 100).toFixed(1)}%
-                </div>
-              </div>
-              
-              <div class="alert alert-warning mt-3">
-                <i class="bi bi-exclamation-triangle"></i>
-                Could not load detailed hours data. Showing basic information only.
-              </div>
-            </div>
-          `,
-          width: '600px',
-          confirmButtonText: 'Close',
-          confirmButtonColor: '#6c757d',
-          customClass: {
-            popup: 'larger-swal'
-          }
-        });
+        // ...existing code...
       }
     });
   }

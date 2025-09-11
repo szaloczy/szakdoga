@@ -111,6 +111,25 @@
   <!-- Main Content -->
   <div class="container">
     @if (selectedTab === 'week') {
+      <div class="d-flex justify-content-end mb-3 gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="refreshData()"
+          [disabled]="isLoading"
+        >
+          <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+          {{ 'internship_hours.actions.refresh' | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="exportToCSV()"
+          [disabled]="entries.length === 0"
+        >
+          <i class="bi bi-download"></i> {{ 'internship_hours.actions.export_csv' | translate }}
+        </button>
+      </div>
       <app-week-view></app-week-view>
     } @else {
       <!-- Filters and Actions -->
@@ -134,42 +153,6 @@
             [(ngModel)]="dateFilter"
             (change)="onDateFilterChange()"
           />
-        </div>
-        <div class="col-md-2">
-          <button
-            type="button"
-            class="btn btn-outline-secondary"
-            (click)="clearFilters()"
-            [disabled]="!searchTerm && !dateFilter"
-          >
-            <i class="bi bi-x-lg"></i> {{ 'internship_hours.filters.clear' | translate }}
-          </button>
-        </div>
-        <div class="col-md-3 text-end d-flex justify-content-end gap-2">
-          <button
-            type="button"
-            class="btn btn-outline-primary"
-            (click)="refreshData()"
-            [disabled]="isLoading"
-          >
-            <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
-            {{ 'internship_hours.actions.refresh' | translate }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-success"
-            (click)="exportToCSV()"
-            [disabled]="filteredEntries.length === 0"
-          >
-            <i class="bi bi-download"></i> {{ 'internship_hours.actions.export_csv' | translate }}
-          </button>
-          <button
-            type="button"
-            class="btn btn-primary"
-            (click)="addHour()"
-          >
-            <i class="bi bi-plus-lg"></i> {{ 'internship_hours.actions.add_hour' | translate }}
-          </button>
         </div>
       </div>
 

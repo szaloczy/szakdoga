@@ -333,7 +333,9 @@ export const en: NestedI18n = {
             sort_by_status: { text: "Sort by Status" }
         },
         actions: {
-            view_hours: { text: "View Hours History" }
+            view_hours: { text: "View Hours History" },
+            approve_hours: { text: "Approve Hours" },
+            reject_hours: { text: "Reject Hours" }
         },
         label: {
             no_pending_hours: { text: "All hours approved" }

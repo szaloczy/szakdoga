@@ -107,7 +107,7 @@ export class WeekViewComponent implements OnInit {
   selectDate(date: Date): void {
     this.selectedDate = new Date(date);
     this.selectedDate.setHours(0, 0, 0, 0);
-    this.filterTodayEntries(); // 👉 nap váltáskor szűrés
+    this.filterTodayEntries();
   }
 
   getTotalForDay(date: Date): string {

@@ -34,7 +34,7 @@
               <li class="list-group-item"><strong>{{ 'dashboard.student.name' | translate }}:</strong> {{ studentProfile?.user?.firstname }} {{ studentProfile?.user?.lastname }}</li>
               <li class="list-group-item"><strong>{{ 'dashboard.student.neptun' | translate }}:</strong> {{ studentProfile?.neptun }}</li>
               <li class="list-group-item"><strong>{{ 'dashboard.student.university' | translate }}:</strong> {{ studentProfile?.university }}</li>
-              <li class="list-group-item"><strong>{{ 'dashboard.student.phone' | translate }}:</strong> {{ studentProfile?.phone }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.major' | translate }}:</strong> {{ studentProfile?.major }}</li>
             </ul>
           </div>
         </div>
@@ -95,7 +95,23 @@
           @for (doc of studentDocuments; track doc) {
           <li class="list-group-item d-flex justify-content-between align-items-center">
             <div>
-              <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">{{ 'admin_panel.document.management.states' | translate }}</span>
+              <strong>{{ doc.originalName }}</strong> <span class="badge bg-light text-dark ms-2">
+                @switch (doc.status) {
+                  @case ('pending') {
+                    <span class="badge bg-warning text-dark"><i class="bi bi-hourglass-split me-1"></i>{{ 'dashboard.student.status.pending' | translate }}</span>
+                  }
+                  @case ('approved') {
+                    <span class="badge bg-success"><i class="bi bi-check-circle-fill me-1"></i>{{ 'dashboard.student.status.approved' | translate }}</span>
+                  }
+                  @case ('rejected') {
+                    <span class="badge bg-danger"><i class="bi bi-x-circle-fill me-1"></i>{{ 'dashboard.student.status.rejected' | translate }}</span>
+                  }
+                  @default {
+                    <span class="badge bg-secondary"><i class="bi bi-question-circle me-1"></i>{{ doc.status }}</span>
+                  }
+                }
+
+              </span>
               @if (doc.reviewNote) {
               <span class="ms-2 text-muted"> ({{ 'dashboard.student.note' | translate }}: {{ doc.reviewNote }})</span>
               }

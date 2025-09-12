@@ -28,17 +28,17 @@ throw new Error('Method not implemented.');
   entries: InternshipHourDTO[] = [];
   filteredEntries: InternshipHourDTO[] = [];
   
-  // Loading and error states
+  
   isLoading = false;
   error: string | null = null;
   
-  // Statistics
+ 
   totalHours = 0;
   approvedHours = 0;
   pendingHours = 0;
   rejectedHours = 0;
   
-  // Filters and search
+  
   searchTerm = '';
   dateFilter = '';
   statusFilter: string = '';

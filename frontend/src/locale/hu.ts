@@ -146,6 +146,7 @@ export const hu: NestedI18n = {
             upload_documents: { text: "Dokumentumok feltöltése" },
             add_internship: { text: "Új gyakorlat rögzítése" },
             previous_internships: { text: "Korábbi gyakorlatok" },
+            major: { text: "Szak" },
             personal_data: { text: "Személyes adatok" },
             name: { text: "Név" },
             neptun: { text: "Neptun kód" },
@@ -158,6 +159,7 @@ export const hu: NestedI18n = {
             status: { text: "Státusz" },
             approved: { text: "Jóváhagyva" },
             pending: { text: "Függőben" },
+            rejected: { text: "Elutasítva" },
             hours_summary: { text: "Órák összesítése" },
             approved_hours: { text: "Jóváhagyott órák" },
             pending_hours: { text: "Függő órák" },
@@ -333,7 +335,9 @@ export const hu: NestedI18n = {
             sort_by_status: { text: "Rendezés státusz szerint" }
         },
         actions: {
-            view_hours: { text: "Órák megtekintése" }
+            view_hours: { text: "Órák megtekintése" },
+            approve_hours: { text: "Óra jóváhagyás" },
+            reject_hours: { text: "Óra elutasítása" }
         },
         label: {
             no_pending_hours: { text: "Minden óra jóváhagyva" }

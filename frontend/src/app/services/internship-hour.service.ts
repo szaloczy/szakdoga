@@ -36,6 +36,10 @@ export class InternshipHourService {
     return this.http.post<any>(`/api/internship-hour/${id}/reject`, { reason }) 
   };
 
+  rejectAllStudentHours(studentId: number) {
+    return this.http.post<any>(`/api/internship-hour/student/${studentId}/reject-all`, {})
+  }
+
   bulkApprove(hourIds: number[]) {
     return this.http.post<any>(`/api/internship-hour/bulk-approve`, { hourIds })
   };

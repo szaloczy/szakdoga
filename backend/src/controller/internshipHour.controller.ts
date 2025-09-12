@@ -267,6 +267,42 @@ export class InternshipHourController extends Controller {
     }
   };
 
+  rejectAllStudentHours = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const studentId = Number(req.params["studentId"]);
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (isNaN(studentId)) {
+        return this.handleError(res, null, 400, "Invalid student ID");
+      }
+
+      const result = await this.service.rejectAllStudentPendingHours(studentId, user.id);
+
+      const rejectedHoursCount = result.reduce((sum, hour) => {
+        const start = new Date(`2000-01-01 ${hour.startTime}`);
+        const end = new Date(`2000-01-01 ${hour.endTime}`);
+        const diffMs = end.getTime() - start.getTime();
+        return sum + (diffMs / (1000 * 60 * 60));
+      }, 0);
+
+      
+      const newTotalHours = await this.service.getTotalHoursForStudent(studentId);
+
+      res.json({
+        success: true,
+        message: "All pending hours rejected successfully",
+        rejectedHours: Math.round(rejectedHoursCount * 100) / 100,
+        newTotalHours: Math.round(newTotalHours * 100) / 100
+      });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   
   getStudentHourDetails = async (req, res) => {
     try {

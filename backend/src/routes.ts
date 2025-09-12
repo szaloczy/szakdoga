@@ -89,6 +89,7 @@ router.post("/internship-hour/:id/approve", authMiddleware, internshipHourContro
 router.post("/internship-hour/:id/reject", authMiddleware, internshipHourController.reject);
 router.post("/internship-hour/bulk-approve", authMiddleware, internshipHourController.bulkApprove);
 router.post("/internship-hour/student/:studentId/approve-all", authMiddleware, internshipHourController.approveAllStudentHours);
+router.post("/internship-hour/student/:studentId/reject-all", authMiddleware, internshipHourController.rejectAllStudentHours);
 router.get("/internship-hour/student/:studentId/details", authMiddleware, internshipHourController.getStudentHourDetails);
 router.get("/internship-hour/:id", internshipHourController.getOne);
 router.post("/internship-hour", authMiddleware, internshipHourController.create);

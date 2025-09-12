@@ -439,6 +439,60 @@ export class InternshipHourService {
 
     return await this.hourRepo.save(pendingHours);
   }
+  
+  async rejectAllStudentPendingHours(studentUserId: number, mentorUserId: number): Promise<InternshipHour[]> {
+    const student = await this.studentRepo.findOne({
+      where: { user: { id: studentUserId } },
+      relations: ["user"]
+    });
+
+    if (!student) {
+      throw new Error("Student not found");
+    }
+
+    
+    const internship = await this.internshipRepo.findOne({
+      where: { 
+        student: { id: student.id },
+        mentor: { user: { id: mentorUserId } },
+        isApproved: true
+      },
+      relations: ["mentor", "mentor.user"]
+    });
+
+    if (!internship) {
+      throw new Error("No approved internship found for this student under your mentorship");
+    }
+
+    
+    const pendingHours = await this.hourRepo.find({
+      where: {
+        internship: { id: internship.id },
+        status: "pending"
+      },
+      relations: ["internship"]
+    });
+
+    if (pendingHours.length === 0) {
+      throw new Error("No pending hours found for this student");
+    }
+
+    const mentor = await this.mentorRepo.findOne({ 
+      where: { user: { id: mentorUserId } },
+      relations: ["user"]
+    });
+    
+    if (!mentor) {
+      throw new Error("Mentor not found");
+    }
+
+    for (const hour of pendingHours) {
+      hour.status = "rejected";
+      hour.approvedBy = mentor;
+    }
+
+    return await this.hourRepo.save(pendingHours);
+  }
 
   async getStudentHourDetails(studentUserId: number, mentorUserId: number): Promise<any> {
     const student = await this.studentRepo.findOne({

@@ -350,9 +350,8 @@ export class StudentsComponent implements OnInit {
           didOpen: () => { Swal.showLoading(); }
         });
 
-        this.internshipHourService.rejectHour(studentId).subscribe({
+        this.internshipHourService.rejectAllStudentHours(studentId).subscribe({
           next: (response: any) => {
-            // Frissítsd a hallgató adatait
             const studentIndex = this.students.findIndex(s => s.id === studentId);
             if (studentIndex !== -1) {
               this.students[studentIndex] = {
@@ -405,7 +404,6 @@ export class StudentsComponent implements OnInit {
         const rejectedHours = data.rejectedHours || 0;
         const hoursList = data.hours || [];
 
-        // Modal with hour entries and reject buttons for pending hours
         Swal.fire({
           title: `Hours History - ${student.firstname} ${student.lastname}`,
           html: `
@@ -471,6 +469,9 @@ export class StudentsComponent implements OnInit {
                         ${hour.status === 'pending' ? `
                           <button class="btn btn-sm btn-outline-danger ms-2" onclick="window.rejectHourEntry(${hour.id}, '${student.firstname} ${student.lastname}')">
                             <i class="bi bi-x-circle"></i> Elutasít
+                          </button>
+                          <button class="btn btn-sm btn-outline-success ms-2" onclick="window.approveHourEntry(${hour.id}, '${student.firstname} ${student.lastname}')">
+                            <i class="bi bi-check-circle"></i> Elfogad
                           </button>
                         ` : ''}
                       </div>

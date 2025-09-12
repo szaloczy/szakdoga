@@ -108,7 +108,6 @@
     </div>
   </div>
 
-  <!-- Loading State -->
   @if (isLoading) {
     <div class="text-center py-5">
       <div class="spinner-border text-primary" role="status">
@@ -118,7 +117,6 @@
     </div>
   }
 
-  <!-- Students List -->
   @if (!isLoading && filteredStudents.length > 0) {
     <div class="row">
       @for (student of filteredStudents; track student.id) {
@@ -170,7 +168,6 @@
                 </div>
               </div>
               
-              <!-- Progress Bar -->
               <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <small class="text-muted">{{ 'students.card.progress' | translate }}</small>
@@ -200,7 +197,7 @@
                       (click)="approveStudentHours(student.id)"
                     >
                       <i class="bi bi-check-circle me-1"></i>
-                      {{ 'students.actions.approve_hours' | translate }}
+                      {{ 'mentor_students.actions.approve_hours' | translate }}
                       <span class="badge bg-light text-dark ms-2">{{ getPendingHours(student) | number:'1.0-0' }}h</span>
                     </button>
                     <button 
@@ -232,7 +229,6 @@
     </div>
   }
 
-  <!-- Empty State -->
   @if (!isLoading && filteredStudents.length === 0 && students.length === 0) {
     <div class="text-center py-5">
       <i class="bi bi-people fs-1 text-muted d-block mb-3"></i>
@@ -241,7 +237,6 @@
     </div>
   }
 
-  <!-- No Search Results -->
   @if (!isLoading && filteredStudents.length === 0 && students.length > 0) {
     <div class="text-center py-5">
       <i class="bi bi-search fs-1 text-muted d-block mb-3"></i>

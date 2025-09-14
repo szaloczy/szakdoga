@@ -285,7 +285,8 @@ export const en: NestedI18n = {
             approved: { text: "Approved Hours" },
             pending: { text: "Pending Hours" },
             rejected: { text: "Rejected Hours" },
-            total: { text: "Total Hours" }
+            total: { text: "Total Hours" },
+            left: { text: "Hours Left" }
         },
         tabs: {
             week: { text: "Week View" },
@@ -302,7 +303,9 @@ export const en: NestedI18n = {
             export_csv: { text: "Export to CSV" },
             add_hour: { text: "Add Hour" },
             try_again: { text: "Try Again" },
-            edit: { text: "Edit" }
+            edit: { text: "Edit" },
+            approve: { text: "Approve" },
+            reject: { text: "Reject" },
         },
         loading: { text: "Loading internship hours..." },
         entries: {
@@ -313,7 +316,8 @@ export const en: NestedI18n = {
             filters_applied: { text: "Filters applied" },
             no_entries_found: { text: "No entries found" },
             try_adjusting_filters: { text: "Try adjusting your filters or clearing them." },
-            no_hours_yet: { text: "No {{tab}} internship hours yet." }
+            no_hours_yet: { text: "No {{tab}} internship hours yet." },
+            hours_entries: { text: "Showing recent hour entries for this student" },
         },
         no_internship: {
             text: "You cannot register hours until you have an approved internship"

@@ -14,6 +14,60 @@ import { ToastService } from '../../../services/toast.service';
   styleUrl: './week-view.component.scss'
 })
 export class WeekViewComponent implements OnInit {
+isLoading = false;
+error: string | null = null;
+
+get entries(): InternshipHourDTO[] {
+  return this.allEntries;
+}
+
+refreshData(): void {
+  this.isLoading = true;
+  this.error = null;
+  this.internshipHourService.getMine().subscribe({
+    next: (hours) => {
+      this.allEntries = hours;
+      this.filterTodayEntries();
+      this.isLoading = false;
+    },
+    error: (error) => {
+      console.error('Error loading internship hours:', error);
+      this.error = 'Failed to load internship hours. Please try again.';
+      this.toastService.showError('Failed to load internship hours');
+      this.isLoading = false;
+    }
+  });
+}
+
+exportToCSV(): void {
+  if (this.entries.length === 0) {
+    this.toastService.showError('No data to export');
+    return;
+  }
+
+  const headers = ['Date', 'Start Time', 'End Time', 'Duration', 'Description', 'Status'];
+  const csvData = this.entries.map(entry => [
+    entry.date,
+    entry.startTime,
+    entry.endTime,
+    this.getDuration(entry.startTime, entry.endTime),
+    entry.description,
+    entry.status
+  ]);
+
+  const csvContent = [headers, ...csvData]
+    .map(row => row.map(cell => `"${cell}"`).join(','))
+    .join('\n');
+
+  const blob = new Blob([csvContent], { type: 'text/csv' });
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `internship-hours-week-${new Date().toISOString().split('T')[0]}.csv`;
+  a.click();
+  window.URL.revokeObjectURL(url);
+  this.toastService.showSuccess('Data exported successfully');
+}
 
   fb = inject(FormBuilder);
   authService = inject(AuthService);

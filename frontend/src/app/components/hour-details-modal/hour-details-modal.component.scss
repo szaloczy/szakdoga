@@ -1,0 +1,49 @@
+
+.modal-backdrop {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(30, 41, 59, 0.45);
+  backdrop-filter: blur(3px);
+  z-index: 1040;
+  transition: background 0.3s;
+}
+
+.modal-dialog {
+  position: fixed;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1050;
+  width: 700px;
+  max-width: 95vw;
+  transition: box-shadow 0.3s, transform 0.2s;
+}
+
+.modal-content {
+  border-radius: 1.2rem;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.22);
+  background: rgba(255,255,255,0.98);
+  border: 1px solid #e2e8f0;
+  padding: 1.5rem 1.2rem;
+  animation: modalFadeIn 0.25s;
+}
+
+.modal-header {
+  border-top-left-radius: 1.2rem;
+  border-top-right-radius: 1.2rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px;
+}
+
+.modal-footer {
+  border-bottom-left-radius: 1.2rem;
+  border-bottom-right-radius: 1.2rem;
+  background: #f8fafc;
+  padding-top: 0.75rem;
+  border-top: 1px solid #e2e8f0;
+}
+
+@keyframes modalFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}

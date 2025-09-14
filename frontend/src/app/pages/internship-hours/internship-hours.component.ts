@@ -175,22 +175,11 @@ throw new Error('Method not implemented.');
     this.toastService.showSuccess('Data exported successfully');
   }
 
-  // Refresh functionality
-  refreshData(): void {
-    if (this.selectedTab !== 'week') {
-      this.loadEntries(this.selectedTab as 'approved' | 'pending' | 'rejected');
-    }
-    this.loadStatistics();
-  }
-
-  // Edit functionality
   editEntry(entry: InternshipHourDTO): void {
-    // For now, just show info - could implement edit modal later
     this.toastService.showSuccess(`Edit functionality for entry ${entry.id} will be implemented`);
     console.log('Edit entry:', entry);
   }
 
-  // Utility methods for template
   getStatusIcon(status: string): string {
     switch (status) {
       case 'approved': return 'bi-check-circle-fill';
@@ -209,7 +198,6 @@ throw new Error('Method not implemented.');
     }
   }
 
-  // Quick actions
   approveAllPending(): void {
     const pendingEntries = this.entries.filter(e => e.status === 'pending');
     if (pendingEntries.length === 0) {
@@ -217,7 +205,6 @@ throw new Error('Method not implemented.');
       return;
     }
     
-    // This would require a backend endpoint
     this.toastService.showSuccess(`Bulk approve functionality would approve ${pendingEntries.length} entries`);
   }
 

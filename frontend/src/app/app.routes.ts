@@ -14,6 +14,7 @@ import { InternshipManagementComponent } from './admin-panel/internship-manageme
 import { InternshipHoursComponent } from './pages/internship-hours/internship-hours.component';
 import { DocumentUploadComponent } from './pages/document-upload/document-upload.component';
 import { DocumentManagementComponent } from './admin-panel/document-management/document-management.component';
+import { StatisticsComponent } from './pages/statistics/statistics.component';
 
 export const routes: Routes = [
     {
@@ -47,6 +48,7 @@ export const routes: Routes = [
             { path: 'students', component: StudentsComponent, canActivate: [() => inject(AuthService).mentorAccess()] },
             { path: 'internship-hours', component: InternshipHoursComponent },
             { path: 'documents', component: DocumentUploadComponent },
+            { path: 'statistics', component: StatisticsComponent },
             { path: '', redirectTo: 'dashboard', pathMatch:'full' },
         ]
     },

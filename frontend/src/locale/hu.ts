@@ -288,7 +288,8 @@ export const hu: NestedI18n = {
             approved: { text: "Jóváhagyott órák" },
             pending: { text: "Függő órák" },
             rejected: { text: "Elutasított órák" },
-            total: { text: "Összes óra" }
+            total: { text: "Összes óra" },
+            left: { text: "Hátralévő órák" }
         },
         tabs: {
             week: { text: "Heti nézet" },
@@ -305,7 +306,9 @@ export const hu: NestedI18n = {
             export_csv: { text: "Exportálás CSV-be" },
             add_hour: { text: "Óra hozzáadása" },
             try_again: { text: "Újra" },
-            edit: { text: "Szerkesztés" }
+            edit: { text: "Szerkesztés" },
+            approve: { text: "Jóváhagyás" },
+            reject: { text: "Elutasítás" },
         },
         loading: { text: "Gyakorlati órák betöltése..." },
         entries: {
@@ -316,7 +319,9 @@ export const hu: NestedI18n = {
             filters_applied: { text: "Szűrők aktívak" },
             no_entries_found: { text: "Nincs találat" },
             try_adjusting_filters: { text: "Próbálja módosítani a szűrőket vagy törölje őket." },
-            no_hours_yet: { text: "Nincs még {{tab}} gyakorlati óra." }
+            no_hours_yet: { text: "Nincs még {{tab}} gyakorlati óra." },
+            hours_entries: { text: "Hallgató rögzített óráinak listája" },
+
         }
     },
     mentor_students: {
@@ -336,8 +341,8 @@ export const hu: NestedI18n = {
         },
         actions: {
             view_hours: { text: "Órák megtekintése" },
-            approve_hours: { text: "Óra jóváhagyás" },
-            reject_hours: { text: "Óra elutasítása" }
+            approve_hours: { text: "Órák jóváhagyása" },
+            reject_hours: { text: "Órák elutasítása" }
         },
         label: {
             no_pending_hours: { text: "Minden óra jóváhagyva" }

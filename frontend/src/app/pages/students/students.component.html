@@ -247,4 +247,18 @@
       </button>
     </div>
   }
+
+  <app-hour-details-modal
+    *ngIf="showHourDetailsModal"
+    [student]="modalStudent"
+    [totalHours]="modalTotalHours"
+    [approvedHours]="modalApprovedHours"
+    [pendingHours]="modalPendingHours"
+    [rejectedHours]="modalRejectedHours"
+    [hoursList]="modalHoursList"
+    [show]="showHourDetailsModal"
+    (close)="handleHourDetailsModalClose()"
+    (rejectHour)="handleRejectHourFromModal($event)"
+    (approveHour)="handleApproveHourFromModal($event)"
+  ></app-hour-details-modal>
 </div>

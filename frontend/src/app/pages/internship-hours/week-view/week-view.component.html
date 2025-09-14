@@ -3,6 +3,25 @@
     <h2 class="fw-semibold">{{ 'internship_hours.title' | translate }}</h2>
     @if (authService.getRole() === "student") {
       <button class="btn btn-primary" (click)="openModal()">+ {{ 'internship_hours.add_hour' | translate }}</button>
+      <div class="d-flex justify-content-end mb-3 gap-2">
+        <button
+          type="button"
+          class="btn btn-outline-primary"
+          (click)="refreshData()"
+          [disabled]="isLoading"
+        >
+          <i class="bi bi-arrow-clockwise" [class.spin]="isLoading"></i>
+          {{ 'internship_hours.actions.refresh' | translate }}
+        </button>
+        <button
+          type="button"
+          class="btn btn-success"
+          (click)="exportToCSV()"
+          [disabled]="entries.length === 0"
+        >
+          <i class="bi bi-download"></i> {{ 'internship_hours.actions.export_csv' | translate }}
+        </button>
+      </div>
     }
   </div>
 
@@ -73,24 +92,17 @@
   </ng-template>
 </div>
 
-<!-- MODAL -->
  @if (isModalOpen) {
   <div
     class="custom-modal-backdrop"
   >
     <div class="custom-modal">
+      
       <form (ngSubmit)="addHour()" [formGroup]="hourForm">
+        
         <div class="mb-3">
           <h5>{{ 'internship_hours.add_hour_box.title' | translate }}</h5>
         </div>
-        <!-- 
-        @if (authService.getUserRole() === "Mentor") {
-        <div class="mb-3">
-          <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
-          <input type="time" class="form-control" formControlName="startTime" name="startTime" required />
-        </div>
-        }
-        -->
         <div class="mb-3">
           <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
           <input type="time" class="form-control" formControlName="startTime" name="startTime" required />

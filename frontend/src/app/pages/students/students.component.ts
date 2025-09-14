@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { I18nService } from '../../shared/i18n.pipe';
+import { HourDetailsModalComponent } from '../../components/hour-details-modal/hour-details-modal.component';
 import { MentorService } from '../../services/mentor.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
@@ -29,12 +30,27 @@ interface StudentResponseDTO {
   imports: [
     CommonModule,
     FormsModule,
-    I18nService
+    I18nService,
+    HourDetailsModalComponent
   ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss'
 })
 export class StudentsComponent implements OnInit {
+  handleApproveHourFromModal(event: { hourId: number, studentName: string }): void {
+    this.internshipHourService.approveHour(event.hourId).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Óra elfogadva!');
+        this.handleHourDetailsModalClose();
+        if (this.REFRESH_AFTER_APPROVAL) {
+          this.loadStudents();
+        }
+      },
+      error: (error: any) => {
+        this.toastService.showError('Az óra elfogadása nem sikerült');
+      }
+    });
+  }
 
   private mentorService = inject(MentorService);
   private authService = inject(AuthService);
@@ -50,6 +66,14 @@ export class StudentsComponent implements OnInit {
 
   // Configuration: set to true if you want to reload data from backend after each approval
   private REFRESH_AFTER_APPROVAL = false;
+
+  showHourDetailsModal: boolean = false;
+  modalStudent: StudentResponseDTO | null = null;
+  modalTotalHours: number = 0;
+  modalApprovedHours: number = 0;
+  modalPendingHours: number = 0;
+  modalRejectedHours: number = 0;
+  modalHoursList: any[] = [];
 
   ngOnInit(): void {
     if (!this.authService.mentorAccess()) {
@@ -387,169 +411,41 @@ export class StudentsComponent implements OnInit {
   }
 
   viewHoursDetails(student: StudentResponseDTO): void {
-    Swal.fire({
-      title: 'Loading...',
-      text: 'Fetching hours details',
-      allowOutsideClick: false,
-      showConfirmButton: false,
-      didOpen: () => { Swal.showLoading(); }
-    });
-
     this.internshipHourService.getStudentHourDetails(student.id).subscribe({
       next: (response: any) => {
         const data = response.data || response;
-        const totalHours = data.totalHours || student.hours;
-        const approvedHours = data.approvedHours || student.hours;
-        const pendingHours = data.pendingHours || this.getPendingHours(student);
-        const rejectedHours = data.rejectedHours || 0;
-        const hoursList = data.hours || [];
-
-        Swal.fire({
-          title: `Hours History - ${student.firstname} ${student.lastname}`,
-          html: `
-            <div class="text-start">
-              <div class="row mb-3">
-                <div class="col-3">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Total Hours</h6>
-                      <h4 class="text-primary">${totalHours.toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Approved</h6>
-                      <h4 class="text-success">${approvedHours.toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Pending</h6>
-                      <h4 class="text-warning">${pendingHours.toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-                <div class="col-3">
-                  <div class="card bg-light">
-                    <div class="card-body text-center">
-                      <h6 class="card-title">Remaining</h6>
-                      <h4 class="text-info">${Math.max(0, 180 - totalHours).toFixed(1)}</h4>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="progress mb-3" style="height: 20px;">
-                <div class="progress-bar bg-success" role="progressbar" 
-                     style="width: ${Math.min(100, (approvedHours / 180) * 100)}%">
-                  Approved: ${((approvedHours / 180) * 100).toFixed(1)}%
-                </div>
-                <div class="progress-bar bg-warning" role="progressbar" 
-                     style="width: ${Math.min(100 - (approvedHours / 180) * 100, (pendingHours / 180) * 100)}%">
-                  Pending: ${((pendingHours / 180) * 100).toFixed(1)}%
-                </div>
-              </div>
-              <hr>
-              <h6>Recent Hour Entries:</h6>
-              <div class="list-group" style="max-height: 300px; overflow-y: auto;">
-                ${hoursList.length > 0 ? 
-                  hoursList.slice(0, 10).map((hour: any) => `
-                    <div class="list-group-item d-flex justify-content-between align-items-center">
-                      <div>
-                        <strong>${new Date(hour.date).toLocaleDateString()}</strong><br>
-                        <small class="text-muted">${hour.description || 'Work activity'}</small>
-                      </div>
-                      <div class="text-end">
-                        <span class="badge ${hour.status === 'approved' ? 'bg-success' : hour.status === 'pending' ? 'bg-warning' : 'bg-danger'} rounded-pill">
-                          ${hour.hours}h - ${hour.status}
-                        </span>
-                        ${hour.status === 'pending' ? `
-                          <button class="btn btn-sm btn-outline-danger ms-2" onclick="window.rejectHourEntry(${hour.id}, '${student.firstname} ${student.lastname}')">
-                            <i class="bi bi-x-circle"></i> Elutasít
-                          </button>
-                          <button class="btn btn-sm btn-outline-success ms-2" onclick="window.approveHourEntry(${hour.id}, '${student.firstname} ${student.lastname}')">
-                            <i class="bi bi-check-circle"></i> Elfogad
-                          </button>
-                        ` : ''}
-                      </div>
-                    </div>
-                  `).join('') :
-                  '<div class="text-center text-muted py-3">No hour entries found</div>'
-                }
-              </div>
-              <div class="mt-3 text-center">
-                <small class="text-muted">
-                  <i class="bi bi-info-circle"></i>
-                  Showing recent hour entries for this student
-                </small>
-              </div>
-            </div>
-          `,
-          width: '700px',
-          confirmButtonText: 'Close',
-          confirmButtonColor: '#6c757d',
-          customClass: { popup: 'larger-swal' }
-        });
-
-        // Expose a global function for rejecting hour entries
-        (window as any).rejectHourEntry = (hourId: number, studentName: string) => {
-          Swal.fire({
-            title: `Elutasítás - ${studentName}`,
-            input: 'text',
-            inputLabel: 'Elutasítás indoka',
-            inputPlaceholder: 'Add meg az elutasítás okát...',
-            showCancelButton: true,
-            confirmButtonColor: '#dc3545',
-            cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Elutasít',
-            cancelButtonText: 'Mégse',
-            preConfirm: (reason) => {
-              if (!reason) {
-                Swal.showValidationMessage('Az elutasítás indoka kötelező!');
-              }
-              return reason;
-            }
-          }).then((result: any) => {
-            if (result.isConfirmed && result.value) {
-              Swal.fire({
-                title: 'Feldolgozás...',
-                text: 'Óra elutasítása folyamatban',
-                allowOutsideClick: false,
-                showConfirmButton: false,
-                didOpen: () => { Swal.showLoading(); }
-              });
-              this.internshipHourService.rejectHour(hourId, result.value).subscribe({
-                next: () => {
-                  Swal.fire({
-                    title: 'Elutasítva!',
-                    text: 'Az óra sikeresen elutasítva.',
-                    icon: 'success',
-                    confirmButtonColor: '#28a745'
-                  });
-                  this.toastService.showSuccess('Óra elutasítva!');
-                  if (this.REFRESH_AFTER_APPROVAL) {
-                    this.loadStudents();
-                  }
-                },
-                error: (error: any) => {
-                  Swal.fire({
-                    title: 'Hiba!',
-                    text: 'Az óra elutasítása nem sikerült. Próbáld újra!',
-                    icon: 'error',
-                    confirmButtonColor: '#dc3545'
-                  });
-                  this.toastService.showError('Az óra elutasítása nem sikerült');
-                }
-              });
-            }
-          });
-        };
+        this.modalStudent = student;
+        this.modalTotalHours = data.totalHours || student.hours;
+        this.modalApprovedHours = data.approvedHours || student.hours;
+        this.modalPendingHours = data.pendingHours || this.getPendingHours(student);
+        this.modalRejectedHours = data.rejectedHours || 0;
+        this.modalHoursList = data.hours || [];
+        this.showHourDetailsModal = true;
       },
       error: (error: any) => {
-        // ...existing code...
+        console.error('Error fetching hour details:', error);
+        this.toastService.showError('Nem sikerült lekérni az óra adatokat');
+      }
+    });
+  }
+
+  handleHourDetailsModalClose(): void {
+    this.showHourDetailsModal = false;
+    this.modalStudent = null;
+    this.modalHoursList = [];
+  }
+
+  handleRejectHourFromModal(event: { hourId: number, studentName: string, reason: string }): void {
+    this.internshipHourService.rejectHour(event.hourId, event.reason).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Óra elutasítva!');
+        this.handleHourDetailsModalClose();
+        if (this.REFRESH_AFTER_APPROVAL) {
+          this.loadStudents();
+        }
+      },
+      error: (error: any) => {
+        this.toastService.showError('Az óra elutasítása nem sikerült');
       }
     });
   }

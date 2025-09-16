@@ -1,3 +1,4 @@
+import { ResetPasswordComponent } from './pages/reset-password/reset-password.component';
 import { Routes } from '@angular/router';
 import { RegisterComponent } from './pages/register/register.component';
 import { LoginComponent } from './pages/login/login.component';
@@ -17,6 +18,9 @@ import { DocumentManagementComponent } from './admin-panel/document-management/d
 import { StatisticsComponent } from './pages/statistics/statistics.component';
 
 export const routes: Routes = [
+    {
+        path: 'reset-password', component: ResetPasswordComponent
+    },
     {
         path: 'register', component: RegisterComponent
     },

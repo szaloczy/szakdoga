@@ -13,16 +13,19 @@ export const router = express.Router();
 
 const userController = new UserController();
 
+
 router.get("/user", userController.getAll);
 router.get("/user/:id", userController.getOne);
 router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
-router.put("/user/:id", authMiddleware, userController.update);
-router.delete("/user/:id", authMiddleware, userController.delete);
+router.post("/user/forgot-password", userController.forgotPassword);
+router.post("/user/reset-password", userController.resetPassword); 
+router.put("/user/:id", authMiddleware, userController.update); 
+router.delete("/user/:id", authMiddleware, userController.delete); 
 
 router.get("/profile/:id", userController.getProfile);
 
-// Student routes
+
 const studentController = new StudentController();
 
 router.get("/student", studentController.getAll);
@@ -31,13 +34,12 @@ router.get("/student/user/:userId", authMiddleware, studentController.getByUserI
 //router.get("/student/neptun/:neptun", studentController.getByNeptun);
 //router.get("/student/search", studentController.searchStudents);
 
-// CSV export route
+
 router.get("/students/export-csv", authMiddleware, studentController.exportCsv);
 
-// Saját órák exportja hallgatónak
 router.get("/students/export-csv/mine", authMiddleware, studentController.exportMyCsv);
 
-// Company routes
+
 const companyController = new CompanyController();
 
 router.get("/company", companyController.getAll);
@@ -50,10 +52,10 @@ router.put("/company/:id", authMiddleware, companyController.update);
 router.delete("/company/:id", authMiddleware, companyController.delete);
 router.post("/company/:id/deactivate", authMiddleware, companyController.deactivate);
 
-// Internship routes
+
 const internshipController = new InternshipController();
 
-// Internship routes
+
 router.get("/internship", internshipController.getAll);
 router.get("/internship/my", authMiddleware, internshipController.getMyInternship);
 router.get("/internship/:id", authMiddleware, internshipController.getOne);
@@ -65,7 +67,7 @@ router.post("/internship/:id/reject", authMiddleware, internshipController.rejec
 
 router.get("/profile/internship/:id", internshipController.getByUserId);
 
-// Mentor routes
+
 const mentorController = new MentorController();
 
 router.get("/mentor", mentorController.getAll);

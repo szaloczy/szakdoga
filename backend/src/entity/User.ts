@@ -37,4 +37,10 @@ export class User {
     onDelete: "CASCADE",
   })
   mentor?: Mentor;
+
+  @Column({ nullable: true })
+  resetToken?: string;
+
+  @Column({ type: "bigint", nullable: true })
+  resetTokenExpires?: number;
 }

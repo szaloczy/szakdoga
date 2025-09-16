@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { AccessTokenDTO, LoginDTO, ProfileDTO, RegisterDTO, StudentDTO, UserDTO, UserResponseDto, CreateMentorDTO, CreateStudentDTO } from '../../types';
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,14 @@ export class UserService {
   register(registerData: RegisterDTO) {
     return this.http.post<string>(`/api/user/register`, registerData);
   };
+
+  forgotPassword(email: string): Observable<any> {
+    return this.http.post('/api/user/forgot-password', { email });
+  }
+
+  resetPassword(token: string, password: string): Observable<any> {
+    return this.http.post('/api/user/reset-password', { token, password });
+  }
 
   getAll() { return this.http.get<UserResponseDto[]>(`/api/user`)};
 

@@ -78,8 +78,22 @@ export const en: NestedI18n = {
                 link: {
                     text: "Register here"
                 }
+            },
+            forgot_password: {
+                text: "Forgot password?"
+            },
+            },
+            forgot_password_form: {
+                title: {
+                    text: "Reset password"
+                },
+                description: {
+                    text: "Enter your email address and we will send you a link to reset your password."
+                },
+                placeholder: {
+                    text: "Enter your email"
+                },
             }
-        }
     },
     error_message: {
         firstname_required: {
@@ -459,6 +473,9 @@ export const en: NestedI18n = {
             },
             reset: {
                 text: "Reset"
+            },
+            submit: {
+                text: "Submit"
             }
         }
     },

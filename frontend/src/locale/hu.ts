@@ -78,8 +78,22 @@ export const hu: NestedI18n = {
                 link: {
                     text: 'Regisztráció'
                 }
+            },
+            forgot_password: {
+                text: "Elfelejtett jelszó?"
+            },
+            },
+            forgot_password_form: {
+                title: {
+                    text: "Jelszó visszaállítása"
+                },
+                description: {
+                    text: "Adja meg az e-mail címét, és elküldjük Önnek a jelszó visszaállításához szükséges linket."
+                },
+                placeholder: {
+                    text: "Adja meg az e-mail címét"
+                },
             }
-        }
     },
      error_message: {
         firstname_required: {
@@ -460,6 +474,9 @@ export const hu: NestedI18n = {
             },
             reset: {
                 text: "Visszaállítás"
+            },
+            submit: {
+                text: "Küldés"
             }
         }
     },

@@ -62,7 +62,8 @@ export class LoginComponent implements OnInit{
     const email = this.forgotPasswordForm.value.email;
     this.userService.forgotPassword(email).subscribe({
       next: (res) => {
-        this.message = 'Ha létezik ilyen email, küldtünk rá visszaállító linket!';
+        this.isForgotPasswordPopupOpen = false;
+        this.toastService.showSuccess("Ha létezik ilyen email, küldtünk rá visszaállító linket!")
         this.error = null;
       },
       error: (err) => {
@@ -80,8 +81,7 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          console.log("Sikeres bejelentkezés");
-          this.toastService.showSuccess("Sikeres bejelentkezés");
+          this.toastService.showSuccess(this.i18nService.transform('login.success'));
           this.authService.setToken(response.accessToken);
           if (this.authService.decodeToken()?.role == "admin") {
             this.router.navigateByUrl("/admin")

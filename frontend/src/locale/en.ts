@@ -1,3 +1,13 @@
+export default {
+    reset_password: {
+        error: {
+            invalid_data_or_token: 'Invalid data or missing token.',
+            passwords_mismatch: 'Passwords do not match!',
+            unknown: 'Unknown error.'
+        },
+        success: 'New password set successfully!'
+    }
+};
 import { NestedI18n } from "../types";
 
 export const en: NestedI18n = {
@@ -53,6 +63,9 @@ export const en: NestedI18n = {
                     text: "Login here"
                 }
             }
+        },
+        success: {
+            text: "Successful registration!"
         }
     },
     login: {
@@ -83,6 +96,9 @@ export const en: NestedI18n = {
                 text: "Forgot password?"
             },
             },
+            success: {
+                text: "Successful login"
+            },
             forgot_password_form: {
                 title: {
                     text: "Reset password"
@@ -93,6 +109,16 @@ export const en: NestedI18n = {
                 placeholder: {
                     text: "Enter your email"
                 },
+            },
+            reset_password_form: {
+                title: { text: "Reset password" },
+                placeholder: { text: "New password" },
+                placeholder_again: { text: "New password again" },
+                button: { text: "Set new password" },
+                errors: {
+                    passwords_mismatch: { text: "Passwords do not match" },
+                    minlength: { text: "Password must be at least 5 characters long" }
+                }
             }
     },
     error_message: {

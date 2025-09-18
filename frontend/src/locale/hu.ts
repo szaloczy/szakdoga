@@ -1,3 +1,13 @@
+export default {
+    reset_password: {
+        error: {
+            invalid_data_or_token: 'Hibás adatok vagy hiányzó token.',
+            passwords_mismatch: 'A két jelszó nem egyezik meg!',
+            unknown: 'Ismeretlen hiba.'
+        },
+        success: 'Új jelszó sikeresen beállítva!'
+    }
+};
 import { NestedI18n } from "../types";
 
 export const hu: NestedI18n = {
@@ -82,6 +92,9 @@ export const hu: NestedI18n = {
             forgot_password: {
                 text: "Elfelejtett jelszó?"
             },
+            success: {
+                text: "Sikeres bejelentkezés"
+            }
             },
             forgot_password_form: {
                 title: {
@@ -93,6 +106,16 @@ export const hu: NestedI18n = {
                 placeholder: {
                     text: "Adja meg az e-mail címét"
                 },
+            },
+            reset_password_form: {
+                title: { text: "Jelszó visszaállítása" },
+                placeholder: { text: "Új jelszó" },
+                placeholder_again: { text: "Új jelszó újra" },
+                button: { text: "Új jelszó beállítása" },
+                errors: {
+                    passwords_mismatch: { text: "A jelszavak nem egyeznek" },
+                    minlength: { text: "A jelszónak legalább 5 karakter hosszúnak kell lennie" }
+                }
             }
     },
      error_message: {

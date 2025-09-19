@@ -1,5 +1,4 @@
 <div class="container profile-container mt-5">
-  <!-- Loading Spinner -->
   @if (isProfileLoading) {
     <div class="d-flex justify-content-center">
       <div class="spinner-border" role="status">
@@ -8,7 +7,6 @@
     </div>
   } @else {
   <div class="row">
-    <!-- Left Panel -->
     <div class="col-md-4 text-center">
       <img
         src="/avatar.png"
@@ -17,7 +15,15 @@
         height="150"
         alt="{{ 'profile.student_details.title' | translate }}"
       />
-      <input type="file" (change)="onFileSelected($event)" />
+      <label class="custom-file-label">
+        <input type="file" (change)="onFileSelected($event)" style="display:none;" #fileInput />
+        <button type="button" class="btn btn-outline-secondary" (click)="fileInput.click()">
+          {{ 'buttons.forms.document_upload.upload_section.choose_file.text' | translate }}
+        </button>
+        <span class="ms-2">
+          {{ selectedFile?.name || ('document_upload.upload_section.no_file.text' | translate) }}
+        </span>
+      </label>
       <div class="mt-3">
         @if (authService.getRole() === "student") {
           <div class="card">
@@ -129,7 +135,7 @@
         </div>
         <div class="row mb-3">
           <div class="col">
-            <label class="form-label">{{ 'profile.student_details.university' | translate }} <small class="text-muted">({{ 'profile.student_details.optional' | translate }})</small></label>
+            <label class="form-label">{{ 'profile.student_details.university' | translate }} </label>
             <input
               formControlName="university"
               placeholder="{{ 'profile.student_details.placeholder.uni' | translate }}"
@@ -141,7 +147,7 @@
             }
           </div>
           <div class="col">
-            <label class="form-label">{{ 'profile.student_details.major' | translate }} <small class="text-muted">({{ 'profile.student_details.optional' | translate }})</small></label>
+            <label class="form-label">{{ 'profile.student_details.major' | translate }} </label>
             <input
               formControlName="major"
               placeholder="{{ 'profile.student_details.placeholder.major' | translate }}"
@@ -153,7 +159,7 @@
             }
           </div>
           <div class="col">
-            <label class="form-label">{{ 'profile.student_details.neptun' | translate }} <small class="text-muted">({{ 'profile.student_details.optional' | translate }})</small></label>
+            <label class="form-label">{{ 'profile.student_details.neptun' | translate }} </label>
             <input
               formControlName="neptun"
               placeholder="{{ 'profile.student_details.placeholder.neptun' | translate }}"
@@ -187,6 +193,14 @@
             [disabled]="isLoading"
           >
             🔄 {{ 'buttons.forms.reset' | translate }}
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-secondary modify-password-button" 
+            (click)="resetProfile()"
+            [disabled]="isLoading"
+          >
+            🔄 {{ 'profile.reset_password.title' | translate }}
           </button>
         </div>
       </form>

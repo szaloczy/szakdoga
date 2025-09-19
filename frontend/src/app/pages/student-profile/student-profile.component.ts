@@ -71,6 +71,7 @@ export class StudentProfileComponent implements OnInit{
   }
 
   internship: ProfileInternshipDTO | null = null;
+selectedFile: any;
 
   ngOnInit(): void {
     const currentUserRole = this.authService.getRole();

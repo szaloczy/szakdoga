@@ -292,6 +292,9 @@ export const hu: NestedI18n = {
                 city: { text: "Település" },
                 company_address: { text: "Cím" }
             }
+        },
+        reset_password: {
+            title: { text: "Jelszó módosítása" },
         }
     },
     internship_hours:{
@@ -500,7 +503,16 @@ export const hu: NestedI18n = {
             },
             submit: {
                 text: "Küldés"
-            }
+            },
+            choose_file: {
+                text: "Fájl kiválasztása"
+            },
+            document_upload: {
+                upload_section: {
+                    choose_file: { text: 'Fájl kiválasztása' },
+                    no_file: { text: 'Nincs fájl kiválasztva' }
+                }
+            },
         }
     },
     students: {

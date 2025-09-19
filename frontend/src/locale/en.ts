@@ -295,6 +295,9 @@ export const en: NestedI18n = {
                 city: { text: "City" },
                 company_address: { text: "Address" }
             }
+        },
+        reset_password: {
+            title: { text: "Modify Password" },
         }
     },
     internship_hours:{
@@ -502,7 +505,17 @@ export const en: NestedI18n = {
             },
             submit: {
                 text: "Submit"
-            }
+            },
+            choose_file: {
+                text: "Choose File"
+            },
+            document_upload: {
+                upload_section: {
+                    choose_file: { text: 'Choose file' },
+                    no_file: { text: 'No file chosen' }
+                }
+            },
+            
         }
     },
     students: {

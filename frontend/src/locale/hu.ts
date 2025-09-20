@@ -133,7 +133,7 @@ export const hu: NestedI18n = {
         },
         terms_required: {
             text: "*Feltételek elfogadása szükséges"
-        }
+        },  
     },
     response: {
         hour_created: {
@@ -324,6 +324,24 @@ export const hu: NestedI18n = {
         no_internship: {
             text: "Nem tudsz órát regisztrálni amíg nincs jóváhagyott gyakorlati helyed"
         },
+        messages: {
+            delete_hour: {
+                success: {
+                    text: "Óra sikeresen törölve"
+                },
+                failed: {
+                    text: "Törlés sikertelen"
+                }
+            },
+            update_hour: {
+                success: {
+                    text: "Óra sikeresen frissítve"
+                },
+                failed: {
+                    text: "Frissítés sikertelen"
+                }
+            }
+        },
         stats: {
             approved: { text: "Jóváhagyott órák" },
             pending: { text: "Függő órák" },
@@ -507,6 +525,12 @@ export const hu: NestedI18n = {
             choose_file: {
                 text: "Fájl kiválasztása"
             },
+            edit: {
+                text: "Szerkesztés"
+            },
+            delete: {
+                text: "Törlés"
+            },
             document_upload: {
                 upload_section: {
                     choose_file: { text: 'Fájl kiválasztása' },
@@ -615,5 +639,48 @@ export const hu: NestedI18n = {
     time: {
         hour: { text: 'óra' },
         minute: { text: 'perc' },
+    },
+    be_response: {
+        common: {
+            student_not_found: { text: "Hallgató nem található." },
+            hour_entry_not_found: { text: "Óra bejegyzés nem található." },
+            mentor_not_found: { text: "Mentor nem található." }
+        },
+        create_hour: {
+            no_approved_internship: { text: "Ennek a hallgatónak nincs jóváhagyott gyakornoki helye." },
+            future_date_not_allowed: { text: "Nem lehet jövőbeli dátumot megadni a gyakornoki órához." },
+            start_time_must_be_earlier: { text: "A kezdési időpontnak korábbinak kell lennie, mint a befejezési időpont." },
+            date_out_of_internship_period: { text: "A gyakornoki óra dátumának a gyakornoki időszakon belül kell lennie." },
+            only_8_hours_per_day_allowed: { text: "Naponta legfeljebb 8 órát lehet rögzíteni." }
+        },
+        update_hour: {
+            only_own_entry_update: { text: "Csak a saját óra bejegyzéseidet frissítheted." },
+            only_pending_update: { text: "Csak a függőben lévő óra bejegyzéseket frissítheted." }
+        },
+        delete_hour: {
+            only_own_entry_delete: { text: "Csak a saját óra bejegyzéseidet törölheted." },
+            only_pending_delete: { text: "Csak a függőben lévő óra bejegyzéseket törölheted." }
+        },
+        approve_hour: {
+            only_own_students: { text: "Csak a saját hallgatóid óráit hagyhatod jóvá." },
+            only_pending_approve: { text: "Csak a függőben lévő óra bejegyzéseket hagyhatod jóvá." }
+        },
+        reject_hour: {
+            only_own_students: { text: "Csak a saját hallgatóid óráit utasíthatod el." },
+            only_pending_reject: { text: "Csak a függőben lévő óra bejegyzéseket utasíthatod el." }
+        },
+        bulk_approve: {
+            no_hours_found_by_ids: { text: "Nincs óra a megadott azonosítókkal." },
+            only_own_students: { text: "Csak a saját hallgatóid óráit hagyhatod jóvá." },
+            no_pending_hours: { text: "Nincs függőben lévő óra, amit jóváhagyhatnál." }
+        },
+        approve_all: {
+            no_approved_internship_for_student: { text: "Nincs jóváhagyott gyakornoki helye ennek a hallgatónak a te mentorálásod alatt." },
+            no_pending_hours_for_student: { text: "Nincs függőben lévő óra ennek a hallgatónak." }
+        },
+        reject_all: {
+            no_approved_internship_for_student: { text: "Nincs jóváhagyott gyakornoki helye ennek a hallgatónak a te mentorálásod alatt." },
+            no_pending_hours_for_student: { text: "Nincs függőben lévő óra ennek a hallgatónak." }
+        }
     }
 }

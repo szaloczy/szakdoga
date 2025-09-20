@@ -135,8 +135,8 @@ export const en: NestedI18n = {
             text: "*Password field is required"
         },
         terms_required: {
-            text: "*Trems must be accepted"
-        }
+            text: "*Terms must be accepted"
+        },
     },
     response: {
         hour_created: {
@@ -364,8 +364,26 @@ export const en: NestedI18n = {
         },
         no_internship: {
             text: "You cannot register hours until you have an approved internship"
+        },
+        messages: {
+            delete_hour: {
+                success: {
+                    text: "Hour deleted successfully" 
+                },
+                failed: {
+                    text: "Deletion failed"
+                }
+            },
+            update_hour: {
+                success: {
+                    text: "Hour updated successfully"
+                },
+                failed: {
+                    text: "Update failed"
+                }
+            }
         }
-    },
+        },
     mentor_students: {
         filters:{
             by_status:{
@@ -509,6 +527,12 @@ export const en: NestedI18n = {
             choose_file: {
                 text: "Choose File"
             },
+            edit: {
+                text: "Edit"
+            },
+            delete: {
+                text: "Delete"
+            },
             document_upload: {
                 upload_section: {
                     choose_file: { text: 'Choose file' },
@@ -618,5 +642,48 @@ export const en: NestedI18n = {
     time: {
         hour: { text: 'hour' },
         minute: { text: 'minute' },
+    },
+    be_response: {
+        common: {
+            student_not_found: { text: "Student not found." },
+            hour_entry_not_found: { text: "Hour entry not found." },
+            mentor_not_found: { text: "Mentor not found." }
+        },
+        create_hour: {
+            no_approved_internship: { text: "This student doesn't have an approved internship." },
+            future_date_not_allowed: { text: "Cannot create internship hour for a future date." },
+            start_time_must_be_earlier: { text: "Start time must be earlier than end time." },
+            date_out_of_internship_period: { text: "Internship hour date must be within the internship period." },
+            only_8_hours_per_day_allowed: { text: "You can record up to 8 hours per day." }
+        },
+        update_hour: {
+            only_own_entry_update: { text: "You can only update your own hour entries." },
+            only_pending_update: { text: "Can only update pending hour entries." }
+        },
+        delete_hour: {
+            only_own_entry_delete: { text: "You can only delete your own hour entries." },
+            only_pending_delete: { text: "Can only delete pending hour entries." }
+        },
+        approve_hour: {
+            only_own_students: { text: "You can only approve hours for your own students." },
+            only_pending_approve: { text: "Can only approve pending hour entries." }
+        },
+        reject_hour: {
+            only_own_students: { text: "You can only reject hours for your own students." },
+            only_pending_reject: { text: "Can only reject pending hour entries." }
+        },
+        bulk_approve: {
+            no_hours_found_by_ids: { text: "No hours found with the provided IDs." },
+            only_own_students: { text: "You can only approve hours for your own students." },
+            no_pending_hours: { text: "No pending hours found to approve." }
+        },
+        approve_all: {
+            no_approved_internship_for_student: { text: "No approved internship found for this student under your mentorship." },
+            no_pending_hours_for_student: { text: "No pending hours found for this student." }
+        },
+        reject_all: {
+            no_approved_internship_for_student: { text: "No approved internship found for this student under your mentorship." },
+            no_pending_hours_for_student: { text: "No pending hours found for this student." }
+        }
     }
 }

@@ -11,7 +11,6 @@ export class InternshipHourService {
   private hourRepo = AppDataSource.getRepository(InternshipHour);
   private internshipRepo = AppDataSource.getRepository(Internship);
   private studentRepo = AppDataSource.getRepository(Student);
-  private userRepo = AppDataSource.getRepository(User);
   private mentorRepo = AppDataSource.getRepository(Mentor);
 
 
@@ -30,7 +29,7 @@ export class InternshipHourService {
     });
 
     if (!student) {
-      throw new Error("Student not found");
+      throw new Error("be_response.common.student_not_found");
     }
 
     const internship = await this.internshipRepo.findOne({
@@ -41,36 +40,46 @@ export class InternshipHourService {
     });
 
     if (!internship) {
-      throw new Error("This student doesn't have an approved internship")
+      throw new Error("be_response.create_hour.no_approved_internship");
     }
 
     const currentDate = new Date();
     const workDate = new Date(data.date);
 
     if (workDate > currentDate) {
-      throw new Error("Cannot create internship hour for a future date");
+      throw new Error("be_response.create_hour.future_date_not_allowed");
     }
 
     if (data.startTime >= data.endTime) {
-      throw new Error("Start time must be earlier then end time");
+      throw new Error("be_response.create_hour.start_time_must_be_earlier");
     }
 
     const internshipStart = new Date(internship.startDate);
     const internshipEnd = new Date(internship.endDate);
 
     if (workDate < internshipStart || workDate > internshipEnd) {
-      throw new Error("Internship hour date must be within the internship period");
+      throw new Error("be_response.create_hour.date_out_of_internship_period");
     }
 
-    const existingHour = await this.hourRepo.findOne({
+    const sameDayHours = await this.hourRepo.find({
       where: {
         internship: { id: internship.id },
         date: data.date
       }
     });
 
-    if (existingHour) {
-      throw new Error("Internship hour for this date already exists");
+    let totalHours = 0;
+    for (const hour of sameDayHours) {
+      const start = new Date(`2000-01-01T${hour.startTime}`);
+      const end = new Date(`2000-01-01T${hour.endTime}`);
+      totalHours += (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    }
+
+    const newStart = new Date(`2000-01-01T${data.startTime}`);
+    const newEnd = new Date(`2000-01-01T${data.endTime}`);
+    const newDuration = (newEnd.getTime() - newStart.getTime()) / (1000 * 60 * 60);
+    if (totalHours + newDuration > 8) {
+      throw new Error("be_response.create_hour.only_8_hours_per_day_allowed");
     }
 
     const hour = this.hourRepo.create({
@@ -93,7 +102,7 @@ export class InternshipHourService {
   });
 
   if (!student) {
-    throw new Error("Student not found");
+    throw new Error("be_response.common.student_not_found");
   }
 
   const whereCondition: any = {
@@ -164,20 +173,20 @@ export class InternshipHourService {
     });
 
     if (!hour) {
-      throw new Error("Hour entry not found");
+      throw new Error("be_response.common.hour_entry_not_found");
     }
 
     if (hour.internship.student.user.id !== userId) {
-      throw new Error("You can only update your own hour entries");
+      throw new Error("be_response.update_hour.only_own_entry_update");
     }
 
     if (hour.status !== "pending") {
-      throw new Error("Can only update pending hour entries");
+      throw new Error("be_response.update_hour.only_pending_update");
     }
 
     
     if (data.startTime && data.endTime && data.startTime >= data.endTime) {
-      throw new Error("Start time must be earlier than end time");
+      throw new Error("be_response.create_hour.start_time_must_be_earlier");
     }
 
     if (data.date) hour.date = data.date;
@@ -195,15 +204,15 @@ export class InternshipHourService {
     });
 
     if (!hour) {
-      throw new Error("Hour entry not found");
+      throw new Error("be_response.common.hour_entry_not_found");
     }
 
     if (hour.internship.student.user.id !== userId) {
-      throw new Error("You can only delete your own hour entries");
+      throw new Error("be_response.delete_hour.only_own_entry_delete");
     }
 
     if (hour.status !== "pending") {
-      throw new Error("Can only delete pending hour entries");
+      throw new Error("be_response.delete_hour.only_pending_delete");
     }
 
     await this.hourRepo.remove(hour);
@@ -216,15 +225,15 @@ export class InternshipHourService {
     });
 
     if (!hour) {
-      throw new Error("Hour entry not found");
+      throw new Error("be_response.common.hour_entry_not_found");
     }
 
     if (hour.internship.mentor.user.id !== mentorUserId) {
-      throw new Error("You can only approve hours for your own students");
+      throw new Error("be_response.approve_hour.only_own_students");
     }
 
     if (hour.status !== "pending") {
-      throw new Error("Can only approve pending hour entries");
+      throw new Error("be_response.approve_hour.only_pending_approve");
     }
 
     const mentor = await this.mentorRepo.findOne({ 
@@ -233,7 +242,7 @@ export class InternshipHourService {
     });
     
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new Error("be_response.common.mentor_not_found");
     }
 
     hour.status = "approved";
@@ -249,15 +258,15 @@ export class InternshipHourService {
     });
 
     if (!hour) {
-      throw new Error("Hour entry not found");
+      throw new Error("be_response.common.hour_entry_not_found");
     }
 
     if (hour.internship.mentor.user.id !== mentorUserId) {
-      throw new Error("You can only reject hours for your own students");
+      throw new Error("be_response.reject_hour.only_own_students");
     }
 
     if (hour.status !== "pending") {
-      throw new Error("Can only reject pending hour entries");
+      throw new Error("be_response.reject_hour.only_pending_reject");
     }
 
     const mentor = await this.mentorRepo.findOne({ 
@@ -266,7 +275,7 @@ export class InternshipHourService {
     });
     
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new Error("be_response.common.mentor_not_found");
     }
 
     hour.status = "rejected";
@@ -350,7 +359,7 @@ export class InternshipHourService {
     });
 
     if (hours.length === 0) {
-      throw new Error("No hours found with the provided IDs");
+      throw new Error("be_response.bulk_approve.no_hours_found_by_ids");
     }
 
     const mentor = await this.mentorRepo.findOne({ 
@@ -359,14 +368,14 @@ export class InternshipHourService {
     });
     
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new Error("be_response.common.mentor_not_found");
     }
 
     const approvedHours: InternshipHour[] = [];
 
     for (const hour of hours) {
       if (hour.internship.mentor.user.id !== mentorUserId) {
-        throw new Error(`You can only approve hours for your own students. Hour ID: ${hour.id}`);
+        throw new Error("be_response.bulk_approve.only_own_students");
       }
 
       if (hour.status !== "pending") {
@@ -379,7 +388,7 @@ export class InternshipHourService {
     }
 
     if (approvedHours.length === 0) {
-      throw new Error("No pending hours found to approve");
+      throw new Error("be_response.bulk_approve.no_pending_hours");
     }
 
     return await this.hourRepo.save(approvedHours);
@@ -393,7 +402,7 @@ export class InternshipHourService {
     });
 
     if (!student) {
-      throw new Error("Student not found");
+      throw new Error("be_response.common.student_not_found");
     }
 
     
@@ -407,7 +416,7 @@ export class InternshipHourService {
     });
 
     if (!internship) {
-      throw new Error("No approved internship found for this student under your mentorship");
+      throw new Error("be_response.approve_all.no_approved_internship_for_student");
     }
 
     
@@ -420,7 +429,7 @@ export class InternshipHourService {
     });
 
     if (pendingHours.length === 0) {
-      throw new Error("No pending hours found for this student");
+      throw new Error("be_response.approve_all.no_pending_hours_for_student");
     }
 
     const mentor = await this.mentorRepo.findOne({ 
@@ -429,7 +438,7 @@ export class InternshipHourService {
     });
     
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new Error("be_response.common.mentor_not_found");
     }
 
     for (const hour of pendingHours) {
@@ -447,7 +456,7 @@ export class InternshipHourService {
     });
 
     if (!student) {
-      throw new Error("Student not found");
+      throw new Error("be_response.common.student_not_found");
     }
 
     
@@ -461,7 +470,7 @@ export class InternshipHourService {
     });
 
     if (!internship) {
-      throw new Error("No approved internship found for this student under your mentorship");
+      throw new Error("be_response.reject_all.no_approved_internship_for_student");
     }
 
     
@@ -474,7 +483,7 @@ export class InternshipHourService {
     });
 
     if (pendingHours.length === 0) {
-      throw new Error("No pending hours found for this student");
+      throw new Error("be_response.reject_all.no_pending_hours_for_student");
     }
 
     const mentor = await this.mentorRepo.findOne({ 
@@ -483,7 +492,7 @@ export class InternshipHourService {
     });
     
     if (!mentor) {
-      throw new Error("Mentor not found");
+      throw new Error("be_response.common.mentor_not_found");
     }
 
     for (const hour of pendingHours) {

@@ -1,5 +1,3 @@
-
- 
 import { Controller } from "./base.controller";
 import { AppDataSource } from "../data-source";
 import { User } from "../entity/User";
@@ -7,7 +5,7 @@ import { secretKey } from "../config";
 import { Student } from "../entity/Student";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import { GetProfileResponseDTO, UpdateProfileDTO } from "../types";
+import { GetProfileResponseDTO } from "../types";
 import { Mentor } from "../entity/Mentor";
 import { QueryFailedError } from "typeorm";
 
@@ -62,13 +60,11 @@ export class UserController extends Controller {
         return this.handleError(res, null, 404, "User not found");
       }
 
-      // User adatok frissítése
       if (updateData.email) user.email = updateData.email;
       if (updateData.firstname) user.firstname = updateData.firstname;
       if (updateData.lastname) user.lastname = updateData.lastname;
       if (updateData.active !== undefined) user.active = updateData.active;
 
-      // Student adatok frissítése ha van
       if (user.student && updateData.student) {
         if (updateData.student.phone !== undefined) user.student.phone = updateData.student.phone;
         if (updateData.student.major !== undefined) user.student.major = updateData.student.major;
@@ -215,7 +211,6 @@ export class UserController extends Controller {
     }
   }
 
-  // POST /user/forgot-password
   forgotPassword = async (req, res) => {
     try {
       const { email } = req.body;
@@ -223,7 +218,6 @@ export class UserController extends Controller {
       const user = await this.repository.findOne({ where: { email } });
       if (!user) return res.status(200).json({ message: "If the email exists, a reset link will be sent." });
 
-      // Token generálás
       const token = require("crypto").randomBytes(32).toString("hex");
       user.resetToken = token;
       user.resetTokenExpires = Date.now() + 1000 * 60 * 60; // 1 óra
@@ -237,7 +231,6 @@ export class UserController extends Controller {
     }
   };
 
-  // POST /user/reset-password
   resetPassword = async (req, res) => {
     try {
       const { token, password } = req.body;

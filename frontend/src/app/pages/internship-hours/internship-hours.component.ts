@@ -3,7 +3,7 @@ import { Component, OnInit, inject } from '@angular/core';
 import { I18nService } from '../../shared/i18n.pipe';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { WeekViewComponent } from './week-view/week-view.component';
-import { InternshipHourDTO, InternshipListDTO } from '../../../types';
+import { InternshipHourDTO } from '../../../types';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { ToastService } from '../../services/toast.service';
 import { AuthService } from '../../services/auth.service';
@@ -16,28 +16,21 @@ import { AuthService } from '../../services/auth.service';
   styleUrl: './internship-hours.component.scss'
 })
 export class InternshipHoursComponent implements OnInit {
-addHour() {
-throw new Error('Method not implemented.');
-}
 
   internshipHoursService = inject(InternshipHourService);
   toastService = inject(ToastService);
   authService = inject(AuthService);
-
   selectedTab: 'week' | 'approved' | 'pending' | 'rejected' = 'week';
   entries: InternshipHourDTO[] = [];
   filteredEntries: InternshipHourDTO[] = [];
   
-  
   isLoading = false;
   error: string | null = null;
   
- 
   totalHours = 0;
   approvedHours = 0;
   pendingHours = 0;
   rejectedHours = 0;
-  
   
   searchTerm = '';
   dateFilter = '';
@@ -116,7 +109,6 @@ throw new Error('Method not implemented.');
     return `${wholeHours}h ${minutes}m`;
   }
 
-  // Search and filter functionality
   applyFilters(): void {
     this.filteredEntries = this.entries.filter(entry => {
       const matchesSearch = !this.searchTerm || 
@@ -143,7 +135,6 @@ throw new Error('Method not implemented.');
     this.applyFilters();
   }
 
-  // Export functionality
   exportToCSV(): void {
     if (this.filteredEntries.length === 0) {
       this.toastService.showError('No data to export');

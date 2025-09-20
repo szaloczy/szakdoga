@@ -228,8 +228,8 @@ exportToCSV(): void {
         this.loadHours();
       },
       error: (err) => {
-        console.error(err.error);
-        this.toastService.showError(this.i18nService.transform('response.hour_invalid'+ `: ${err.error.message}`));
+        console.log("response:" + err.error);
+        this.toastService.showError(this.i18nService.transform(err.error));
       }
     });
   }
@@ -237,4 +237,35 @@ exportToCSV(): void {
   get hasApprovedInternship(): boolean {
     return this.internships.some((i: InternshipListDTO) => i.isApproved === true);
   }
+
+  deleteHour(entryHour: InternshipHourDTO) {
+    this.internshipHourService.delete(entryHour.id).subscribe({
+      next: (response) => {
+          this.toastService.showSuccess(this.i18nService.transform('internship_hours.messages.delete_hour.success'));
+          this.refreshData();
+      },
+      error: (err: string) => {
+        this.toastService.showError(this.i18nService.transform('internship_hours.messages.delete_hour.failed'))
+      }
+    })
+    }
+
+    editHour(hourEntry: InternshipHourDTO) {
+      this.hourForm.patchValue({
+        startTime: hourEntry.startTime,
+        endTime: hourEntry.endTime,
+        description: hourEntry.description
+      });
+      this.openModal();
+
+      this.internshipHourService.update(hourEntry.id, this.hourForm.value).subscribe({
+        next: (response) => {
+          this.toastService.showSuccess(this.i18nService.transform('internship_hours.messages.update_hour.success'));
+          this.loadHours();
+        },
+        error: (err) => {
+          this.toastService.showError(this.i18nService.transform('internship_hours.messages.update_hour.failed'));
+        }
+      });
+    }
 }

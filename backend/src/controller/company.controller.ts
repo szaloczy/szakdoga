@@ -16,21 +16,18 @@ export class CompanyController extends Controller {
         .leftJoinAndSelect("company.mentors", "mentors")
         .leftJoinAndSelect("mentors.user", "mentorUser");
 
-      // Szűrés aktív státusz alapján
       if (active !== undefined) {
         queryBuilder = queryBuilder.where("company.active = :active", {
           active: active === 'true'
         });
       }
 
-      // Szűrés város alapján
       if (city) {
         queryBuilder = queryBuilder.andWhere("company.city ILIKE :city", {
           city: `%${city}%`
         });
       }
 
-      // Szűrés név alapján
       if (name) {
         queryBuilder = queryBuilder.andWhere("company.name ILIKE :name", {
           name: `%${name}%`
@@ -41,7 +38,6 @@ export class CompanyController extends Controller {
         .orderBy("company.name", "ASC")
         .getMany();
 
-      // DTO-ra konvertálás
       const companiesDTO: CompanyDTO[] = companies.map(company => ({
         id: company.id,
         name: company.name,
@@ -100,23 +96,19 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Csak admin hozhat létre céget
       if (user.role !== "admin") {
         return this.handleError(res, null, 403, "Only admins can create companies");
       }
 
-      // Validáció
       if (!name || !city || !email || !address) {
         return this.handleError(res, null, 400, "Name, city, email and address are required");
       }
 
-      // Email formátum validáció
       const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
       if (!emailRegex.test(email)) {
         return this.handleError(res, null, 400, "Invalid email format");
       }
 
-      // Ellenőrizzük, hogy nem létezik-e már ilyen nevű cég
       const existingCompany = await this.repository.findOne({
         where: { name: name }
       });
@@ -125,7 +117,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 409, "Company with this name already exists");
       }
 
-      // Cég létrehozása
       const company = this.repository.create({
         name,
         city,
@@ -163,7 +154,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Csak admin módosíthatja a cégeket
       if (user.role !== "admin") {
         return this.handleError(res, null, 403, "Only admins can update companies");
       }
@@ -180,7 +170,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 404, "Company not found");
       }
 
-      // Email validáció ha van
       if (email) {
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
         if (!emailRegex.test(email)) {
@@ -188,7 +177,6 @@ export class CompanyController extends Controller {
         }
       }
 
-      // Név egyediség ellenőrzése ha változott
       if (name && name !== company.name) {
         const existingCompany = await this.repository.findOne({
           where: { name: name }
@@ -199,7 +187,6 @@ export class CompanyController extends Controller {
         }
       }
 
-      // Frissítés
       if (name) company.name = name;
       if (city) company.city = city;
       if (email) company.email = email;
@@ -234,7 +221,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Csak admin törölheti a cégeket
       if (user.role !== "admin") {
         return this.handleError(res, null, 403, "Only admins can delete companies");
       }
@@ -252,7 +238,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 404, "Company not found");
       }
 
-      // Ellenőrizzük, hogy vannak-e aktív mentorok vagy gyakornokságok
       const activeMentors = await this.mentorRepository.count({
         where: { 
           company: { id: companyId },
@@ -264,7 +249,6 @@ export class CompanyController extends Controller {
         return this.handleError(res, null, 400, "Cannot delete company with active mentors");
       }
 
-      // Soft delete - deaktiválás helyett törlés
       await this.repository.remove(company);
 
       res.json({ message: "Company deleted successfully" });
@@ -273,7 +257,6 @@ export class CompanyController extends Controller {
     }
   };
 
-  // Cég deaktiválása (soft delete)
   deactivate = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -308,7 +291,6 @@ export class CompanyController extends Controller {
     }
   };
 
-  // Cég mentorjainak lekérdezése
   getMentors = async (req, res) => {
     try {
       const companyId = Number(req.params["id"]);
@@ -334,7 +316,6 @@ export class CompanyController extends Controller {
     }
   };
 
-  // Cégek keresése
   search = async (req, res) => {
     try {
       const { query } = req.query;
@@ -368,7 +349,6 @@ export class CompanyController extends Controller {
     }
   };
 
-  // Aktív cégek listája
   getActive = async (req, res) => {
     try {
       const companies = await this.repository.find({

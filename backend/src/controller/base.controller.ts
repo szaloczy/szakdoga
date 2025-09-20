@@ -77,10 +77,13 @@ export abstract class Controller {
   };
 
   handleError = (res, err, status = 500, message = "Unknown server error.") => {
-    if (err) {
-      console.error(err);
-    }
-
-    res.status(status).json({ message });
-  };
+      let errorMessage = message;
+      if (err) {
+        console.error(err);
+        if (err.message) {
+          errorMessage = err.message;
+        }
+      }
+      res.status(status).json(errorMessage);
+    };
 }

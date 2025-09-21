@@ -1,4 +1,23 @@
-<div>
-  <canvas id="canvas">{{chart}}</canvas>
+<div class="container py-4">
+  <h2 class="mb-4">{{ 'statistics.title' | translate }}</h2>
+  <div class="row g-4">
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5 class="mb-3">{{ 'statistics.bar.hours_per_month' | translate }}</h5>
+        <canvas id="barChart"></canvas>
+      </div>
+    </div>
+    <div class="col-md-6">
+      <div class="card p-3">
+        <h5 class="mb-3">{{ 'statistics.pie.status_distribution' | translate }}</h5>
+        <canvas id="pieChart"></canvas>
+      </div>
+    </div>
+    <div class="col-12">
+      <div class="card p-3">
+        <h5 class="mb-3">{{ 'statistics.line.cumulative_hours' | translate }}</h5>
+        <canvas id="lineChart"></canvas>
+      </div>
+    </div>
+  </div>
 </div>
-<p>statistics works!</p>

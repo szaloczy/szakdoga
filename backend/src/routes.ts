@@ -8,6 +8,7 @@ import { InternshipHourController } from "./controller/internshipHour.controller
 import { authMiddleware } from "./middleware/auth.middleware";
 import { DocumentController } from "./controller/document.controller";
 import { documentUpload } from "./middleware/multer.middleware";
+import { StatisticsController } from "./controller/statistics.controller";
 
 export const router = express.Router();
 
@@ -98,6 +99,7 @@ router.post("/internship-hour", authMiddleware, internshipHourController.create)
 router.put("/internship-hour/:id", authMiddleware, internshipHourController.update);
 router.delete("/internship-hour/:id", authMiddleware, internshipHourController.delete);
 
+
 const documentController = new DocumentController();
 
 router.post("/documents/upload", authMiddleware, documentUpload.single("file"), documentController.upload);
@@ -106,3 +108,9 @@ router.get("/documents/student", authMiddleware, documentController.getStudentDo
 router.post("/documents/:id/review", authMiddleware, documentController.review);
 router.get("/documents/:id/download", authMiddleware, documentController.download);
 router.delete("/documents/:id", authMiddleware, documentController.delete);
+
+const statisticsController = new StatisticsController();
+
+router.get("/hours-per-month", authMiddleware, statisticsController.getHoursPerMonth.bind(statisticsController));
+router.get("/hour-status-distribution", authMiddleware, statisticsController.getHourStatusDistribution.bind(statisticsController));
+router.get("/cumulative-hours", authMiddleware, statisticsController.getCumulativeHours.bind(statisticsController));

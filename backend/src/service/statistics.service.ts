@@ -4,8 +4,14 @@ import { InternshipHour } from "../entity/InternshipHour";
 export class StatisticsService {
   private hourRepo = AppDataSource.getRepository(InternshipHour);
 
-  async getHoursPerMonth() {
-    const hours = await this.hourRepo.find({ where: { status: "approved" } });
+  async getHoursPerMonth(userId: number) {
+    const hours = await this.hourRepo.find({ 
+      where: { 
+        status: "approved",
+        internship: { student: { user: { id: userId } } }
+      },
+      relations: ["internship", "internship.student", "internship.student.user"]
+    });
     const monthMap: Record<string, number> = {};
     for (const hour of hours) {
       const date = new Date(hour.date);
@@ -17,18 +23,32 @@ export class StatisticsService {
     return { labels, data };
   }
 
-  async getHourStatusDistribution() {
+  async getHourStatusDistribution(userId: number) {
     const statuses = ["approved", "pending", "rejected"] as const;
     const data = [];
     for (const status of statuses) {
-      const count = await this.hourRepo.count({ where: { status: status as "approved" | "pending" | "rejected" } });
-      data.push(count);
+      const hours = await this.hourRepo.find({ 
+        where: { 
+          status: status as "approved" | "pending" | "rejected",
+          internship: { student: { user: { id: userId } } }
+        },
+        relations: ["internship", "internship.student", "internship.student.user"]
+      });
+      const totalHours = hours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+      data.push(Math.round(totalHours * 100) / 100);
     }
     return { labels: Array.from(statuses), data };
   }
 
-  async getCumulativeHours() {
-    const hours = await this.hourRepo.find({ where: { status: "approved" }, order: { date: "ASC" } });
+  async getCumulativeHours(userId: number) {
+    const hours = await this.hourRepo.find({ 
+      where: { 
+        status: "approved",
+        internship: { student: { user: { id: userId } } }
+      },
+      relations: ["internship", "internship.student", "internship.student.user"],
+      order: { date: "ASC" } 
+    });
     if (hours.length === 0) return { labels: [], data: [] };
     const minDate = new Date(hours[0].date);
     const maxDate = new Date(hours[hours.length - 1].date);
@@ -49,7 +69,7 @@ export class StatisticsService {
       for (const h of weekHours) weekSum += this.getHourDuration(h);
       cumulative += weekSum;
       weekLabels.push(`Week ${weekIndex}`);
-      weekData.push(cumulative);
+      weekData.push(Math.round(cumulative * 100) / 100);
       current.setDate(current.getDate() + 7);
       weekIndex++;
     }

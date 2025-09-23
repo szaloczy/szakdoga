@@ -111,6 +111,6 @@ router.delete("/documents/:id", authMiddleware, documentController.delete);
 
 const statisticsController = new StatisticsController();
 
-router.get("/hours-per-month", authMiddleware, statisticsController.getHoursPerMonth.bind(statisticsController));
-router.get("/hour-status-distribution", authMiddleware, statisticsController.getHourStatusDistribution.bind(statisticsController));
-router.get("/cumulative-hours", authMiddleware, statisticsController.getCumulativeHours.bind(statisticsController));
+router.get("/statistics/hours-per-month", authMiddleware, statisticsController.getHoursPerMonth.bind(statisticsController));
+router.get("/statistics/hour-status-distribution", authMiddleware, statisticsController.getHourStatusDistribution.bind(statisticsController));
+router.get("/statistics/cumulative-hours", authMiddleware, statisticsController.getCumulativeHours.bind(statisticsController));

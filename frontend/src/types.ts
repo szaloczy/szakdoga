@@ -213,6 +213,11 @@ export interface InternshipWithHours {
     hours: InternshipHourDTO[];
 }
 
+export interface Statistics {
+    labels: string[];
+    data: number[];
+}
+
 export enum UserRole {
     STUDENT = "student",
     ADMIN = "admin",

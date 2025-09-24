@@ -11,6 +11,10 @@ export default {
 import { NestedI18n } from "../types";
 
 export const hu: NestedI18n = {
+    common: {
+        yes: { text: 'Igen' },
+        no: { text: 'Nem' }
+    },
     role: {
         student: {
             text: 'Hallgató'
@@ -458,10 +462,70 @@ export const hu: NestedI18n = {
                 documents: {
                     text: "Dokumentumok"
                 }
+            },
+            descriptions: {
+                user_desc: {
+                    text: "Regisztrált felhasználók kezelése"
+                },
+                companies_desc: {
+                    text: "Cégek hozzáadása és szerkesztése"
+                },
+                internship_desc: {
+                    text: "Gyakorlatok létrehozása és jóváhagyása"
+                },
+                document_desc: {
+                    text: "Feltöltött dokumentumok kezelése"
+                }
             }
         },
         user_management: {
 
+        },
+        company_management: {
+            title: {
+                text: "Cégek kezelés"
+            },
+            buttons: {
+                add_company: { text: "Cég hozzáadása" },
+                back_to_dashboard: { text: "Vissza a kezdőlapra" }
+            },
+            table_headers: {
+                name: { text: "Cég neve" },
+                city: { text: "Város" },
+                address: { text: "Cím" },
+                active: { text: "Aktív" },
+                actions: { text: "Műveletek" }
+            }
+        },
+         internship_management: {
+            title: {
+                text: "Gyakorlatok kezelése"
+            },
+            buttons: {
+                add_internship: { text: "Gyakorlat hozzáadása" },
+                back_to_dashboard: { text: "Vissza a kezdőlapra" }
+            },
+            table_headers: {
+                student: { text: "Hallgató" },
+                mentor: { text: "Mentor" },
+                company: { text: "Cég" },
+                start_date: { text: "Kezdési dátum" },
+                is_approved: { text: "Jóváhagyási státusz" },
+                actions: { text: "Műveletek" }
+            },
+            form: {
+                title: { text: "Új gyakorlat hozzáadása" },
+                student: { text: "Hallgató kiválasztása" },
+                mentor: { text: "Mentor kiválasztása" },
+                company: { text: "Cég kiválasztása" },
+                start_date: { text: "Kezdési dátum" },
+                end_date: { text: "Befejezési dátum" },
+                is_approved: { text: "Jóváhagyási státusz" },
+                options: {
+                    approved: { text: "Jóváhagy" },
+                    not_approved: { text: "Elutasít" }
+                }
+            }
         },
         document_management: {
             title: {
@@ -626,6 +690,22 @@ export const hu: NestedI18n = {
                 text: "Nincs olyan hallgató, aki megfelelne a keresési feltételeknek."
             }
         }
+    },
+    statistics: {
+        title: { text: "Statisztikák" },
+        charts: {
+            pie: { text: "Órák állapot szerint" },
+            candle: { text: "Órák havi bontásban" },
+            line: { text: "Kumulált órák" },
+        },
+        candle: {
+            hours_per_month: { text: "Gyakornoki órák havonta" }
+        },
+        pie: {
+            hour_status: { text: "Órák állapot szerint" }
+        },
+        loading: { text: "Statisztikák betöltése..." },
+        no_data: { text: "Nincs elérhető adat a statisztikákhoz." }
     },
     days: {
         mon: { text: 'Hétfő' },

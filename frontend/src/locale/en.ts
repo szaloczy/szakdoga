@@ -11,6 +11,10 @@ export default {
 import { NestedI18n } from "../types";
 
 export const en: NestedI18n = {
+    common: {
+        yes: { text: 'Yes' },
+        no: { text: 'No' }
+    },
     role: {
         student: {
             text: 'Student'
@@ -460,10 +464,70 @@ export const en: NestedI18n = {
                 documents: {
                     text: "Documents"
                 }
+            },
+            descriptions: {
+                user_desc: {
+                    text: "Manage registered users"
+                },
+                companies_desc: {
+                    text: "Manage companies"
+                },
+                internship_desc: {
+                    text: "Manage internships"
+                },
+                document_desc: {
+                    text: "Manage uploaded documents"
+                }
             }
         },
         user_management: {
 
+        },
+        company_management: {
+            title: {
+                text: "Company management"
+            },
+            buttons: {
+                add_company: { text: "Add Company" },
+                back_to_dashboard: { text: "Back to Dashboard" }
+            },
+            table_headers: {
+                name: { text: "Company Name" },
+                city: { text: "City" },
+                address: { text: "Address" },
+                active: { text: "Active" },
+                actions: { text: "Actions" }
+            }
+        },
+        internship_management: {
+            title: {
+                text: "Internship management"
+            },
+            buttons: {
+                add_internship: { text: "Add Internship" },
+                back_to_dashboard: { text: "Back to Dashboard" }
+            },
+            table_headers: {
+                student: { text: "Student" },
+                mentor: { text: "Mentor" },
+                company: { text: "Company" },
+                start_date: { text: "Start Date" },
+                is_approved: { text: "Approval Status" },
+                actions: { text: "Actions" }
+            },
+            form: {
+                title: { text: "Add New Internship" },
+                student: { text: "Select Student" },
+                mentor: { text: "Select Mentor" },
+                company: { text: "Select Company" },
+                start_date: { text: "Start Date" },
+                end_date: { text: "End Date" },
+                is_approved: { text: "Approval Status" },
+                options: {
+                    approved: { text: "Approved" },
+                    not_approved: { text: "Not Approved" }
+                }
+            }
         },
         document_management: {
             title: {
@@ -629,6 +693,23 @@ export const en: NestedI18n = {
                 text: "No students match your search criteria."
             }
         }
+    },
+    statistics: {
+        title: { text: "Statistics" },
+        charts: {
+            pie: { text: "Hours by Status" },
+            candle: { text: "Hours by Month" },
+            line: { text: "Cumulative Hours" }
+        },
+        candle: {
+            hours_per_month: { text: "Internship hours per month" }
+        },
+        pie: {
+            hour_status: { text: "Internship hours by status" }
+        }
+        ,
+        loading: { text: "Loading statistics..." },
+        no_data: { text: "No data available for statistics." }
     },
     days: {
         mon: { text: 'Monday' },

@@ -14,4 +14,10 @@ export class StatisticsService {
 
   getCumulativeHours() { return this.http.get<Statistics>(`/api/statistics/cumulative-hours`) };
 
+  getMentorHoursPerMonth() { return this.http.get<Statistics>(`/api/statistics/mentor/hours-per-month`) };
+
+  getMentorStatusDistribution() { return this.http.get<Statistics>(`/api/statistics/mentor/hour-status-distribution`) };
+
+  getMentorCumulativeHours() { return this.http.get<Statistics>(`/api/statistics/mentor/cumulative-hours`) };
+
   }

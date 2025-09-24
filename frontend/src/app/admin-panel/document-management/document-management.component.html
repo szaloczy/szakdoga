@@ -1,5 +1,12 @@
 <div class="container py-4">
-	<h2 class="mb-4 text-primary fw-bold">{{ 'admin_panel.document_management.title.text' | translate }}</h2>
+	<!-- Header section with title and back button -->
+	<div class="d-flex justify-content-between align-items-center mb-4">
+		<h2 class="text-primary fw-bold mb-0">{{ 'admin_panel.document_management.title.text' | translate }}</h2>
+		<button class="btn btn-outline-secondary" routerLink="/admin">
+			<i class="bi bi-arrow-left"></i> {{ 'admin_panel.company_management.buttons.back_to_dashboard' | translate }}
+		</button>
+	</div>
+	
 	<div class="table-responsive">
 		<table class="table table-bordered align-middle">
 			<thead class="table-light">

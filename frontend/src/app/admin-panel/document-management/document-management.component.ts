@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentService } from '../../services/document.service';
 import { Document } from '../../models/document.model';
 import { I18nService } from "../../shared/i18n.pipe";
+import { ToastService } from '../../services/toast.service';
+import { RouterLink } from '@angular/router';
 
 @Component({
   selector: 'app-document-management',
   templateUrl: './document-management.component.html',
   styleUrl: './document-management.component.scss',
-  imports: [CommonModule, I18nService]
+  imports: [CommonModule, I18nService, RouterLink]
 })
 export class DocumentManagementComponent implements OnInit {
+  toastService = inject(ToastService);
+
   documents: Document[] = [];
   reviewNote = '';
   selectedId: number | null = null;
@@ -41,30 +45,25 @@ export class DocumentManagementComponent implements OnInit {
   loadDocuments() {
     this.documentService.getAllDocuments().subscribe({
       next: (docs) => {
-        console.log(docs);
         this.documents = docs;
       },
       error: (err) => {
-        console.error(err);
+        this.toastService.showError('Hiba a dokumentumok betöltésekor: ' + err.message);
       }
     });
   }
 
   acceptDocument(doc: Document) {
     this.documentService.reviewDocument(doc.id, 'approved').subscribe(() => {
-      window.alert('Elfogadva!');
+      this.toastService.showSuccess('Dokumentum elfogadva!');
       this.loadDocuments();
     });
   }
 
-  openRejectModal(doc: Document) {
-    this.selectedId = doc.id;
-    // Modal megnyitása (implementáld Angular Material Dialoggal vagy saját modal komponenssel)
-  }
 
   rejectDocument(doc: Document) {
     this.documentService.reviewDocument(doc.id, 'rejected', this.reviewNote).subscribe(() => {
-      window.alert('Elutasítva!');
+      this.toastService.showError('Dokumentum elutasítva!');
       this.loadDocuments();
       this.reviewNote = '';
       this.selectedId = null;

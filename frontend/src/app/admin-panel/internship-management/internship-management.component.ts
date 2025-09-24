@@ -6,12 +6,14 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
 import { MentorService } from '../../services/mentor.service';
+import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
   selector: 'app-internship-management',
   imports: [
     RouterLink,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    I18nService
   ],
   templateUrl: './internship-management.component.html',
   styleUrl: './internship-management.component.scss'

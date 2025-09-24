@@ -4,12 +4,14 @@ import { CompanyService } from '../../services/company.service';
 import { RouterLink } from '@angular/router';
 import { ToastService } from '../../services/toast.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { I18nService } from '../../shared/i18n.pipe';
 
 @Component({
   selector: 'app-company-management',
   imports: [
     RouterLink,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    I18nService
   ],
   templateUrl: './company-management.component.html',
   styleUrl: './company-management.component.scss'

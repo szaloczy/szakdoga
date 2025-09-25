@@ -24,7 +24,7 @@
     </div>
 
     <div class="row g-4 mt-4">
-      <div class="col-12 col-lg-6">
+      <div class="col-12 col-lg-4">
         <div class="card border-0 shadow-lg animate__animated animate__fadeInLeft">
           <div class="card-header bg-primary text-white">
             <h5 class="mb-0"><i class="bi bi-person me-2"></i>{{ 'dashboard.student.personal_data' | translate }}</h5>
@@ -39,7 +39,27 @@
           </div>
         </div>
       </div>
-      <div class="col-12 col-lg-6">
+      
+      @if (dashboardProgress) {
+      <div class="col-12 col-lg-4 d-flex justify-content-center align-items-center">
+        <div class="position-relative d-inline-block animate__animated animate__fadeInUp">
+          <svg width="180" height="180" class="circular-progress">
+            <circle cx="90" cy="90" r="75" fill="none" stroke="#e9ecef" stroke-width="12"/>
+            <circle cx="90" cy="90" r="75" fill="none" stroke="#28a745" stroke-width="12" 
+                    stroke-linecap="round" 
+                    [style.stroke-dasharray]="2 * 3.14159 * 75"
+                    [style.stroke-dashoffset]="2 * 3.14159 * 75 - (dashboardProgress.percentage / 100) * 2 * 3.14159 * 75"
+                    style="transform: rotate(-90deg); transform-origin: center;"/>
+          </svg>
+          <div class="position-absolute top-50 start-50 translate-middle text-center">
+            <div class="fw-bold text-success" style="font-size: 1.5rem;">{{ dashboardProgress.total }}</div>
+            <div class="text-muted" style="font-size: 1.2rem;">/{{ dashboardProgress.completed }}</div>
+          </div>
+        </div>
+      </div>
+      }
+      
+      <div class="col-12 col-lg-4">
         @if (internshipInfo) {
         <div class="card border-0 shadow-lg animate__animated animate__fadeInRight">
           <div class="card-header bg-info text-white">

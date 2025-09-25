@@ -69,6 +69,7 @@ export interface InternshipDTO {
   studentNeptun: string | null;
   mentorName: string;
   companyName: string;
+  requiredWeeks?: number | null;
 }
 
 export interface profileInternshipDTO {
@@ -82,6 +83,7 @@ export interface profileInternshipDTO {
   companyEmail: string;
   companyAddress: string;
   companyCity: string;
+  requiredWeeks?: number | null;
 }
 export interface StudentWithHoursDto {
   id: number;

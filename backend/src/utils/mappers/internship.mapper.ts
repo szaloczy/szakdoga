@@ -25,6 +25,7 @@ export function mapInternshipToDTO(internship: Internship): InternshipDTO {
       ? `${internship.mentor.user.firstname} ${internship.mentor.user.lastname}`
       : "N/A",
     companyName: internship.company?.name ?? "N/A",
+    requiredWeeks: internship.requiredWeeks ?? null,
   };
 }
 
@@ -44,4 +45,5 @@ export const mapProfileInternshipToDTO = (
   companyEmail: internship.company?.email,
   companyAddress: internship.company?.address,
   companyCity: internship.company?.city,
+  requiredWeeks: internship.requiredWeeks ?? null,
 });

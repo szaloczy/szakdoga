@@ -21,6 +21,7 @@ export class InternshipService {
       companyId: number;
       studentId?: number; // Hozzáadom a studentId opcionális mezőt
       isApproved?: boolean; // Hozzáadom az isApproved opcionális mezőt
+      requiredWeeks?: number; // Kötelező hetek száma
     }
   ): Promise<Internship> {
     // Ha van studentId, azt használjuk, különben userId alapján keresünk
@@ -50,6 +51,7 @@ export class InternshipService {
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
       isApproved: data.isApproved !== undefined ? data.isApproved : false,
+      requiredWeeks: data.requiredWeeks || null,
     });
 
     return await this.internshipRepo.save(internship);
@@ -217,6 +219,7 @@ export class InternshipService {
       mentorId?: number;
       companyId?: number;
       isApproved?: boolean;
+      requiredWeeks?: number;
     },
     isAdmin: boolean = false
   ): Promise<Internship> {
@@ -252,6 +255,11 @@ export class InternshipService {
     // isApproved frissítés (csak admin vagy ha explicit módon van beállítva)
     if (data.isApproved !== undefined) {
       internship.isApproved = data.isApproved;
+    }
+
+    // requiredWeeks frissítés
+    if (data.requiredWeeks !== undefined) {
+      internship.requiredWeeks = data.requiredWeeks;
     }
 
     // Dátum validáció ha változtak

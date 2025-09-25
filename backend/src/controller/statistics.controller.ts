@@ -82,4 +82,32 @@ export class StatisticsController {
       res.status(500).json({ message: "Failed to fetch mentor cumulative hours" });
     }
   }
+
+  // Hallgató előrehaladás statisztikája
+  async getProgressStatistics(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const result = await this.statisticsService.getProgressStatistics(userId);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch progress statistics" });
+    }
+  }
+
+  // Dashboard kördiagram adatok
+  async getDashboardProgress(req: Request, res: Response) {
+    try {
+      const userId = req.user?.id;
+      if (!userId) {
+        return res.status(401).json({ message: "Unauthorized" });
+      }
+      const result = await this.statisticsService.getDashboardProgress(userId);
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch dashboard progress" });
+    }
+  }
 }

@@ -209,6 +209,11 @@ export const en: NestedI18n = {
             pending_hours: { text: "Pending hours" },
             rejected_hours: { text: "Rejected hours" },
             total_hours: { text: "Total hours" },
+            progress_statistics: { text: "Progress Statistics" },
+            completed_hours: { text: "Completed hours" },
+            completed_weeks: { text: "Completed weeks" },
+            remaining_hours: { text: "Remaining hours" },
+            remaining_weeks: { text: "Remaining weeks" },
             uploaded_documents: { text: "Uploaded documents" },
             note: { text: "Note" }
         },
@@ -481,7 +486,48 @@ export const en: NestedI18n = {
             }
         },
         user_management: {
-
+            title: {
+                text: "User management"
+            },
+            buttons: {
+                add_student: { text: "Add Student" },
+                add_mentor: { text: "Add Mentor" },
+                back_to_dashboard: { text: "Back to Dashboard" }
+            },
+            table_headers: {
+                name: { text: "Name" },
+                email: { text: "Email" },
+                role: { text: "Role" },
+                status: { text: "Status" },
+                actions: { text: "Actions" }
+            },
+            add_student_form: {
+                title: { text: "Add New Student" },
+                firstname: { text: "First Name" },
+                lastname: { text: "Last Name" },
+                email: { text: "Email" },
+                active: { text: "Active" },
+                password: { text: "Password" }
+            },
+            add_mentor_form: {
+                title: { text: "Add New Mentor" },
+                firstname: { text: "First Name" },
+                lastname: { text: "Last Name" },
+                password: { text: "Password" },
+                position: { text: "Position" },
+                email: { text: "Email" },
+                company: { text: "Company" },
+                active: { text: "Active" },
+                inactive: { text: "Inactive" }
+            },
+            edit_student_form: {
+                title: { text: "Edit Student" },
+                firstname: { text: "First Name" },
+                lastname: { text: "Last Name" },
+                email: { text: "Email" },
+                active: { text: "Active" },
+                password: { text: "Password" }
+            }
         },
         company_management: {
             title: {
@@ -497,6 +543,13 @@ export const en: NestedI18n = {
                 address: { text: "Address" },
                 active: { text: "Active" },
                 actions: { text: "Actions" }
+            },
+            form: {
+                title: { text: "Add New Company" },
+                name: { text: "Company Name" },
+                city: { text: "City" },
+                address: { text: "Address" },
+                active: { text: "Active" }
             }
         },
         internship_management: {

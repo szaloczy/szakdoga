@@ -1,22 +1,21 @@
 <div class="user-management container mt-5">
   <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
-    <h2 class="m-0">User Management</h2>
+    <h2 class="m-0">{{ 'admin_panel.user_management.title' | translate }}</h2>
 
     <div class="btn-group">
       <button class="btn btn-primary" (click)="startCreateStudent()">
-        <i class="bi bi-plus-lg me-1"></i> Add Student
+        <i class="bi bi-plus-lg me-1"></i> {{ 'admin_panel.user_management.buttons.add_student' | translate }}
       </button>
       <button class="btn btn-primary" (click)="startCreateMentor()">
-        <i class="bi bi-plus-lg me-1"></i> Add Mentor
+        <i class="bi bi-plus-lg me-1"></i> {{ 'admin_panel.user_management.buttons.add_mentor' | translate }}
       </button>
     </div>
 
     <button class="btn btn-secondary" routerLink="/admin">
-      <i class="bi bi-arrow"></i> Back to Dashboard
+      <i class="bi bi-arrow"></i> {{ 'admin_panel.company_management.buttons.back_to_dashboard' | translate }}
     </button>
   </div>
 
-   <!-- ========== SEARCH & FILTER ========== -->
   <div class="row mb-3 gy-2">
     <div class="col-md-6">
       <input type="text" class="form-control" placeholder="Search by name or email..." />
@@ -24,29 +23,25 @@
     <div class="col-md-3">
       <select class="form-select">
         <option value="">All Roles</option>
-       <!--  @for(role of roles; track role) {
-          <option>{{ role }}</option>
-        } -->
       </select>
     </div>
   </div>
 
-  <!-- ========== STUDENT FORM ========== -->
   @if(showStudentForm) {
     <form [formGroup]="studentForm" (ngSubmit)="createStudent()" class="card p-3 mb-4">
-      <h5>Add Student</h5>
+      <h5>{{ 'admin_panel.user_management.add_student_form.title' | translate }}</h5>
       <div class="row g-2">
         <div class="col-md-6">
-          <input type="text" class="form-control" name="firstname" placeholder="First Name" formControlName="firstname" required />
+          <input type="text" class="form-control" name="firstname" placeholder="{{ 'admin_panel.user_management.add_student_form.firstname' | translate }}" formControlName="firstname" required />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" name="lastname" placeholder="Last Name" formControlName="lastname" required />
+          <input type="text" class="form-control" name="lastname" placeholder="{{ 'admin_panel.user_management.add_student_form.lastname' | translate }}" formControlName="lastname" required />
         </div>
         <div class="col-md-6">
-          <input type="email" class="form-control" name="email" placeholder="Email" formControlName="email" required />
+          <input type="email" class="form-control" name="email" placeholder="{{ 'admin_panel.user_management.add_student_form.email' | translate }}" formControlName="email" required />
         </div>
         <div class="col-md-6">
-          <input type="password" class="form-control" name="password" placeholder="Password" formControlName="password" required />
+          <input type="password" class="form-control" name="password" placeholder="{{ 'admin_panel.user_management.add_student_form.password' | translate }}" formControlName="password" required />
         </div>
         <div class="col-md-6">
           <select class="form-select" formControlName="active" name="active" required>
@@ -61,29 +56,28 @@
     </form>
   }
 
-  <!-- ========== MENTOR FORM ========== -->
   @if(showMentorForm) {
     <form [formGroup]="mentorForm" (ngSubmit)="createMentor()" class="card p-3 mb-4">
-      <h5>Add Mentor</h5>
+      <h5>{{ 'admin_panel.user_management.add_mentor_form.title' | translate }}</h5>
       <div class="row g-2">
         <div class="col-md-6">
-          <input type="text" class="form-control" name="firstname" placeholder="First Name" formControlName="firstname" required />
+          <input type="text" class="form-control" name="firstname" placeholder="{{ 'admin_panel.user_management.add_mentor_form.firstname' | translate }}" formControlName="firstname" required />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" name="lastname" placeholder="Last Name" formControlName="lastname" required />
+          <input type="text" class="form-control" name="lastname" placeholder="{{ 'admin_panel.user_management.add_mentor_form.lastname' | translate }}" formControlName="lastname" required />
         </div>
         <div class="col-md-6">
-          <input type="email" class="form-control" name="email" placeholder="Email" formControlName="email" required />
+          <input type="email" class="form-control" name="email" placeholder="{{ 'admin_panel.user_management.add_mentor_form.email' | translate }}" formControlName="email" required />
         </div>
         <div class="col-md-6">
-          <input type="password" class="form-control" name="password" placeholder="Password" formControlName="password" required />
+          <input type="password" class="form-control" name="password" placeholder="{{ 'admin_panel.user_management.add_mentor_form.password' | translate }}" formControlName="password" required />
         </div>
         <div class="col-md-6">
-          <input type="text" class="form-control" name="position" placeholder="Position" formControlName="position" required />
+          <input type="text" class="form-control" name="position" placeholder="{{ 'admin_panel.user_management.add_mentor_form.position' | translate }}" formControlName="position" required />
         </div>
         <div class="col-md-6">
           <select class="form-select" name="companyId" formControlName="companyId" required>
-            <option value="" disabled selected>Select Company</option>
+            <option value="" disabled selected>{{ 'admin_panel.user_management.add_mentor_form.company' | translate }}</option>
             @for(company of companies; track company) {
             <option [value]="company.id">{{ company.name }}</option>
             }
@@ -91,18 +85,17 @@
         </div>
         <div class="col-md-6">
           <select class="form-select" name="active" required formControlName="active">
-            <option [ngValue]="true">Active</option>
-            <option [ngValue]="false">Inactive</option>
+            <option [ngValue]="true">{{ 'admin_panel.user_management.add_mentor_form.active' | translate }}</option>
+            <option [ngValue]="false">{{ 'admin_panel.user_management.add_mentor_form.inactive' | translate }}</option>
           </select>
         </div>
         <div class="col-12">
-          <button type="submit" class="btn btn-success mt-2">Save</button>
+          <button type="submit" class="btn btn-success mt-2">{{ 'buttons.forms.save' | translate }}</button>
         </div>
       </div>
     </form>
   }
 
-  <!-- ========== USER TABLE ========== -->
   <div class="table-responsive">
     <table class="table table-striped table-bordered align-middle">
       <thead class="table-dark">

@@ -141,6 +141,7 @@ export interface InternshipDTO {
     startDate: Date;
     endDate: Date;
     isApproved: boolean;
+    requiredWeeks: number;
     student: StudentDTO;
     mentor: MentorDTO;
     company: CompanyDTO;
@@ -162,6 +163,7 @@ export interface ProfileInternshipDTO {
     startDate: string;
     endDate: string;
     isApproved: boolean;
+    requiredWeeks: number;
     mentorName: string;
     companyName: string;
     mentorEmail: string;
@@ -216,6 +218,24 @@ export interface InternshipWithHours {
 export interface Statistics {
     labels: string[];
     data: number[];
+}
+
+export interface ProgressStatistics {
+    totalRequiredHours: number;
+    completedHours: number;
+    remainingHours: number;
+    progressPercentage: number;
+    completedWeeks: number;
+    totalRequiredWeeks: number;
+}
+
+export interface DashboardProgress {
+    labels: string[];
+    data: number[];
+    total: number;
+    percentage: number;
+    completed: number;
+    remaining: number;
 }
 
 export enum UserRole {

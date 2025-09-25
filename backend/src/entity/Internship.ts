@@ -26,6 +26,9 @@ export class Internship {
   @Column({ default: false })
   isApproved: boolean;
 
+  @Column({ nullable: true })
+  requiredWeeks: number;
+
   @OneToOne(() => Student, (student) => student.internship, {
     onDelete: "CASCADE",
     cascade: false,

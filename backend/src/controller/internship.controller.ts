@@ -1,5 +1,3 @@
-import { AppDataSource } from "../data-source";
-import { Internship } from "../entity/Internship";
 import { InternshipService } from "../service/internship.service";
 import {
   mapInternshipToDTO,
@@ -19,6 +17,7 @@ export class InternshipController extends Controller {
       if (studentId) filters.studentId = Number(studentId);
       if (mentorId) filters.mentorId = Number(mentorId);
       if (companyId) filters.companyId = Number(companyId);
+
 
       const internships = await this.service.getAllInternships(filters);
       const result = internships.map(mapInternshipToDTO);
@@ -70,7 +69,6 @@ export class InternshipController extends Controller {
     }
   };
 
-  // Saját gyakornokság lekérdezése (authentikált felhasználó számára)
   getMyInternship = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -95,18 +93,16 @@ export class InternshipController extends Controller {
   create = async (req, res) => {
     try {
       const user = (req as any).user;
-      const { startDate, endDate, mentor, company, student, mentorId, companyId, studentId, isApproved } = req.body;
+      const { startDate, endDate, mentor, company, student, mentorId, companyId, studentId, isApproved, requiredWeeks } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Rugalmas mezőnév kezelés - frontend `mentor`, `company` és `student` mezőket küld
       const finalMentorId = mentorId || mentor;
       const finalCompanyId = companyId || company;
       const finalStudentId = studentId || student;
 
-      // Validáció
       if (!startDate || !endDate || !finalMentorId || !finalCompanyId) {
         return this.handleError(res, null, 400, "startDate, endDate, mentor and company are required");
       }
@@ -118,9 +114,9 @@ export class InternshipController extends Controller {
         companyId: Number(finalCompanyId),
         studentId: finalStudentId ? Number(finalStudentId) : undefined,
         isApproved: isApproved !== undefined ? Boolean(isApproved) : false,
+        requiredWeeks: requiredWeeks ? Number(requiredWeeks) : undefined,
       });
 
-      // Teljes adatok visszaadása
       const fullInternship = await this.service.getInternshipById(internship.id);
       const result = mapInternshipToDTO(fullInternship);
       res.status(201).json(result);
@@ -133,7 +129,7 @@ export class InternshipController extends Controller {
     try {
       const user = (req as any).user;
       const internshipId = Number(req.params["id"]);
-      const { startDate, endDate, mentor, company, mentorId, companyId, isApproved } = req.body;
+      const { startDate, endDate, mentor, company, mentorId, companyId, isApproved, requiredWeeks } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
@@ -143,11 +139,9 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
-      // Rugalmas mezőnév kezelés
       const finalMentorId = mentorId || mentor;
       const finalCompanyId = companyId || company;
 
-      // Admin státusz ellenőrzése
       const isAdmin = user.role === "admin";
 
       const updatedInternship = await this.service.updateInternship(
@@ -159,6 +153,7 @@ export class InternshipController extends Controller {
           mentorId: finalMentorId ? Number(finalMentorId) : undefined,
           companyId: finalCompanyId ? Number(finalCompanyId) : undefined,
           isApproved: isApproved !== undefined ? Boolean(isApproved) : undefined,
+          requiredWeeks: requiredWeeks ? Number(requiredWeeks) : undefined,
         },
         isAdmin
       );
@@ -183,7 +178,6 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
-      // Admin státusz ellenőrzése
       const isAdmin = user.role === "admin";
 
       await this.service.deleteInternship(internshipId, user.id, isAdmin);
@@ -210,13 +204,11 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
-      // Admin mindent jóváhagyhat, mentor csak a sajátját
       if (user.role === "admin") {
         const internship = await this.service.getInternshipById(internshipId);
         if (!internship) {
           return this.handleError(res, null, 404, "Internship not found");
         }
-        // Admin esetén közvetlenül frissítjük a service-en keresztül
         await this.service.approveInternship(internshipId, internship.mentor.user.id);
       } else {
         await this.service.approveInternship(internshipId, user.id);
@@ -245,13 +237,11 @@ export class InternshipController extends Controller {
         return this.handleError(res, null, 400, "Invalid internship ID");
       }
 
-      // Admin mindent elutasíthat, mentor csak a sajátját
       if (user.role === "admin") {
         const internship = await this.service.getInternshipById(internshipId);
         if (!internship) {
           return this.handleError(res, null, 404, "Internship not found");
         }
-        // Admin esetén közvetlenül frissítjük a service-en keresztül
         await this.service.rejectInternship(internshipId, internship.mentor.user.id);
       } else {
         await this.service.rejectInternship(internshipId, user.id);

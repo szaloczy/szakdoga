@@ -17,10 +17,11 @@ import {
 } from '@angular/forms';
 import { CompanyService } from '../../services/company.service';
 import { CommonModule } from '@angular/common';
+import { I18nService } from "../../shared/i18n.pipe";
 
 @Component({
   selector: 'app-user-management',
-  imports: [RouterLink, ReactiveFormsModule, CommonModule],
+  imports: [RouterLink, ReactiveFormsModule, CommonModule, I18nService],
   templateUrl: './user-management.component.html',
   styleUrl: './user-management.component.scss',
 })

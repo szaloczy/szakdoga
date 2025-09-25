@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Statistics } from '../../types';
+import { Statistics, ProgressStatistics, DashboardProgress } from '../../types';
 
 @Injectable({
   providedIn: 'root'
@@ -20,4 +20,7 @@ export class StatisticsService {
 
   getMentorCumulativeHours() { return this.http.get<Statistics>(`/api/statistics/mentor/cumulative-hours`) };
 
-  }
+  getProgressStatistics() { return this.http.get<ProgressStatistics>(`/api/statistics/progress`) };
+
+  getDashboardProgress() { return this.http.get<DashboardProgress>(`/api/statistics/dashboard-progress`) };
+}

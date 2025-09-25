@@ -164,6 +164,61 @@ export class StatisticsService {
     return { labels: weekLabels, data: weekData };
   }
 
+  // Hallgató előrehaladás statisztikája
+  async getProgressStatistics(userId: number) {
+    const hours = await this.hourRepo.find({ 
+      where: { 
+        status: "approved",
+        internship: { student: { user: { id: userId } } }
+      },
+      relations: ["internship", "internship.student", "internship.student.user"]
+    });
+    
+    if (hours.length === 0) {
+      return {
+        completedHours: 0,
+        requiredHours: 180, // Default 180 óra
+        requiredWeeks: 0,
+        progressPercentage: 0,
+        remainingHours: 180,
+        weeksCompleted: 0
+      };
+    }
+
+    const internship = hours[0].internship;
+    const requiredWeeks = internship.requiredWeeks || 0;
+    // Ha van requiredWeeks, azt használjuk (40 óra/hét), különben 180 óra default
+    const requiredHours = requiredWeeks > 0 ? requiredWeeks * 40 : 180;
+    
+    const completedHours = hours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+    const weeksCompleted = Math.floor(completedHours / 40);
+    const progressPercentage = requiredHours > 0 ? Math.round((completedHours / requiredHours) * 100) : 0;
+    const remainingHours = Math.max(0, requiredHours - completedHours);
+
+    return {
+      completedHours: Math.round(completedHours * 100) / 100,
+      requiredHours,
+      requiredWeeks,
+      progressPercentage,
+      remainingHours: Math.round(remainingHours * 100) / 100,
+      weeksCompleted
+    };
+  }
+
+  // Dashboard kördiagram adatok
+  async getDashboardProgress(userId: number) {
+    const progressData = await this.getProgressStatistics(userId);
+    
+    return {
+      labels: ["Teljesített órák", "Hátralévő órák"],
+      data: [progressData.completedHours, progressData.remainingHours],
+      total: progressData.requiredHours,
+      percentage: progressData.progressPercentage,
+      completed: progressData.completedHours,
+      remaining: progressData.remainingHours
+    };
+  }
+
   private getHourDuration(hour: InternshipHour): number {
     const start = new Date(`2000-01-01T${hour.startTime}`);
     const end = new Date(`2000-01-01T${hour.endTime}`);

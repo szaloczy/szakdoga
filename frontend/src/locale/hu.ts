@@ -206,6 +206,11 @@ export const hu: NestedI18n = {
             pending_hours: { text: "Függő órák" },
             rejected_hours: { text: "Elutasított órák" },
             total_hours: { text: "Összes óra" },
+            progress_statistics: { text: "Haladás Statisztikák" },
+            completed_hours: { text: "Teljesített órák" },
+            completed_weeks: { text: "Teljesített hetek" },
+            remaining_hours: { text: "Hátralevő órák" },
+            remaining_weeks: { text: "Hátralevő hetek" },
             uploaded_documents: { text: "Feltöltött dokumentumok" },
             note: { text: "Megjegyzés" }
         },
@@ -479,7 +484,39 @@ export const hu: NestedI18n = {
             }
         },
         user_management: {
-
+            title: {
+                text: "Felhasználók kezelése"
+            },
+            buttons: {
+                add_student: { text: "Hallgató hozzáadása" },
+                add_mentor: { text: "Mentor hozzáadása" },
+                back_to_dashboard: { text: "Vissza a kezdőlapra" }
+            },
+            table_headers: {
+                name: { text: "Név" },
+                email: { text: "Email" },
+                role: { text: "Szerep" },
+                status: { text: "Státusz" },
+                actions: { text: "Műveletek" }
+            },
+            add_student_form: {
+                title: { text: "Új hallgató hozzáadása" },
+                firstname: { text: "Keresztnév" },
+                lastname: { text: "Vezetéknév" },
+                email: { text: "Email" },
+                active: { text: "Aktív" },
+            },
+            add_mentor_form: {
+                title: { text: "Új mentor hozzáadása" },
+                firstname: { text: "Keresztnév" },
+                lastname: { text: "Vezetéknév" },
+                password: { text: "Jelszó" },
+                position: { text: "Beosztás" },
+                email: { text: "Email" },
+                company: { text: "Cég" },
+                active: { text: "Aktív" },
+                inactive: { text: "Inaktív" }
+            },
         },
         company_management: {
             title: {

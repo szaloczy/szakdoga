@@ -114,6 +114,8 @@ const statisticsController = new StatisticsController();
 router.get("/statistics/hours-per-month", authMiddleware, statisticsController.getHoursPerMonth.bind(statisticsController));
 router.get("/statistics/hour-status-distribution", authMiddleware, statisticsController.getHourStatusDistribution.bind(statisticsController));
 router.get("/statistics/cumulative-hours", authMiddleware, statisticsController.getCumulativeHours.bind(statisticsController));
+router.get("/statistics/progress", authMiddleware, statisticsController.getProgressStatistics.bind(statisticsController));
+router.get("/statistics/dashboard-progress", authMiddleware, statisticsController.getDashboardProgress.bind(statisticsController));
 
 router.get("/statistics/mentor/hours-per-month", authMiddleware, statisticsController.getMentorHoursPerMonth.bind(statisticsController));
 router.get("/statistics/mentor/hour-status-distribution", authMiddleware, statisticsController.getMentorHourStatusDistribution.bind(statisticsController));

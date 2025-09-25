@@ -3,13 +3,14 @@ import { CommonModule, DatePipe, TitleCasePipe } from '@angular/common';
 import { Component, inject, OnInit } from '@angular/core';
 import { AuthService } from '../../services/auth.service';
 import { I18nService } from '../../shared/i18n.pipe';
-import { UserDTO, UserRole, InternshipWithHours, MentorProfileDTO, StudentDTO, InternshipHourDTO, extendedStudentDTO } from '../../../types';
+import { UserDTO, UserRole, InternshipWithHours, MentorProfileDTO, StudentDTO, InternshipHourDTO, extendedStudentDTO, ProgressStatistics, DashboardProgress } from '../../../types';
 import { StudentService } from '../../services/student.service';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { DocumentService } from '../../services/document.service';
 import { UploadedDocument } from '../../models/document.model';
 import { UserService } from '../../services/user.service';
 import { MentorService } from '../../services/mentor.service';
+import { StatisticsService } from '../../services/statistics.service';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
 
 @Component({
@@ -33,6 +34,7 @@ export class DashboardComponent implements OnInit{
   studentService = inject(StudentService);
   internshipHourService = inject(InternshipHourService);
   documentService = inject(DocumentService);
+  statisticsService = inject(StatisticsService);
 
   user: UserDTO | null = null;
   studentProfile: StudentDTO | null = null;
@@ -42,6 +44,8 @@ export class DashboardComponent implements OnInit{
   studentDocuments: UploadedDocument[] = [];
   mentorProfile: MentorProfileDTO | null = null;
   mentorStudents: extendedStudentDTO[] = [];
+  progressStats: ProgressStatistics | null = null;
+  dashboardProgress: DashboardProgress | null = null;
   mentorStudentHourStats: { [studentId: number]: { approved: number; pending: number; rejected: number; total: number } } = {};
   mentorDocuments: UploadedDocument[] = [];
   mentorStats = { totalStudents: 0, activeStudents: 0, totalHours: 0, pendingHours: 0, documents: { pending: 0, approved: 0, rejected: 0 } };
@@ -91,6 +95,16 @@ export class DashboardComponent implements OnInit{
     this.documentService.getStudentDocuments().subscribe({
       next: (docs) => {
         this.studentDocuments = docs;
+      }
+    });
+    
+    // Load dashboard progress statistics
+    this.statisticsService.getDashboardProgress().subscribe({
+      next: (progress) => {
+        this.dashboardProgress = progress;
+      },
+      error: (err) => {
+        console.error('Error loading dashboard progress:', err);
       }
     });
   }

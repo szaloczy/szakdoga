@@ -211,6 +211,8 @@ export const hu: NestedI18n = {
             completed_weeks: { text: "Teljesített hetek" },
             remaining_hours: { text: "Hátralevő órák" },
             remaining_weeks: { text: "Hátralevő hetek" },
+            progress_status: { text: "Előrehaladás" },
+            completed_vs_required_hours: { text: "Teljesített / Szükséges órák" },
             uploaded_documents: { text: "Feltöltött dokumentumok" },
             note: { text: "Megjegyzés" }
         },

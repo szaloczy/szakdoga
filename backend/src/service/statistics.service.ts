@@ -187,7 +187,7 @@ export class StatisticsService {
 
     const internship = hours[0].internship;
     const requiredWeeks = internship.requiredWeeks || 0;
-    // Ha van requiredWeeks, azt használjuk (40 óra/hét), különben 180 óra default
+    
     const requiredHours = requiredWeeks > 0 ? requiredWeeks * 40 : 180;
     
     const completedHours = hours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);

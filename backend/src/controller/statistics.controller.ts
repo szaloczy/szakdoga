@@ -83,7 +83,6 @@ export class StatisticsController {
     }
   }
 
-  // Hallgató előrehaladás statisztikája
   async getProgressStatistics(req: Request, res: Response) {
     try {
       const userId = req.user?.id;
@@ -97,7 +96,6 @@ export class StatisticsController {
     }
   }
 
-  // Dashboard kördiagram adatok
   async getDashboardProgress(req: Request, res: Response) {
     try {
       const userId = req.user?.id;

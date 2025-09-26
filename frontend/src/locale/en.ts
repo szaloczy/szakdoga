@@ -214,6 +214,8 @@ export const en: NestedI18n = {
             completed_weeks: { text: "Completed weeks" },
             remaining_hours: { text: "Remaining hours" },
             remaining_weeks: { text: "Remaining weeks" },
+            progress_status: { text: "Progress Status" },
+            completed_vs_required_hours: { text: "Completed / Required Hours" },
             uploaded_documents: { text: "Uploaded documents" },
             note: { text: "Note" }
         },

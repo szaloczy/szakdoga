@@ -1,7 +1,7 @@
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light login-background">
   <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
-    <h3 class="text-center fw-bold mb-4">{{ "login.form.title" | translate }}</h3>
-
+    <h3 class="text-center fw-bold mb-4 text-uppercase">{{ "login.form.title" | translate }}</h3>
+    
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <div class="mb-3">
         <input

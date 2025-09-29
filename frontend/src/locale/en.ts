@@ -90,7 +90,7 @@ export const en: NestedI18n = {
             },
             registered: {
                 question: {
-                    text: "Dont have an account?"
+                    text: "Don't have an account?"
                 },
                 link: {
                     text: "Register here"
@@ -432,7 +432,8 @@ export const en: NestedI18n = {
             uploading: { text: "Uploading..." },
             success: { text: "File uploaded successfully!" },
             error: { text: "Error uploading file. Please try again." },
-            invalid_file: { text: "Invalid file type. Please upload a PDF." }
+            invalid_file: { text: "Invalid file type. Please upload a PDF." },
+            empty: { text: "You haven't uploaded any files." }
         },
         documents_section: {
             title: { text: "Uploaded Documents" },
@@ -652,6 +653,9 @@ export const en: NestedI18n = {
             delete: {
                 text: "Delete"
             },
+            reject: {
+                text: "Reject" 
+            },
             document_upload: {
                 upload_section: {
                     choose_file: { text: 'Choose file' },
@@ -746,6 +750,81 @@ export const en: NestedI18n = {
             },
             no_results_desc: {
                 text: "No students match your search criteria."
+            }
+        },
+        pop_ups: {
+            rejection: {
+                title: {
+                    text: "Rejection Confirmation"
+                },
+                desc1: {
+                    text: "Are you sure you want to reject "
+                },
+                desc2: {
+                    text: "all hours? "
+                },
+                loading: {
+                    text: "Loading ..."
+                },
+                loading_desc: {
+                    text: "Processing of rejecting student hours"
+                }
+            },
+            approval: {
+                title: {
+                    text: "Approve Student Hours"
+                },
+                student_label: {
+                    text: "Student:"
+                },
+                pending_hours: {
+                    text: "Pending Hours:"
+                },
+                current_approved_hours: {
+                    text: "Current Approved Hours:"
+                },
+                total_after_approval: {
+                    text: "Total After Approval:"
+                },
+                complete_requirement: {
+                    text: "This will complete the 180-hour requirement!"
+                },
+                remaining_hours: {
+                    text: "Remaining: {{hours}} hours to complete requirement"
+                },
+                confirm_button: {
+                    text: "Approve All Pending Hours"
+                },
+                processing_title: {
+                    text: "Processing..."
+                },
+                processing_desc: {
+                    text: "Approving all pending hours for student"
+                },
+                success_title: {
+                    text: "Congratulations!"
+                },
+                success_desc: {
+                    text: "has completed their <strong>180-hour</strong> internship requirement!"
+                },
+                success_message: {
+                    text: "All pending hours approved successfully!"
+                },
+                hours_approved_title: {
+                    text: "Hours Approved!"
+                },
+                hours_approved_desc: {
+                    text: "Successfully approved all pending hours for {{name}}"
+                },
+                error_title: {
+                    text: "Error!"
+                },
+                error_desc: {
+                    text: "Failed to approve hours. Please try again."
+                },
+                excellent_button: {
+                    text: "Excellent!"
+                }
             }
         }
     },

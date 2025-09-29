@@ -26,6 +26,10 @@
       transform: translateY(-2px);
       box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
     }
+
+    .reject-button {
+      color: black;
+    }
   }
 
   .student-card {
@@ -88,7 +92,6 @@
     100% { transform: rotate(360deg); }
   }
 
-  // Additional styles for buttons in card footer
   .card-footer {
     .btn-outline-info {
       border-color: #17a2b8;
@@ -103,7 +106,6 @@
     }
   }
 
-  // Custom styles for SweetAlert2
   :global(.larger-swal) {
     .swal2-popup {
       border-radius: 16px !important;
@@ -128,7 +130,6 @@
     }
   }
 
-  // Status specific colors
   .text-status-pending {
     color: #856404 !important;
   }
@@ -141,7 +142,6 @@
     color: #055160 !important;
   }
 
-  // Responsive design
   @media (max-width: 768px) {
     .search-box {
       min-width: 200px;
@@ -203,7 +203,6 @@
     }
   }
 
-  // Filter and sort controls
   .form-select {
     border-radius: 8px;
     border: 2px solid #e2e8f0;
@@ -215,7 +214,6 @@
     }
   }
 
-  // Dropdown improvements
   .dropdown-menu {
     border-radius: 12px;
     border: none;
@@ -239,7 +237,6 @@
     }
   }
 
-  // Enhanced status badges
   .bg-warning .card-body {
     background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
     border-radius: 12px;
@@ -261,7 +258,6 @@
   }
 }
 
-// Loading state
 .loading-overlay {
   position: relative;
   
@@ -277,7 +273,6 @@
   }
 }
 
-// Utilities
 .text-truncate-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;

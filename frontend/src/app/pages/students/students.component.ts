@@ -37,22 +37,9 @@ interface StudentResponseDTO {
   styleUrl: './students.component.scss'
 })
 export class StudentsComponent implements OnInit {
-  handleApproveHourFromModal(event: { hourId: number, studentName: string }): void {
-    this.internshipHourService.approveHour(event.hourId).subscribe({
-      next: () => {
-        this.toastService.showSuccess('Óra elfogadva!');
-        this.handleHourDetailsModalClose();
-        if (this.REFRESH_AFTER_APPROVAL) {
-          this.loadStudents();
-        }
-      },
-      error: (error: any) => {
-        this.toastService.showError('Az óra elfogadása nem sikerült');
-      }
-    });
-  }
 
   private mentorService = inject(MentorService);
+  i18nService = inject(I18nService);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
   private router = inject(Router);
@@ -61,10 +48,9 @@ export class StudentsComponent implements OnInit {
   students: StudentResponseDTO[] = [];
   isLoading = false;
   searchTerm = '';
-  selectedFilter = 'all'; // all, active, pending, completed
-  sortBy = 'name'; // name, hours, university, status
+  selectedFilter = 'all'; 
+  sortBy = 'name'; 
 
-  // Configuration: set to true if you want to reload data from backend after each approval
   private REFRESH_AFTER_APPROVAL = false;
 
   showHourDetailsModal: boolean = false;
@@ -90,15 +76,11 @@ export class StudentsComponent implements OnInit {
       next: (data: any) => {
         console.log('Backend response:', data);
         
-        // Handle the new backend response format
         if (Array.isArray(data)) {
-          // Direct array of StudentResponseDTO objects
           this.students = data as StudentResponseDTO[];
         } else if (data && Array.isArray(data.students)) {
-          // Wrapped in students property
           this.students = data.students as StudentResponseDTO[];
         } else if (data && Array.isArray(data.data)) {
-          // Wrapped in data property
           this.students = data.data as StudentResponseDTO[];
         } else {
           console.error('Unexpected response format:', data);
@@ -117,7 +99,6 @@ export class StudentsComponent implements OnInit {
     });
   }
 
-  // Statistical count methods
   getActiveStudentsCount(): number {
     return this.students.filter(student => 
       this.getStudentStatus(student) === 'active'
@@ -146,7 +127,6 @@ export class StudentsComponent implements OnInit {
       );
     }
 
-    // Filter by search term
     if (this.searchTerm) {
       filtered = filtered.filter(student => 
         `${student.firstname} ${student.lastname}`
@@ -157,13 +137,6 @@ export class StudentsComponent implements OnInit {
     }
     
     return filtered;
-  }
-
-  private calculateHoursDuration(startTime: string, endTime: string): number {
-    const start = new Date(`1970-01-01T${startTime}`);
-    const end = new Date(`1970-01-01T${endTime}`);
-    const diffMs = end.getTime() - start.getTime();
-    return diffMs / (1000 * 60 * 60); // Convert to hours
   }
 
   getStudentStatus(student: StudentResponseDTO): string {
@@ -209,12 +182,10 @@ export class StudentsComponent implements OnInit {
   }
 
   getApprovedHours(student: StudentResponseDTO): number {
-    // For now, this is the same as total hours since we don't have separate approved/pending tracking
     return student.hours;
   }
 
   getPendingHours(student: StudentResponseDTO): number {
-    // Backend should provide this data in the StudentResponseDTO
     return student.pendingHours || 0;
   }
 
@@ -233,17 +204,17 @@ export class StudentsComponent implements OnInit {
     const totalAfterApproval = approvedHours + pendingHours;
 
     Swal.fire({
-      title: 'Approve Student Hours',
+      title: this.i18nService.transform('students.pop_ups.approval.title'),
       html: `
         <div class="text-start">
-          <h5>Student: ${student.firstname} ${student.lastname}</h5>
+          <h5>${this.i18nService.transform('students.pop_ups.approval.student_label')} ${student.firstname} ${student.lastname}</h5>
           <hr>
-          <p><strong>Pending Hours:</strong> ${pendingHours.toFixed(1)} hours</p>
-          <p><strong>Current Approved Hours:</strong> ${approvedHours.toFixed(1)} hours</p>
-          <p><strong>Total After Approval:</strong> ${totalAfterApproval.toFixed(1)} hours</p>
+          <p><strong>${this.i18nService.transform('students.pop_ups.approval.pending_hours')}</strong> ${pendingHours.toFixed(1)}</p>
+          <p><strong>${this.i18nService.transform('students.pop_ups.approval.current_approved_hours')}</strong> ${approvedHours.toFixed(1)}</p>
+          <p><strong>${this.i18nService.transform('students.pop_ups.approval.total_after_approval')}</strong> ${totalAfterApproval.toFixed(1)}</p>
           ${totalAfterApproval >= 180 ? 
-            '<div class="alert alert-success mt-3"><i class="bi bi-trophy"></i> This will complete the 180-hour requirement!</div>' : 
-            `<div class="alert alert-info mt-3">Remaining: ${(180 - totalAfterApproval).toFixed(1)} hours to complete requirement</div>`
+            `<div class="alert alert-success mt-3"><i class="bi bi-trophy"></i> ${this.i18nService.transform('students.pop_ups.approval.complete_requirement')}</div>` : 
+            `<div class="alert alert-info mt-3">${this.i18nService.transform('students.pop_ups.approval.remaining_hours', { hours: (180 - totalAfterApproval).toFixed(1) })}</div>`
           }
         </div>
       `,
@@ -251,17 +222,16 @@ export class StudentsComponent implements OnInit {
       showCancelButton: true,
       confirmButtonColor: '#ffc107',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Approve All Pending Hours',
-      cancelButtonText: 'Cancel',
+      confirmButtonText: this.i18nService.transform('students.pop_ups.approval.confirm_button'),
+      cancelButtonText: this.i18nService.transform('buttons.forms.cancel'),
       customClass: {
         popup: 'larger-swal'
       }
     }).then((result: any) => {
       if (result.isConfirmed) {
-        // Show loading
         Swal.fire({
-          title: 'Processing...',
-          text: 'Approving all pending hours for student',
+          title: this.i18nService.transform('students.pop_ups.approval.processing_title'),
+          text: this.i18nService.transform('students.pop_ups.approval.processing_desc'),
           allowOutsideClick: false,
           showConfirmButton: false,
           didOpen: () => {
@@ -269,15 +239,13 @@ export class StudentsComponent implements OnInit {
           }
         });
 
-        // Call the new backend API
+
         this.internshipHourService.approveAllStudentHours(studentId).subscribe({
           next: (response) => {
             console.log('Hours approved successfully:', response);
             
-            // Update the student's hours in the local array
             const studentIndex = this.students.findIndex(s => s.id === studentId);
             if (studentIndex !== -1) {
-              // If backend returns updated student data, use that; otherwise calculate locally
               if (response && response.newTotalHours !== undefined) {
                 this.students[studentIndex] = {
                   ...this.students[studentIndex],
@@ -285,7 +253,6 @@ export class StudentsComponent implements OnInit {
                   pendingHours: 0
                 };
               } else {
-                // Fallback to local calculation
                 this.students[studentIndex] = {
                   ...this.students[studentIndex],
                   hours: totalAfterApproval,
@@ -296,33 +263,32 @@ export class StudentsComponent implements OnInit {
             
             if (totalAfterApproval >= 180) {
               Swal.fire({
-                title: 'Congratulations!',
+                title: this.i18nService.transform('students.pop_ups.approval.success_title'),
                 html: `
                   <div class="text-center">
                     <i class="bi bi-trophy" style="font-size: 3rem; color: #ffc107;"></i>
                     <h4>${student.firstname} ${student.lastname}</h4>
-                    <p>has completed their <strong>180-hour</strong> internship requirement!</p>
+                    <p>${this.i18nService.transform('students.pop_ups.approval.success_desc')}</p>
                     <div class="alert alert-success mt-3">
-                      All pending hours approved successfully!
+                      ${this.i18nService.transform('students.pop_ups.approval.success_message')}
                     </div>
                   </div>
                 `,
                 icon: 'success',
                 confirmButtonColor: '#28a745',
-                confirmButtonText: 'Excellent!'
+                confirmButtonText: this.i18nService.transform('students.pop_ups.approval.excellent_button')
               });
             } else {
               Swal.fire({
-                title: 'Hours Approved!',
-                text: `Successfully approved all pending hours for ${student.firstname} ${student.lastname}`,
+                title: this.i18nService.transform('students.pop_ups.approval.hours_approved_title'),
+                text: this.i18nService.transform('students.pop_ups.approval.hours_approved_desc', { name: `${student.firstname} ${student.lastname}` }),
                 icon: 'success',
                 confirmButtonColor: '#28a745'
               });
             }
 
-            this.toastService.showSuccess('All pending hours approved successfully!');
+            this.toastService.showSuccess(this.i18nService.transform('students.pop_ups.approval.success_message'));
             
-            // Optional: Refresh data from backend to ensure accuracy
             if (this.REFRESH_AFTER_APPROVAL) {
               this.loadStudents();
             }
@@ -330,12 +296,12 @@ export class StudentsComponent implements OnInit {
           error: (error) => {
             console.error('Error approving hours:', error);
             Swal.fire({
-              title: 'Error!',
-              text: 'Failed to approve hours. Please try again.',
+              title: this.i18nService.transform('students.pop_ups.approval.error_title'),
+              text: this.i18nService.transform('students.pop_ups.approval.error_desc'),
               icon: 'error',
               confirmButtonColor: '#dc3545'
             });
-            this.toastService.showError('Failed to approve hours');
+            this.toastService.showError(this.i18nService.transform('students.pop_ups.approval.error_desc'));
           }
         });
       }
@@ -355,20 +321,20 @@ export class StudentsComponent implements OnInit {
     }
 
     Swal.fire({
-      title: 'Elutasítás megerősítése',
-      html: `Biztosan elutasítod <strong>${student.firstname} ${student.lastname}</strong> összes függőben lévő óráját?`,
+      title: this.i18nService.transform('students.pop_ups.rejection.title'),
+      html: this.i18nService.transform('students.pop_ups.rejection.desc1', { firstname: student.firstname, lastname: student.lastname }) + this.i18nService.transform('students.pop_ups.rejection.desc2'),
       icon: 'warning',
       showCancelButton: true,
       confirmButtonColor: '#dc3545',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Elutasítás',
-      cancelButtonText: 'Mégse',
+      confirmButtonText: this.i18nService.transform('buttons.forms.reject'),
+      cancelButtonText:  this.i18nService.transform('buttons.forms.cancel'),
       customClass: { popup: 'larger-swal' }
     }).then((result: any) => {
       if (result.isConfirmed) {
         Swal.fire({
-          title: 'Feldolgozás...',
-          text: 'Hallgató óráinak elutasítása folyamatban',
+          title: this.i18nService.transform('students.pop_ups.rejection.loading'),
+          text: this.i18nService.transform('students.pop_ups.rejection.loading_desc'),
           allowOutsideClick: false,
           showConfirmButton: false,
           didOpen: () => { Swal.showLoading(); }
@@ -535,13 +501,11 @@ export class StudentsComponent implements OnInit {
       }
     });
 
-    // Process each student sequentially
     let processedCount = 0;
     const errors: string[] = [];
 
     const processNext = (index: number) => {
       if (index >= students.length) {
-        // All done
         this.handleBulkApprovalComplete(processedCount, errors);
         return;
       }
@@ -551,14 +515,13 @@ export class StudentsComponent implements OnInit {
         next: (response: any) => {
           console.log(`Approved hours for ${student.firstname} ${student.lastname}:`, response);
           
-          // Update local data
           const studentIndex = this.students.findIndex(s => s.id === student.id);
           if (studentIndex !== -1) {
             const pendingHours = this.getPendingHours(student);
             this.students[studentIndex] = {
               ...this.students[studentIndex],
               hours: this.students[studentIndex].hours + pendingHours,
-              pendingHours: 0  // Reset pending hours to 0 after approval
+              pendingHours: 0
             };
           }
           
@@ -586,7 +549,6 @@ export class StudentsComponent implements OnInit {
       });
       this.toastService.showSuccess(`Bulk approval complete: ${successCount} students processed`);
       
-      // Refresh data after bulk approval if configured
       if (this.REFRESH_AFTER_APPROVAL) {
         this.loadStudents();
       }
@@ -634,6 +596,21 @@ export class StudentsComponent implements OnInit {
           return statusOrder[statusA] - statusOrder[statusB];
         default:
           return 0;
+      }
+    });
+  }
+
+  handleApproveHourFromModal(event: { hourId: number, studentName: string }): void {
+    this.internshipHourService.approveHour(event.hourId).subscribe({
+      next: () => {
+        this.toastService.showSuccess('Óra elfogadva!');
+        this.handleHourDetailsModalClose();
+        if (this.REFRESH_AFTER_APPROVAL) {
+          this.loadStudents();
+        }
+      },
+      error: (error: any) => {
+        this.toastService.showError('Az óra elfogadása nem sikerült');
       }
     });
   }

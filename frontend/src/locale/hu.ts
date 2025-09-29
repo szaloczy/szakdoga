@@ -430,7 +430,8 @@ export const hu: NestedI18n = {
             uploading: { text: "Feltöltés folyamatban..." },
             success: { text: "Fájl sikeresen feltöltve!" },
             error: { text: "Hiba a fájl feltöltésekor. Kérjük, próbálja újra." },
-            invalid_file: { text: "Érvénytelen fájltípus. Kérjük, töltsön fel egy PDF-et." }
+            invalid_file: { text: "Érvénytelen fájltípus. Kérjük, töltsön fel egy PDF-et." },
+            empty: { text: "Nincs feltöltött fájl." }
         },
         documents_section: {
             title: { text: "Feltöltött dokumentumok" },
@@ -634,6 +635,9 @@ export const hu: NestedI18n = {
             delete: {
                 text: "Törlés"
             },
+            reject: {
+                text: "Elutasítás"
+            },
             document_upload: {
                 upload_section: {
                     choose_file: { text: 'Fájl kiválasztása' },
@@ -727,6 +731,81 @@ export const hu: NestedI18n = {
             },
             no_results_desc: {
                 text: "Nincs olyan hallgató, aki megfelelne a keresési feltételeknek."
+            }
+        },
+        pop_ups: {
+            rejection: {
+                title: {
+                    text: "Elutasítás megerősítése"
+                },
+                desc1: {
+                    text: "Biztosan elutasítod "
+                },
+                desc2: {
+                    text: "az összes óráját?"
+                },
+                loading: {
+                text: "Loading ..."
+                },
+                loading_desc: {
+                    text: "Processing of rejecting student hours"
+                }
+            },
+            approval: {
+                title: {
+                    text: "Hallgatói órák jóváhagyása"
+                },
+                student_label: {
+                    text: "Hallgató:"
+                },
+                pending_hours: {
+                    text: "Függő órák:"
+                },
+                current_approved_hours: {
+                    text: "Jelenlegi jóváhagyott órák:"
+                },
+                total_after_approval: {
+                    text: "Összesen jóváhagyás után:"
+                },
+                complete_requirement: {
+                    text: "Ezzel teljesül a 180 órás követelmény!"
+                },
+                remaining_hours: {
+                    text: "Hátralevő: {{hours}} óra a követelmény teljesítéséhez"
+                },
+                confirm_button: {
+                    text: "Összes függő óra jóváhagyása"
+                },
+                processing_title: {
+                    text: "Feldolgozás..."
+                },
+                processing_desc: {
+                    text: "Hallgató összes függő órájának jóváhagyása"
+                },
+                success_title: {
+                    text: "Gratulálunk!"
+                },
+                success_desc: {
+                    text: "teljesítette a <strong>180 órás</strong> gyakorlati követelményt!"
+                },
+                success_message: {
+                    text: "Összes függő óra sikeresen jóváhagyva!"
+                },
+                hours_approved_title: {
+                    text: "Órák jóváhagyva!"
+                },
+                hours_approved_desc: {
+                    text: "Sikeresen jóváhagytad {{name}} összes függő óráját"
+                },
+                error_title: {
+                    text: "Hiba!"
+                },
+                error_desc: {
+                    text: "Az órák jóváhagyása nem sikerült. Próbáld újra!"
+                },
+                excellent_button: {
+                    text: "Kiváló!"
+                }
             }
         }
     },

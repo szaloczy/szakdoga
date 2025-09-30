@@ -1,0 +1,269 @@
+<nav class="navbar navbar-expand-lg bg-light border-bottom shadow-sm">
+  <div class="container-fluid">
+    <span class="navbar-brand mb-0 h1 text-muted">
+      <i class="bi bi-bar-chart-fill me-2"></i>
+      {{ 'admin_panel.admin_statistics.title' | translate }}
+    </span>
+    
+    <div class="d-flex align-items-center gap-3">
+      <button (click)="goBack()" class="btn btn-outline-secondary btn-sm">
+        <i class="bi bi-arrow-left me-1"></i>
+        {{ 'admin_statistics.navigation.back_to_admin' | translate }}
+      </button>
+      <button (click)="exportStatistics()" class="btn btn-primary btn-sm">
+        <i class="bi bi-download me-1"></i>
+        {{ 'admin_statistics.navigation.export_csv' | translate }}
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2 class="mb-0">
+      <i class="bi bi-graph-up me-2"></i>
+      {{ 'admin_panel.admin_statistics.title' | translate }}
+    </h2>
+    <button (click)="loadStatistics()" class="btn btn-outline-primary" [disabled]="isLoading">
+      <i class="bi bi-arrow-clockwise me-1" [class.spin]="isLoading"></i>
+      {{ 'admin_panel.admin_statistics.navigation.refresh' | translate }}
+    </button>
+  </div>
+
+  <div *ngIf="isLoading" class="text-center py-5">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">{{ 'admin_panel.admin_statistics.loading' | translate }}</p>
+  </div>
+
+  <div *ngIf="!isLoading">
+    <div class="row mb-4">
+      <div class="col-12">
+        <h4 class="text-primary mb-3">
+          <i class="bi bi-people-fill me-2"></i>
+          {{ 'admin_panel.admin_statistics.users.title' | translate }}
+        </h4>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.users.total }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.users.total' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-info text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.users.students }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.users.students' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-success text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.users.mentors }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.users.mentors' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+          <div class="card-body text-center">
+            <h3>{{ statistics.users.admins }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.users.admins' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-12">
+        <h4 class="text-success mb-3">
+          <i class="bi bi-briefcase-fill me-2"></i>
+          {{ 'admin_panel.admin_statistics.internships.title' | translate }}
+        </h4>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-secondary text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.internships.total }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.internships.total' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-success text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.internships.approved }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.internships.approved' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+          <div class="card-body text-center">
+            <h3>{{ statistics.internships.pending }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.internships.pending' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-primary text-white">
+          <div class="card-body text-center">
+            <h3>{{ statistics.internships.completed }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.internships.completed' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-12">
+        <h4 class="text-info mb-3">
+          <i class="bi bi-clock-fill me-2"></i>
+          {{ 'admin_panel.admin_statistics.hours.title' | translate }}
+        </h4>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-dark text-white">
+          <div class="card-body text-center">
+            <h3>{{ formatDuration(statistics.hours.total) }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.hours.total' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-success text-white">
+          <div class="card-body text-center">
+            <h3>{{ formatDuration(statistics.hours.approved) }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.hours.approved' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-warning text-dark">
+          <div class="card-body text-center">
+            <h3>{{ formatDuration(statistics.hours.pending) }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.hours.pending' | translate }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3">
+        <div class="card bg-danger text-white">
+          <div class="card-body text-center">
+            <h3>{{ formatDuration(statistics.hours.rejected) }}</h3>
+            <p class="mb-0">{{ 'admin_panel.admin_statistics.hours.rejected' | translate }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row mb-4">
+      <div class="col-md-6">
+        <h4 class="text-warning mb-3">
+          <i class="bi bi-building me-2"></i>
+          {{ 'admin_panel.admin_statistics.companies.title' | translate }}
+        </h4>
+        <div class="row">
+          <div class="col-6">
+            <div class="card bg-secondary text-white">
+              <div class="card-body text-center">
+                <h3>{{ statistics.companies.total }}</h3>
+                <p class="mb-0">{{ 'admin_panel.admin_statistics.companies.total' | translate }}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="card bg-success text-white">
+              <div class="card-body text-center">
+                <h3>{{ statistics.companies.active }}</h3>
+                <p class="mb-0">{{ 'admin_panel.admin_statistics.companies.active' | translate }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-6">
+        <h4 class="text-danger mb-3">
+          <i class="bi bi-file-earmark-text me-2"></i>
+          {{ 'admin_panel.admin_statistics.documents.title' | translate }}
+        </h4>
+        <div class="row">
+          <div class="col-3">
+            <div class="card bg-secondary text-white">
+              <div class="card-body text-center">
+                <h5>{{ statistics.documents.total }}</h5>
+                <small>{{ 'admin_panel.admin_statistics.documents.total' | translate }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card bg-success text-white">
+              <div class="card-body text-center">
+                <h5>{{ statistics.documents.approved }}</h5>
+                <small>{{ 'admin_panel.admin_statistics.documents.approved' | translate }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card bg-warning text-dark">
+              <div class="card-body text-center">
+                <h5>{{ statistics.documents.pending }}</h5>
+                <small>{{ 'admin_panel.admin_statistics.documents.pending' | translate }}</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-3">
+            <div class="card bg-danger text-white">
+              <div class="card-body text-center">
+                <h5>{{ statistics.documents.rejected }}</h5>
+                <small>{{ 'admin_panel.admin_statistics.documents.rejected' | translate }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12">
+        <div class="card bg-light">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="bi bi-info-circle me-2"></i>
+              {{ 'admin_panel.admin_statistics.summary.title' | translate }}
+            </h5>
+            <div class="row text-center">
+              <div class="col-md-3">
+                <div class="border-end">
+                  <h4 class="text-primary">{{ getCompletionRate() | number:'1.0-1' }}%</h4>
+                  <small class="text-muted">{{ 'admin_panel.admin_statistics.summary.completion_rate' | translate }}</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="border-end">
+                  <h4 class="text-success">{{ getHoursApprovalRate() | number:'1.0-1' }}%</h4>
+                  <small class="text-muted">{{ 'admin_panel.admin_statistics.summary.hours_approval_rate' | translate }}</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <div class="border-end">
+                  <h4 class="text-info">{{ getAvgHoursPerStudent() | number:'1.0-1' }}</h4>
+                  <small class="text-muted">{{ 'admin_panel.admin_statistics.summary.avg_hours_per_student' | translate }}</small>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <h4 class="text-warning">{{ getActiveCompaniesRate() | number:'1.0-1' }}%</h4>
+                <small class="text-muted">{{ 'admin_panel.admin_statistics.summary.active_companies_rate' | translate }}</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

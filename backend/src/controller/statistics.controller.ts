@@ -108,4 +108,18 @@ export class StatisticsController {
       res.status(500).json({ message: "Failed to fetch dashboard progress" });
     }
   }
+
+  // Admin statisztikák
+  async getAdminStatistics(req: Request, res: Response) {
+    try {
+      const user = req.user;
+      if (!user || user.role !== "admin") {
+        return res.status(403).json({ message: "Admin access required" });
+      }
+      const result = await this.statisticsService.getAdminStatistics();
+      res.json(result);
+    } catch (err) {
+      res.status(500).json({ message: "Failed to fetch admin statistics" });
+    }
+  }
 }

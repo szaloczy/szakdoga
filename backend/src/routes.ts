@@ -120,3 +120,6 @@ router.get("/statistics/dashboard-progress", authMiddleware, statisticsControlle
 router.get("/statistics/mentor/hours-per-month", authMiddleware, statisticsController.getMentorHoursPerMonth.bind(statisticsController));
 router.get("/statistics/mentor/hour-status-distribution", authMiddleware, statisticsController.getMentorHourStatusDistribution.bind(statisticsController));
 router.get("/statistics/mentor/cumulative-hours", authMiddleware, statisticsController.getMentorCumulativeHours.bind(statisticsController));
+
+// Admin statisztikák
+router.get("/statistics/admin", authMiddleware, statisticsController.getAdminStatistics.bind(statisticsController));

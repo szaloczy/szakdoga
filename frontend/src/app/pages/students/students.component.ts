@@ -212,10 +212,7 @@ export class StudentsComponent implements OnInit {
           <p><strong>${this.i18nService.transform('students.pop_ups.approval.pending_hours')}</strong> ${pendingHours.toFixed(1)}</p>
           <p><strong>${this.i18nService.transform('students.pop_ups.approval.current_approved_hours')}</strong> ${approvedHours.toFixed(1)}</p>
           <p><strong>${this.i18nService.transform('students.pop_ups.approval.total_after_approval')}</strong> ${totalAfterApproval.toFixed(1)}</p>
-          ${totalAfterApproval >= 180 ? 
-            `<div class="alert alert-success mt-3"><i class="bi bi-trophy"></i> ${this.i18nService.transform('students.pop_ups.approval.complete_requirement')}</div>` : 
-            `<div class="alert alert-info mt-3">${this.i18nService.transform('students.pop_ups.approval.remaining_hours', { hours: (180 - totalAfterApproval).toFixed(1) })}</div>`
-          }
+          
         </div>
       `,
       icon: 'question',
@@ -405,10 +402,10 @@ export class StudentsComponent implements OnInit {
     this.internshipHourService.rejectHour(event.hourId, event.reason).subscribe({
       next: () => {
         this.toastService.showSuccess('Óra elutasítva!');
-        this.handleHourDetailsModalClose();
-        if (this.REFRESH_AFTER_APPROVAL) {
-          this.loadStudents();
+        if (this.modalStudent) {
+          this.viewHoursDetails(this.modalStudent);
         }
+        this.loadStudents();
       },
       error: (error: any) => {
         this.toastService.showError('Az óra elutasítása nem sikerült');
@@ -604,10 +601,12 @@ export class StudentsComponent implements OnInit {
     this.internshipHourService.approveHour(event.hourId).subscribe({
       next: () => {
         this.toastService.showSuccess('Óra elfogadva!');
-        this.handleHourDetailsModalClose();
-        if (this.REFRESH_AFTER_APPROVAL) {
-          this.loadStudents();
+        // Refresh the modal data by reloading hour details
+        if (this.modalStudent) {
+          this.viewHoursDetails(this.modalStudent);
         }
+        // Also refresh the main students list
+        this.loadStudents();
       },
       error: (error: any) => {
         this.toastService.showError('Az óra elfogadása nem sikerült');

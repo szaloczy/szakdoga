@@ -43,6 +43,4 @@ export class InternshipHour {
   @UpdateDateColumn()
   updatedAt: Date;
 
-  @Column({ nullable: true })
-  rejectionReason?: string;
 }

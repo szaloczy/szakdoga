@@ -46,11 +46,11 @@
       <div class="progress mb-3" style="height: 20px;">
         <div class="progress-bar bg-success" role="progressbar" 
              [style.width]="(approvedHours / 180) * 100 + '%'">
-          Approved: {{ (approvedHours / 180) * 100 | number:'1.1-1' }}%
+         {{ (approvedHours / 180) * 100 | number:'1.1-1' }}%
         </div>
         <div class="progress-bar bg-warning" role="progressbar" 
              [style.width]="(pendingHours / 180) * 100 + '%'">
-          Pending: {{ (pendingHours / 180) * 100 | number:'1.1-1' }}%
+         {{ (pendingHours / 180) * 100 | number:'1.1-1' }}%
         </div>
       </div>
       <hr>
@@ -74,28 +74,10 @@
                 <button class="btn btn-sm btn-outline-success me-2" (click)="emitApproveHour(hour.id)">
                   <i class="bi bi-check-circle"></i> {{ 'internship_hours.actions.approve' | translate }}
                 </button>
-                <button class="btn btn-sm btn-outline-danger ms-2" (click)="handleRejectHour(hour.id)">
+                <button class="btn btn-sm btn-outline-danger ms-2" (click)="emitRejectHour(hour.id)">
                   <i class="bi bi-x-circle"></i> {{ 'internship_hours.actions.reject' | translate }}
                 </button>
               </ng-container>
-<!-- Reason input modal for rejection -->
-<div class="modal-backdrop" *ngIf="hourToReject"></div>
-<div class="modal-dialog" *ngIf="hourToReject">
-  <div class="modal-content">
-    <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title">{{ 'internship_hours.actions.reject_reason_title' | translate }}</h5>
-      <button type="button" class="btn-close" aria-label="Close" (click)="hourToReject = null"></button>
-    </div>
-    <div class="modal-body">
-                    <label for="rejectReason" class="form-label">{{ 'internship_hours.actions.reject_reason_label' | translate }}</label>
-      <input id="rejectReason" type="text" class="form-control" [(ngModel)]="rejectReason" placeholder="Indoklás...">
-    </div>
-    <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" (click)="hourToReject = null">{{ 'buttons.forms.cancel.text' | translate }}</button>
-                    <button type="button" class="btn btn-danger" [disabled]="!rejectReason" (click)="emitRejectHour()">{{ 'internship_hours.actions.reject' | translate }}</button>
-    </div>
-  </div>
-</div>
             </div>
           </div>
         </ng-container>

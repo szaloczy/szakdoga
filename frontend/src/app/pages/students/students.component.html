@@ -48,13 +48,11 @@
         title="Export students to CSV"
       >
         <i class="bi bi-download me-1"></i>
-        <!-- Le nyiló lista a mentornak - minden hallgató - hallgatónkénti -->
         {{ 'mentor_students.export.to_csv' | translate }}
       </button>
     </div>
   </div>
 
-  <!-- Statistics Cards -->
   <div class="row mb-4">
     <div class="col-md-3">
       <div class="card bg-primary text-white">
@@ -198,7 +196,7 @@
                     >
                       <i class="bi bi-check-circle me-1"></i>
                       {{ 'mentor_students.actions.approve_hours' | translate }}
-                      <span class="badge bg-light text-dark ms-2">{{ getPendingHours(student) | number:'1.0-0' }}h</span>
+                      <span class="badge bg-light text-dark ms-2"></span>
                     </button>
                     <button 
                       class="btn btn-danger reject-button"
@@ -248,8 +246,8 @@
     </div>
   }
 
+  @if (showHourDetailsModal) {
   <app-hour-details-modal
-    *ngIf="showHourDetailsModal"
     [student]="modalStudent"
     [totalHours]="modalTotalHours"
     [approvedHours]="modalApprovedHours"
@@ -261,4 +259,5 @@
     (rejectHour)="handleRejectHourFromModal($event)"
     (approveHour)="handleApproveHourFromModal($event)"
   ></app-hour-details-modal>
+  }
 </div>

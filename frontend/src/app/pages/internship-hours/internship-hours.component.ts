@@ -20,6 +20,7 @@ export class InternshipHoursComponent implements OnInit {
   internshipHoursService = inject(InternshipHourService);
   toastService = inject(ToastService);
   authService = inject(AuthService);
+  i18nService = inject(I18nService);
   selectedTab: 'week' | 'approved' | 'pending' | 'rejected' = 'week';
   entries: InternshipHourDTO[] = [];
   filteredEntries: InternshipHourDTO[] = [];
@@ -106,7 +107,16 @@ export class InternshipHoursComponent implements OnInit {
   formatDuration(hours: number): string {
     const wholeHours = Math.floor(hours);
     const minutes = Math.round((hours - wholeHours) * 60);
-    return `${wholeHours}h ${minutes}m`;
+    
+    const currentLanguage = this.i18nService.getLanguage();
+    
+    if (currentLanguage === 'hu') {
+      // Hungarian format: 17ó 30p
+      return `${wholeHours}ó ${minutes}p`;
+    } else {
+      // English format: 17h 30m
+      return `${wholeHours}h ${minutes}m`;
+    }
   }
 
   applyFilters(): void {

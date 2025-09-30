@@ -16,6 +16,7 @@ import { InternshipHoursComponent } from './pages/internship-hours/internship-ho
 import { DocumentUploadComponent } from './pages/document-upload/document-upload.component';
 import { DocumentManagementComponent } from './admin-panel/document-management/document-management.component';
 import { StatisticsComponent } from './pages/statistics/statistics.component';
+import { AdminStatisticsComponent } from './admin-panel/admin-statistics/admin-statistics.component';
 
 export const routes: Routes = [
     {
@@ -41,6 +42,9 @@ export const routes: Routes = [
     },
     {
         path: 'manage-documents', component: DocumentManagementComponent, canActivate: [() => inject(AuthService).adminAccess()]
+    },
+    {
+        path: 'admin-statistics', component: AdminStatisticsComponent, canActivate: [() => inject(AuthService).adminAccess()]
     },
     {
         path: '',

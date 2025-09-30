@@ -471,6 +471,9 @@ export const en: NestedI18n = {
                 },
                 documents: {
                     text: "Documents"
+                },
+                statistics: {
+                    text: "System Statistics"
                 }
             },
             descriptions: {
@@ -485,6 +488,135 @@ export const en: NestedI18n = {
                 },
                 document_desc: {
                     text: "Manage uploaded documents"
+                },
+                statistics_desc: {
+                    text: "View system statistics and reports"
+                }
+            }
+        },
+        admin_statistics: {
+            title: {
+                text: "System Statistics"
+            },
+            navigation: {
+                back_to_admin: {
+                    text: "Back to Admin"
+                },
+                export_csv: {
+                    text: "Export CSV"
+                },
+                refresh: {
+                    text: "Refresh"
+                }
+            },
+            loading: {
+                text: "Loading statistics..."
+            },
+            users: {
+                title: {
+                    text: "Users Overview"
+                },
+                total: {
+                    text: "Total Users"
+                },
+                students: {
+                    text: "Students"
+                },
+                mentors: {
+                    text: "Mentors"
+                },
+                admins: {
+                    text: "Admins"
+                }
+            },
+            internships: {
+                title: {
+                    text: "Internships Overview"
+                },
+                total: {
+                    text: "Total Internships"
+                },
+                approved: {
+                    text: "Approved"
+                },
+                pending: {
+                    text: "Pending"
+                },
+                completed: {
+                    text: "Completed"
+                }
+            },
+            hours: {
+                title: {
+                    text: "Hours Overview"
+                },
+                total: {
+                    text: "Total Hours"
+                },
+                approved: {
+                    text: "Approved"
+                },
+                pending: {
+                    text: "Pending"
+                },
+                rejected: {
+                    text: "Rejected"
+                }
+            },
+            companies: {
+                title: {
+                    text: "Companies"
+                },
+                total: {
+                    text: "Total"
+                },
+                active: {
+                    text: "Active"
+                }
+            },
+            documents: {
+                title: {
+                    text: "Documents"
+                },
+                total: {
+                    text: "Total"
+                },
+                approved: {
+                    text: "Approved"
+                },
+                pending: {
+                    text: "Pending"
+                },
+                rejected: {
+                    text: "Rejected"
+                }
+            },
+            summary: {
+                title: {
+                    text: "System Summary"
+                },
+                completion_rate: {
+                    text: "Completion Rate"
+                },
+                hours_approval_rate: {
+                    text: "Hours Approval Rate"
+                },
+                avg_hours_per_student: {
+                    text: "Avg Hours per Student"
+                },
+                active_companies_rate: {
+                    text: "Active Companies"
+                }
+            },
+            messages: {
+                statistics_loaded: {
+                    text: "Statistics loaded"
+                },
+                statistics_exported: {
+                    text: "Statistics exported"
+                },
+                loading_error: {
+                    text: "Error loading statistics"
                 }
             }
         },
@@ -655,6 +787,9 @@ export const en: NestedI18n = {
             },
             reject: {
                 text: "Reject" 
+            },
+            exit: {
+                text: "Exit"
             },
             document_upload: {
                 upload_section: {

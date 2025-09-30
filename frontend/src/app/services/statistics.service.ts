@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { Statistics, ProgressStatistics, DashboardProgress } from '../../types';
+import { Statistics, ProgressStatistics, DashboardProgress, AdminStatistics } from '../../types';
 
 @Injectable({
   providedIn: 'root'
@@ -23,4 +23,6 @@ export class StatisticsService {
   getProgressStatistics() { return this.http.get<ProgressStatistics>(`/api/statistics/progress`) };
 
   getDashboardProgress() { return this.http.get<DashboardProgress>(`/api/statistics/dashboard-progress`) };
+
+  getAdminStatistics() { return this.http.get<AdminStatistics>(`/api/statistics/admin`) };
 }

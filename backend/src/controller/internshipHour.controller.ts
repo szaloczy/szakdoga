@@ -156,7 +156,6 @@ export class InternshipHourController extends Controller {
     try {
       const user = (req as any).user;
       const hourId = Number(req.params["id"]);
-      const { reason } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
@@ -166,7 +165,7 @@ export class InternshipHourController extends Controller {
         return this.handleError(res, null, 400, "Invalid hour ID");
       }
 
-      const rejectedHour = await this.service.rejectHour(hourId, user.id, reason);
+      const rejectedHour = await this.service.rejectHour(hourId, user.id);
       res.json(rejectedHour);
     } catch (error) {
       this.handleError(res, error);
@@ -336,8 +335,7 @@ export class InternshipHourController extends Controller {
           status: hour.status,
           submittedAt: hour.submittedAt,
           reviewedAt: hour.reviewedAt,
-          reviewedBy: hour.approvedBy ? `${hour.approvedBy.firstname} ${hour.approvedBy.lastname}` : undefined,
-          rejectionReason: hour.rejectionReason
+          reviewedBy: hour.approvedBy ? `${hour.approvedBy.firstname} ${hour.approvedBy.lastname}` : undefined
         }))
       };
       

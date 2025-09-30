@@ -25,9 +25,6 @@ export class HourDetailsModalComponent {
   @Output() close = new EventEmitter<void>();
   @Output() rejectHour = new EventEmitter<{hourId: number, studentName: string, reason: string}>();
 
-  hourToReject: number|null = null;
-  rejectReason: string = '';
-
   get remainingHours(): number {
     return Math.max(0, 180 - this.totalHours);
   }
@@ -36,17 +33,8 @@ export class HourDetailsModalComponent {
     this.close.emit();
   }
 
-  handleRejectHour(hourId: number) {
-    this.hourToReject = hourId;
-    this.rejectReason = '';
-  }
-
-  emitRejectHour() {
-    if (this.hourToReject && this.rejectReason) {
-      this.rejectHour.emit({ hourId: this.hourToReject, studentName: `${this.student.firstname} ${this.student.lastname}`, reason: this.rejectReason });
-      this.hourToReject = null;
-      this.rejectReason = '';
-    }
+  emitRejectHour(hourId: number) {
+    this.rejectHour.emit({ hourId, studentName: `${this.student.firstname} ${this.student.lastname}`, reason: '' });
   }
 }
 

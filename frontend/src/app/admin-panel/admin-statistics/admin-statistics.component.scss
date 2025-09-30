@@ -1,0 +1,82 @@
+// Loading spinner animation
+.spin {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+// Card hover effects
+.card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+}
+
+// Statistics page specific styles
+.container {
+  max-width: 1200px;
+}
+
+// Navbar styling
+.navbar {
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid #dee2e6;
+  
+  .navbar-brand {
+    color: #6c757d !important;
+    font-weight: 500;
+    
+    i {
+      color: #6c757d;
+    }
+  }
+  
+  .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    
+    &:hover {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+  }
+}
+
+// Statistics cards styling
+h4 {
+  font-weight: 600;
+  margin-bottom: 1rem;
+  
+  i {
+    opacity: 0.8;
+  }
+}
+
+// Summary section
+.bg-light {
+  background-color: #f8f9fa !important;
+  
+  .border-end {
+    border-right: 1px solid #dee2e6 !important;
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .border-end {
+    border-right: none !important;
+    border-bottom: 1px solid #dee2e6 !important;
+    margin-bottom: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .card h5, .card h3 {
+    font-size: 1rem;
+  }
+}

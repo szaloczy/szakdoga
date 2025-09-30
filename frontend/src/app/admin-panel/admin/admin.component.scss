@@ -1,3 +1,28 @@
+// Admin Navigation Bar Styles
+.navbar {
+  background-color: #f8f9fa !important;
+  border-bottom: 1px solid #dee2e6;
+  
+  .navbar-brand {
+    color: #6c757d !important;
+    font-weight: 500;
+    
+    i {
+      color: #6c757d;
+    }
+  }
+  
+  .btn-outline-secondary {
+    border-color: #6c757d;
+    color: #6c757d;
+    
+    &:hover {
+      background-color: #6c757d;
+      border-color: #6c757d;
+    }
+  }
+}
+
 .admin-panel {
   h2 {
     font-weight: 600;

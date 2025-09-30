@@ -1,8 +1,17 @@
 import { AppDataSource } from "../data-source";
 import { InternshipHour } from "../entity/InternshipHour";
+import { User } from "../entity/User";
+import { Internship } from "../entity/Internship";
+import { Company } from "../entity/Company";
+import { Document } from "../entity/Document";
+import { UserRole } from "../types";
 
 export class StatisticsService {
   private hourRepo = AppDataSource.getRepository(InternshipHour);
+  private userRepo = AppDataSource.getRepository(User);
+  private internshipRepo = AppDataSource.getRepository(Internship);
+  private companyRepo = AppDataSource.getRepository(Company);
+  private documentRepo = AppDataSource.getRepository(Document);
 
   async getHoursPerMonth(userId: number) {
     const hours = await this.hourRepo.find({ 
@@ -223,5 +232,81 @@ export class StatisticsService {
     const start = new Date(`2000-01-01T${hour.startTime}`);
     const end = new Date(`2000-01-01T${hour.endTime}`);
     return (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+  }
+
+  // Admin statisztikák
+  async getAdminStatistics() {
+    // Users statisztikák
+    const totalUsers = await this.userRepo.count();
+    const students = await this.userRepo.count({ where: { role: UserRole.STUDENT } });
+    const mentors = await this.userRepo.count({ where: { role: UserRole.MENTOR } });
+    const admins = await this.userRepo.count({ where: { role: UserRole.ADMIN } });
+
+    // Internships statisztikák
+    const totalInternships = await this.internshipRepo.count();
+    const approvedInternships = await this.internshipRepo.count({ where: { isApproved: true } });
+    const pendingInternships = totalInternships - approvedInternships;
+    
+    // Befejezett gyakorlatok (ahol a végdátum már eltelt)
+    const currentDate = new Date();
+    const completedInternships = await this.internshipRepo
+      .createQueryBuilder("internship")
+      .where("internship.endDate < :currentDate", { currentDate })
+      .andWhere("internship.isApproved = true")
+      .getCount();
+
+    // Hours statisztikák
+    const allHours = await this.hourRepo.find();
+    const totalHours = allHours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+    
+    const approvedHours = await this.hourRepo.find({ where: { status: "approved" } });
+    const approvedHoursTotal = approvedHours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+    
+    const pendingHours = await this.hourRepo.find({ where: { status: "pending" } });
+    const pendingHoursTotal = pendingHours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+    
+    const rejectedHours = await this.hourRepo.find({ where: { status: "rejected" } });
+    const rejectedHoursTotal = rejectedHours.reduce((sum, hour) => sum + this.getHourDuration(hour), 0);
+
+    // Companies statisztikák
+    const totalCompanies = await this.companyRepo.count();
+    const activeCompanies = await this.companyRepo.count({ where: { active: true } });
+
+    // Documents statisztikák
+    const totalDocuments = await this.documentRepo.count();
+    const approvedDocuments = await this.documentRepo.count({ where: { status: "approved" } });
+    const pendingDocuments = await this.documentRepo.count({ where: { status: "pending" } });
+    const rejectedDocuments = await this.documentRepo.count({ where: { status: "rejected" } });
+
+    return {
+      users: {
+        total: totalUsers,
+        students: students,
+        mentors: mentors,
+        admins: admins
+      },
+      internships: {
+        total: totalInternships,
+        approved: approvedInternships,
+        pending: pendingInternships,
+        completed: completedInternships
+      },
+      hours: {
+        total: Math.round(totalHours),
+        approved: Math.round(approvedHoursTotal),
+        pending: Math.round(pendingHoursTotal),
+        rejected: Math.round(rejectedHoursTotal)
+      },
+      companies: {
+        total: totalCompanies,
+        active: activeCompanies
+      },
+      documents: {
+        total: totalDocuments,
+        approved: approvedDocuments,
+        pending: pendingDocuments,
+        rejected: rejectedDocuments
+      }
+    };
   }
 }

@@ -469,6 +469,9 @@ export const hu: NestedI18n = {
                 },
                 documents: {
                     text: "Dokumentumok"
+                },
+                statistics: {
+                    text: "Rendszer Statisztikák"
                 }
             },
             descriptions: {
@@ -483,6 +486,135 @@ export const hu: NestedI18n = {
                 },
                 document_desc: {
                     text: "Feltöltött dokumentumok kezelése"
+                },
+                statistics_desc: {
+                    text: "Rendszer statisztikák és jelentések megtekintése"
+                }
+            }
+        },
+        admin_statistics: {
+            title: {
+                text: "Rendszer Statisztikák"
+            },
+            navigation: {
+                back_to_admin: {
+                    text: "Vissza az Adminhoz"
+                },
+                export_csv: {
+                    text: "CSV Exportálás"
+                },
+                refresh: {
+                    text: "Frissítés"
+                }
+            },
+            loading: {
+                text: "Statisztikák betöltése..."
+            },
+            users: {
+                title: {
+                    text: "Felhasználók Áttekintése"
+                },
+                total: {
+                    text: "Összes Felhasználó"
+                },
+                students: {
+                    text: "Hallgatók"
+                },
+                mentors: {
+                    text: "Mentorok"
+                },
+                admins: {
+                    text: "Adminisztrátorok"
+                }
+            },
+            internships: {
+                title: {
+                    text: "Gyakorlatok Áttekintése"
+                },
+                total: {
+                    text: "Összes Gyakorlat"
+                },
+                approved: {
+                    text: "Jóváhagyott"
+                },
+                pending: {
+                    text: "Függőben"
+                },
+                completed: {
+                    text: "Befejezett"
+                }
+            },
+            hours: {
+                title: {
+                    text: "Órák Áttekintése"
+                },
+                total: {
+                    text: "Összes Óra"
+                },
+                approved: {
+                    text: "Jóváhagyott"
+                },
+                pending: {
+                    text: "Függőben"
+                },
+                rejected: {
+                    text: "Elutasított"
+                }
+            },
+            companies: {
+                title: {
+                    text: "Cégek"
+                },
+                total: {
+                    text: "Összes"
+                },
+                active: {
+                    text: "Aktív"
+                }
+            },
+            documents: {
+                title: {
+                    text: "Dokumentumok"
+                },
+                total: {
+                    text: "Összes"
+                },
+                approved: {
+                    text: "Jóváhagyott"
+                },
+                pending: {
+                    text: "Függőben"
+                },
+                rejected: {
+                    text: "Elutasított"
+                }
+            },
+            summary: {
+                title: {
+                    text: "Rendszer Összefoglaló"
+                },
+                completion_rate: {
+                    text: "Befejezési Arány"
+                },
+                hours_approval_rate: {
+                    text: "Órák Jóváhagyási Aránya"
+                },
+                avg_hours_per_student: {
+                    text: "Átlag Óra/Hallgató"
+                },
+                active_companies_rate: {
+                    text: "Aktív Cégek"
+                }
+            },
+            messages: {
+                statistics_loaded: {
+                    text: "Statisztikák betöltve"
+                },
+                statistics_exported: {
+                    text: "Statisztikák exportálva"
+                },
+                loading_error: {
+                    text: "Hiba a statisztikák betöltésekor"
                 }
             }
         },
@@ -637,6 +769,9 @@ export const hu: NestedI18n = {
             },
             reject: {
                 text: "Elutasítás"
+            },
+            exit: {
+                text: "Kilépés"
             },
             document_upload: {
                 upload_section: {

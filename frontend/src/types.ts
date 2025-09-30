@@ -243,3 +243,34 @@ export enum UserRole {
     ADMIN = "admin",
     MENTOR = "mentor",
 }
+
+export interface AdminStatistics {
+    users: {
+        total: number;
+        students: number;
+        mentors: number;
+        admins: number;
+    };
+    internships: {
+        total: number;
+        approved: number;
+        pending: number;
+        completed: number;
+    };
+    hours: {
+        total: number;
+        approved: number;
+        pending: number;
+        rejected: number;
+    };
+    companies: {
+        total: number;
+        active: number;
+    };
+    documents: {
+        total: number;
+        approved: number;
+        pending: number;
+        rejected: number;
+    };
+}

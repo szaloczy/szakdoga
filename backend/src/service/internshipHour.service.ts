@@ -251,7 +251,7 @@ export class InternshipHourService {
     return await this.hourRepo.save(hour);
   }
 
-   async rejectHour(hourId: number, mentorUserId: number, reason?: string): Promise<InternshipHour> {
+  async rejectHour(hourId: number, mentorUserId: number): Promise<InternshipHour> {
     const hour = await this.hourRepo.findOne({
       where: { id: hourId },
       relations: ["internship", "internship.mentor", "internship.mentor.user"],
@@ -280,7 +280,6 @@ export class InternshipHourService {
 
     hour.status = "rejected";
     hour.approvedBy = mentor;
-    if (reason) hour.rejectionReason = reason;
 
     return await this.hourRepo.save(hour);
   }
@@ -591,7 +590,6 @@ export class InternshipHourService {
                               new Date(`2000-01-01 ${hour.startTime}`).getTime()) / (1000 * 60 * 60)) * 100) / 100,
         submittedAt: hour.createdAt.toISOString(),
         reviewedAt: hour.status !== 'pending' && hour.updatedAt ? hour.updatedAt.toISOString() : undefined,
-        rejectionReason: hour.rejectionReason,
         approvedBy: hour.approvedBy ? {
           id: hour.approvedBy.id,
           firstname: hour.approvedBy.user?.firstname,

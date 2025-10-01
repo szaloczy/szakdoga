@@ -1,0 +1,57 @@
+<div class="profile-picture-container">
+  <div class="position-relative d-inline-block">
+
+    <div [class]="'profile-picture ' + sizeClass">
+      <img 
+        *ngIf="profilePictureUrl" 
+        [src]="profilePictureUrl" 
+        [alt]="'Profile picture'"
+        class="profile-picture-img"
+        onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
+      />
+      <div 
+        class="profile-picture-placeholder"
+        [style.display]="profilePictureUrl ? 'none' : 'flex'"
+      >
+        <i class="bi bi-person-circle"></i>
+      </div>
+      
+      <div *ngIf="isUploading" class="profile-picture-loading">
+        <div class="spinner-border spinner-border-sm text-light" role="status">
+          <span class="visually-hidden">{{ 'profile_picture.uploading' | translate }}</span>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="editable" class="profile-picture-controls">
+      <button 
+        type="button" 
+        class="btn btn-primary btn-sm profile-picture-btn"
+        (click)="triggerFileInput()"
+        [disabled]="isUploading"
+        [title]="currentPicture ? ('profile_picture.change' | translate) : ('profile_picture.upload' | translate)"
+      >
+        <i class="bi bi-camera-fill"></i>
+      </button>
+      
+      <button 
+        *ngIf="currentPicture" 
+        type="button" 
+        class="btn btn-danger btn-sm profile-picture-btn ms-1"
+        (click)="deleteProfilePicture()"
+        [disabled]="isUploading"
+        [title]="'profile_picture.delete' | translate"
+      >
+        <i class="bi bi-trash-fill"></i>
+      </button>
+    </div>
+  </div>
+
+  <input 
+    type="file" 
+    id="profile-picture-input"
+    accept="image/jpeg,image/png,image/gif,image/webp"
+    (change)="onFileSelected($event)"
+    style="display: none;"
+  />
+</div>

@@ -618,6 +618,43 @@ export const hu: NestedI18n = {
                 }
             }
         },
+        profile_picture: {
+            upload: {
+                text: "Profilkép Feltöltése"
+            },
+            change: {
+                text: "Kép Módosítása"
+            },
+            delete: {
+                text: "Kép Törlése"
+            },
+            select_file: {
+                text: "Kép Fájl Kiválasztása"
+            },
+            uploading: {
+                text: "Feltöltés..."
+            },
+            messages: {
+                upload_success: {
+                    text: "Profilkép sikeresen feltöltve"
+                },
+                upload_error: {
+                    text: "Hiba a profilkép feltöltésekor"
+                },
+                delete_success: {
+                    text: "Profilkép sikeresen törölve"
+                },
+                delete_error: {
+                    text: "Hiba a profilkép törlésekor"
+                },
+                file_too_large: {
+                    text: "A fájl mérete nem lehet nagyobb 5MB-nál"
+                },
+                invalid_format: {
+                    text: "Kérjük, válasszon érvényes képfájlt (JPEG, PNG, GIF, WebP)"
+                }
+            }
+        },
         user_management: {
             title: {
                 text: "Felhasználók kezelése"

@@ -90,6 +90,7 @@ export interface StudentWithHoursDto {
   firstname: string;
   lastname: string;
   email: string;
+  profilePicture?: string;
   major?: string | null;
   university?: string | null;
   hours: number;                    // Jóváhagyott órák összesen
@@ -170,6 +171,7 @@ export interface GetProfileResponseDTO {
   lastname: string;
   role: UserRole;
   active: boolean;
+  profilePicture?: string;
   student?: StudentDTO;
   mentor?: MentorDTO;
 }

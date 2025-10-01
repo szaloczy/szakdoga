@@ -8,6 +8,8 @@ import bcrypt from "bcrypt";
 import { GetProfileResponseDTO } from "../types";
 import { Mentor } from "../entity/Mentor";
 import { QueryFailedError } from "typeorm";
+import fs from "fs";
+import path from "path";
 
 export class UserController extends Controller {
 
@@ -201,6 +203,7 @@ export class UserController extends Controller {
       lastname: fullUser.lastname,
       role: fullUser.role,
       active: fullUser.active,
+      profilePicture: fullUser.profilePicture,
       ...(fullUser.student && { student: fullUser.student }),
       ...(fullUser.mentor && { mentor: fullUser.mentor })
     };
@@ -248,5 +251,106 @@ export class UserController extends Controller {
       this.handleError(res, error);
     }
   };
+
+  uploadProfilePicture = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (!req.file) {
+        return this.handleError(res, null, 400, "No file uploaded");
+      }
+
+      const currentUser = await this.repository.findOne({
+        where: { id: user.id }
+      });
+
+      if (!currentUser) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      // Régi profilkép törlése ha létezik
+      if (currentUser.profilePicture) {
+        const oldFilePath = path.resolve(__dirname, "../../uploads/profile-pictures", currentUser.profilePicture);
+        if (fs.existsSync(oldFilePath)) {
+          fs.unlinkSync(oldFilePath);
+        }
+      }
+
+      // Új profilkép mentése
+      currentUser.profilePicture = req.file.filename;
+      await this.repository.save(currentUser);
+
+      res.json({
+        message: "Profile picture uploaded successfully",
+        profilePicture: req.file.filename,
+        profilePictureUrl: `/user/profile-picture/${req.file.filename}`
+      });
+    } catch (error) {
+      // Ha hiba történik, töröljük a feltöltött fájlt
+      if (req.file) {
+        const filePath = path.resolve(__dirname, "../../uploads/profile-pictures", req.file.filename);
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath);
+        }
+      }
+      this.handleError(res, error);
+    }
+  };
+
+  deleteProfilePicture = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      const currentUser = await this.repository.findOne({
+        where: { id: user.id }
+      });
+
+      if (!currentUser) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      if (!currentUser.profilePicture) {
+        return this.handleError(res, null, 404, "No profile picture found");
+      }
+
+      // Fájl törlése a lemezről
+      const filePath = path.resolve(__dirname, "../../uploads/profile-pictures", currentUser.profilePicture);
+      if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
+      }
+
+      // Adatbázisban való törlés
+      currentUser.profilePicture = null;
+      await this.repository.save(currentUser);
+
+      res.json({ message: "Profile picture deleted successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  getProfilePicture = async (req, res) => {
+    try {
+      const filename = req.params.filename;
+      const filePath = path.resolve(__dirname, "../../uploads/profile-pictures", filename);
+
+      if (!fs.existsSync(filePath)) {
+        return this.handleError(res, null, 404, "Profile picture not found");
+      }
+
+      res.sendFile(filePath);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
   repository = AppDataSource.getRepository(User);
 }

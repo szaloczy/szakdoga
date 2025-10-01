@@ -1,46 +1,80 @@
-import { Component, inject, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, OnInit, OnDestroy } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { I18nService } from '../../shared/i18n.pipe';
 import { UserService } from '../../services/user.service';
-import { UserDTO, UserRole } from '../../../types';
+import { ProfilePictureService } from '../../services/profile-picture.service';
+import { ProfilePictureComponent } from '../profile-picture/profile-picture.component';
+import { UserDTO, UserRole, ProfileDTO } from '../../../types';
+import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-sidebar',
   imports: [
     RouterLink,
-    I18nService
+    I18nService,
+    ProfilePictureComponent,
+    CommonModule
   ],
   templateUrl: './sidebar.component.html',
   styleUrl: './sidebar.component.scss'
 })
-export class SidebarComponent implements OnInit {
+export class SidebarComponent implements OnInit, OnDestroy {
   @Input() isCollapsed = false;
 
   userService = inject(UserService);
   authService = inject(AuthService);
   toastService = inject(ToastService);
   router = inject(Router);
+  profilePictureService = inject(ProfilePictureService);
 
-  user: UserDTO = {
+  user: ProfileDTO = {
     id: 0,
     firstname: '',
     lastname: '',
     email: '',
-    active: true,
     role: UserRole.STUDENT,
+    profilePicture: undefined,
+    student: undefined
   }
 
+  private profilePictureSubscription?: Subscription;
+
   ngOnInit(): void {
-    this.userService.getOne(this.authService.getUserId()).subscribe({
+    this.loadUserProfile();
+    
+    // Subscribe to profile picture changes
+    this.profilePictureSubscription = this.profilePictureService.profilePicture$.subscribe({
+      next: (profilePicture) => {
+        if (profilePicture !== undefined) {
+          this.user.profilePicture = profilePicture;
+        }
+      }
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.profilePictureSubscription?.unsubscribe();
+  }
+
+  loadUserProfile(): void {
+    this.userService.getProfile(this.authService.getUserId()).subscribe({
       next: (userData) => {
         this.user = userData;
+        // Initialize the profile picture service with current value
+        this.profilePictureService.updateProfilePicture(userData.profilePicture);
       },
       error: (err) => {
         console.error(err);
       }
     });
+  }
+
+  onProfilePictureChanged(newPicture: string | undefined): void {
+    this.user.profilePicture = newPicture;
+    this.profilePictureService.updateProfilePicture(newPicture);
   }
 
   logout() {

@@ -31,37 +31,24 @@
       background: rgba(255,255,255,0.12);
     }
   }
-}
 
-.navbar input {
-  margin-left: auto;
-  margin-right: 0.5rem;
-  padding: 0.4rem 0.8rem;
-  border-radius: 8px;
-  border: none;
-  font-size: 1rem;
-}
-
-.profile-icon {
-  font-size: 1.5rem;
-  margin-left: 1rem;
-  border-radius: 50%;
-  background: rgba(255,255,255,0.12);
-  padding: 6px;
-  transition: background 0.2s;
-  &:hover {
-    background: #e3f2fd;
-    color: #1976d2;
+  input {
+    margin-left: auto;
+    margin-right: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
   }
-}
 
-.navbar input {
-  margin-left: auto;
-  margin-right: 0.5rem;
-  padding: 0.25rem;
-}
+  .profile-section {
+    display: flex;
+    align-items: center;
+    margin-left: 1rem;
+  }
 
-.profile-icon {
-  font-size: 1.5rem;
-  margin-left: 1rem;
+  .right-section {
+    display: flex;
+    align-items: center;
+  }
 }

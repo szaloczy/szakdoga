@@ -9,10 +9,12 @@ import { MentorService } from '../../services/mentor.service';
 import { StudentService } from '../../services/student.service';
 import { CommonModule } from '@angular/common';
 import { ToastService } from '../../services/toast.service';
+import { ProfilePictureComponent } from '../../components/profile-picture/profile-picture.component';
+import { ProfilePictureService } from '../../services/profile-picture.service';
 
 @Component({
   selector: 'app-student-profile',
-  imports: [ReactiveFormsModule, I18nService, CommonModule],
+  imports: [ReactiveFormsModule, I18nService, CommonModule, ProfilePictureComponent],
   templateUrl: './student-profile.component.html',
   styleUrl: './student-profile.component.scss'
 })
@@ -24,6 +26,7 @@ export class StudentProfileComponent implements OnInit{
   internshipService = inject(InternshipService);
   studentService = inject(StudentService);
   toastService = inject(ToastService);
+  profilePictureService = inject(ProfilePictureService);
   
   fb = inject(FormBuilder);
   profileForm!: FormGroup;
@@ -43,6 +46,7 @@ export class StudentProfileComponent implements OnInit{
     firstname: '',
     lastname: '',
     role: UserRole.STUDENT,
+    profilePicture: undefined,
     student: undefined
   }
 
@@ -71,7 +75,13 @@ export class StudentProfileComponent implements OnInit{
   }
 
   internship: ProfileInternshipDTO | null = null;
-selectedFile: any;
+
+  onProfilePictureChanged(newPicture: string | undefined): void {
+    this.profile.profilePicture = newPicture;
+    this.profilePictureService.updateProfilePicture(newPicture);
+    // Optionally reload profile data to ensure consistency
+    this.loadStudentData();
+  }
 
   ngOnInit(): void {
     const currentUserRole = this.authService.getRole();
@@ -271,31 +281,6 @@ selectedFile: any;
 
   onSubmitCompanyForm() {
     console.log('Company form submission not implemented yet');
-  }
-
-  onFileSelected(event: any) {
-    const file = event.target.files[0];
-    if (file) {
-      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
-      if (!allowedTypes.includes(file.type)) {
-        this.toastService.showError('Please select a valid image file (JPEG, PNG, or GIF)');
-        return;
-      }
-    
-      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
-      if (file.size > maxSize) {
-        this.toastService.showError('File size must be less than 5MB');
-        return;
-      }
-      
-      this.toastService.showSuccess('File selected successfully! Upload functionality to be implemented.');
-      
-      const reader = new FileReader();
-      reader.onload = (e: any) => {
-        console.log('File loaded:', e.target.result);
-      };
-      reader.readAsDataURL(file);
-    }
   }
 
   getCurrentUserInfo() {

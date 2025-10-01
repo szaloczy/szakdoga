@@ -4,14 +4,15 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { I18nService } from '../../shared/i18n.pipe';
 import { HourDetailsModalComponent } from '../../components/hour-details-modal/hour-details-modal.component';
+import { ProfilePictureComponent } from '../../components/profile-picture/profile-picture.component';
 import { MentorService } from '../../services/mentor.service';
+import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { ToastService } from '../../services/toast.service';
 import { InternshipHourService } from '../../services/internship-hour.service';
-import { InternshipWithHours, StudentDTO } from '../../../types';
+import { InternshipWithHours, StudentDTO, extendedStudentDTO } from '../../../types';
 import Swal from 'sweetalert2';
 
-// Interface for the backend student response
 interface StudentResponseDTO {
   id: number;
   firstname: string;
@@ -19,10 +20,11 @@ interface StudentResponseDTO {
   email: string;
   major: string | null;
   university: string | null;
-  hours: number; // Total approved hours
-  pendingHours?: number; // Pending hours awaiting approval
-  rejectedHours?: number; // Rejected hours
-  totalSubmittedHours?: number; // Total hours ever submitted
+  profilePicture?: string;
+  hours: number; 
+  pendingHours?: number;
+  rejectedHours?: number; 
+  totalSubmittedHours?: number;
 }
 
 @Component({
@@ -31,7 +33,8 @@ interface StudentResponseDTO {
     CommonModule,
     FormsModule,
     I18nService,
-    HourDetailsModalComponent
+    HourDetailsModalComponent,
+    ProfilePictureComponent
   ],
   templateUrl: './students.component.html',
   styleUrl: './students.component.scss'
@@ -45,7 +48,7 @@ export class StudentsComponent implements OnInit {
   private router = inject(Router);
   private internshipHourService = inject(InternshipHourService);
 
-  students: StudentResponseDTO[] = [];
+  students: extendedStudentDTO[] = [];
   isLoading = false;
   searchTerm = '';
   selectedFilter = 'all'; 
@@ -54,7 +57,7 @@ export class StudentsComponent implements OnInit {
   private REFRESH_AFTER_APPROVAL = false;
 
   showHourDetailsModal: boolean = false;
-  modalStudent: StudentResponseDTO | null = null;
+  modalStudent: extendedStudentDTO | null = null;
   modalTotalHours: number = 0;
   modalApprovedHours: number = 0;
   modalPendingHours: number = 0;
@@ -77,11 +80,11 @@ export class StudentsComponent implements OnInit {
         console.log('Backend response:', data);
         
         if (Array.isArray(data)) {
-          this.students = data as StudentResponseDTO[];
+          this.students = data as extendedStudentDTO[];
         } else if (data && Array.isArray(data.students)) {
-          this.students = data.students as StudentResponseDTO[];
+          this.students = data.students as extendedStudentDTO[];
         } else if (data && Array.isArray(data.data)) {
-          this.students = data.data as StudentResponseDTO[];
+          this.students = data.data as extendedStudentDTO[];
         } else {
           console.error('Unexpected response format:', data);
           this.students = [];
@@ -117,7 +120,7 @@ export class StudentsComponent implements OnInit {
     ).length;
   }
 
-  get filteredStudents(): StudentResponseDTO[] {
+  get filteredStudents(): extendedStudentDTO[] {
     let filtered = this.students;
 
     // Filter by status
@@ -139,9 +142,7 @@ export class StudentsComponent implements OnInit {
     return filtered;
   }
 
-  getStudentStatus(student: StudentResponseDTO): string {
-    // For now, we'll use the hours field from the backend
-    // Since we don't have detailed hour records, we'll use simplified logic
+  getStudentStatus(student: extendedStudentDTO): string {
     if (student.hours >= 180) {
       return 'completed';
     } else if (student.hours > 0) {
@@ -373,7 +374,7 @@ export class StudentsComponent implements OnInit {
     });
   }
 
-  viewHoursDetails(student: StudentResponseDTO): void {
+  viewHoursDetails(student: extendedStudentDTO): void {
     this.internshipHourService.getStudentHourDetails(student.id).subscribe({
       next: (response: any) => {
         const data = response.data || response;

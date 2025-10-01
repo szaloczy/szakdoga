@@ -7,7 +7,7 @@ import { MentorController } from "./controller/mentor.controller";
 import { InternshipHourController } from "./controller/internshipHour.controller";
 import { authMiddleware } from "./middleware/auth.middleware";
 import { DocumentController } from "./controller/document.controller";
-import { documentUpload } from "./middleware/multer.middleware";
+import { documentUpload, profilePictureUpload } from "./middleware/multer.middleware";
 import { StatisticsController } from "./controller/statistics.controller";
 
 export const router = express.Router();
@@ -23,6 +23,11 @@ router.post("/user/forgot-password", userController.forgotPassword);
 router.post("/user/reset-password", userController.resetPassword); 
 router.put("/user/:id", authMiddleware, userController.update); 
 router.delete("/user/:id", authMiddleware, userController.delete); 
+
+// Profilkép végpontok
+router.post("/user/profile-picture", authMiddleware, profilePictureUpload.single("file"), userController.uploadProfilePicture);
+router.delete("/user/profile-picture", authMiddleware, userController.deleteProfilePicture);
+router.get("/user/profile-picture/:filename", userController.getProfilePicture);
 
 router.get("/profile/:id", userController.getProfile);
 

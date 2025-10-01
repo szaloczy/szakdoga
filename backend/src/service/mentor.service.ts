@@ -194,19 +194,13 @@ export class MentorService {
   }
 
   async getStudentsWithHoursByMentor(userId: number): Promise<StudentWithHoursDto[]> {
-    console.log(`Looking for mentor with userId: ${userId}`);
     
-    // Először lekérjük a mentort a userId alapján
     const mentor = await this.getMentorByUserId(userId);
     
     if (!mentor) {
-      console.log(`No mentor found for userId: ${userId}`);
       throw new Error("Mentor not found for this user");
     }
 
-    console.log(`Found mentor: ${mentor.id} for userId: ${userId}`);
-
-    // Lekérjük a mentor diákjait TypeORM repository-val
     const internships = await AppDataSource.getRepository("Internship").find({
       where: { 
         mentor: { id: mentor.id },
@@ -251,12 +245,13 @@ export class MentorService {
         firstname: internship.student.user.firstname,
         lastname: internship.student.user.lastname,
         email: internship.student.user.email,
+        profilePicture: internship.student.user.profilePicture,
         major: internship.student.major,
         university: internship.student.university,
-        hours: Math.round(approvedHours * 100) / 100,                    // Jóváhagyott órák
-        pendingHours: Math.round(pendingHours * 100) / 100,              // Pending órák
-        rejectedHours: Math.round(rejectedHours * 100) / 100,            // Elutasított órák
-        totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100 // Összes beküldött
+        hours: Math.round(approvedHours * 100) / 100,                    
+        pendingHours: Math.round(pendingHours * 100) / 100,              
+        rejectedHours: Math.round(rejectedHours * 100) / 100,            
+        totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100
       });
     }
 

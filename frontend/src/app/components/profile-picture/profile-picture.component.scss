@@ -1,0 +1,122 @@
+.profile-picture-container {
+  display: inline-block;
+}
+
+.profile-picture {
+  position: relative;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 3px solid #fff;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+.profile-picture-small {
+  width: 40px;
+  height: 40px;
+}
+
+.profile-picture-medium {
+  width: 80px;
+  height: 80px;
+}
+
+.profile-picture-large {
+  width: 120px;
+  height: 120px;
+}
+
+.profile-picture-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.profile-picture-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #e9ecef;
+  color: #6c757d;
+}
+
+.profile-picture-small .profile-picture-placeholder i {
+  font-size: 24px;
+}
+
+.profile-picture-medium .profile-picture-placeholder i {
+  font-size: 48px;
+}
+
+.profile-picture-large .profile-picture-placeholder i {
+  font-size: 72px;
+}
+
+.profile-picture-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+
+.profile-picture-controls {
+  position: absolute;
+  bottom: -8px;
+  right: -8px;
+  display: flex;
+  gap: 4px;
+}
+
+.profile-picture-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  font-size: 14px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.profile-picture-small .profile-picture-controls {
+  bottom: -4px;
+  right: -4px;
+}
+
+.profile-picture-small .profile-picture-btn {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+}
+
+.profile-picture-large .profile-picture-controls {
+  bottom: -12px;
+  right: -12px;
+}
+
+.profile-picture-large .profile-picture-btn {
+  width: 36px;
+  height: 36px;
+  font-size: 16px;
+}
+
+/* Hover effects */
+.profile-picture-container:hover .profile-picture {
+  transform: scale(1.02);
+  transition: transform 0.2s ease;
+}
+
+.profile-picture-btn:hover {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}

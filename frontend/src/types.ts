@@ -30,6 +30,7 @@ export interface UserDTO {
     email: string;
     active: boolean;
     role: string;
+    profilePicture?: string;
 }
 
 export type UserResponseDto = {
@@ -40,6 +41,7 @@ export type UserResponseDto = {
   active: boolean;
   password: string;
   role: "admin" | "mentor" | "student";
+  profilePicture?: string;
   mentor?: MentorDTO | null;
   student?: StudentDTO | null;
 };
@@ -65,12 +67,14 @@ export interface extendedStudentDTO {
     id: number;
     firstname: string;
     lastname: string;
+    email: string;
     hours: number;
-    major: string;
+    major: string | null;
     pendingHours: number;
     rejectedHours: number;
     totalSubmittedHours: number;
-    university: string;
+    university: string | null;
+    profilePicture?: string;
 }
 
 export interface ProfileDTO {
@@ -79,6 +83,7 @@ export interface ProfileDTO {
     firstname: string;
     lastname: string;
     role: UserRole;
+    profilePicture?: string;
     student: StudentDTO | undefined;
 }
 

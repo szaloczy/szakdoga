@@ -5,7 +5,18 @@
   <i class="bi bi-list"></i>
 </span>
   <input type="text" placeholder="{{ 'navbar.search' | translate }}" />
-  <i class="fas fa-user-circle profile-icon"></i>
+  
+  <!-- Profile Picture -->
+  <div class="profile-section">
+    <app-profile-picture
+      *ngIf="currentUser"
+      [currentPicture]="currentUser.profilePicture"
+      [size]="'small'"
+      [editable]="false"
+      (pictureChanged)="onProfilePictureChanged($event)"
+    ></app-profile-picture>
+  </div>
+  
    <div class="right-section">
     <app-language-selector></app-language-selector>
   </div>

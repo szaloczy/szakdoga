@@ -25,6 +25,11 @@
     display: flex;
     align-items: center;
     padding: 0 1.5rem 1rem 1.5rem;
+    
+    app-profile-picture {
+      display: block;
+    }
+    
     .profile-pic {
       width: 48px;
       height: 48px;

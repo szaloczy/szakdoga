@@ -1,7 +1,12 @@
 <nav [class.collapsed]="isCollapsed" class="sidebar">
 
   <div class="profile-section">
-    <img src="/avatar.png" alt="Profile" class="profile-pic">
+    <app-profile-picture
+      [currentPicture]="user.profilePicture"
+      [size]="'medium'"
+      [editable]="false"
+      (pictureChanged)="onProfilePictureChanged($event)"
+    ></app-profile-picture>
     @if(!isCollapsed && authService.isLoggedIn()) {
       <div class="profile-info">
         <div class="username">{{ user.firstname }} {{ user.lastname }}</div>

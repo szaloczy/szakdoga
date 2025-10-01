@@ -122,7 +122,12 @@
           <div class="card student-card h-100">
             <div class="card-header d-flex justify-content-between align-items-center">
               <div class="d-flex align-items-center">
-                <img src="/avatar.png" alt="Student Avatar" class="student-avatar me-2">
+                <app-profile-picture
+                  [currentPicture]="student.profilePicture"
+                  [size]="'small'"
+                  [editable]="false"
+                  class="me-2"
+                ></app-profile-picture>
                 <div>
                   <h6 class="mb-0">
                     {{ student.firstname }} {{ student.lastname }}

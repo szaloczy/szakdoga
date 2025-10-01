@@ -21,7 +21,7 @@ export class MentorService {
 
   deactivate(id: number) { return this.http.delete<any>(`/api/mentor/${id}`)};
 
-  getStudents() { return this.http.get<extendedStudentDTO[]>(`/api/mentor/students`)};  // Returns StudentResponseDTO[]
+  getStudents() { return this.http.get<extendedStudentDTO[]>(`/api/mentor/students`)};
 
   getByCompany(companyId: number) { return this.http.get<MentorDTO[]>(`/api/mentor/company/${companyId}`)};
 

@@ -39,4 +39,18 @@ export class UserService {
   getProfile(id: number) { return this.http.get<ProfileDTO>(`/api/profile/${id}`)};
 
   updateUser(userId: number, userData: any) { return this.http.put<any>(`/api/user/${userId}`, userData);}
+
+  uploadProfilePicture(file: File): Observable<any> {
+    const formData = new FormData();
+    formData.append('file', file);
+    return this.http.post(`/api/user/profile-picture`, formData);
+  }
+
+  deleteProfilePicture(): Observable<any> {
+    return this.http.delete(`/api/user/profile-picture`);
+  }
+
+  getProfilePictureUrl(filename: string): string {
+    return `/api/user/profile-picture/${filename}`;
+  }
 }

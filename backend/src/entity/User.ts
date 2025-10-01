@@ -43,4 +43,7 @@ export class User {
 
   @Column({ type: "bigint", nullable: true })
   resetTokenExpires?: number;
+
+  @Column({ nullable: true })
+  profilePicture?: string;
 }

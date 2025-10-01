@@ -1,6 +1,7 @@
 import { MentorService } from "../service/mentor.service";
 import { createMentorDTO, GetProfileResponseDTO } from "../types";
 import { Controller } from "./base.controller";
+import { parse } from "json2csv";
 
 export class MentorController extends Controller {
   private service = new MentorService();
@@ -122,11 +123,9 @@ export class MentorController extends Controller {
         return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      console.log(`Getting students for mentor with userId: ${userId}`);
       const studentsWithHours = await this.service.getStudentsWithHoursByMentor(userId);
       res.json(studentsWithHours);
     } catch (error) {
-      console.log(`Error in getStudents: ${error.message}`);
       this.handleError(res, error);
     }
   };
@@ -172,6 +171,90 @@ export class MentorController extends Controller {
 
       await this.service.deactivateMentor(mentorId);
       res.json({ message: "Mentor deactivated successfully" });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  exportAllStudentsHours = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      const studentsWithHours = await this.service.getAllStudentsHoursForExport(user.id);
+
+      if (!studentsWithHours || studentsWithHours.length === 0) {
+        return res.status(404).json({ error: "No students or hours found" });
+      }
+
+      const fields = [
+        { label: "Hallgató neve", value: row => `${row.firstname} ${row.lastname}` },
+        { label: "Email", value: "email" },
+        { label: "Egyetem", value: "university" },
+        { label: "Szak", value: "major" },
+        { label: "Dátum", value: "date" },
+        { label: "Kezdés", value: "startTime" },
+        { label: "Végzés", value: "endTime" },
+        { label: "Leírás", value: "description" },
+        { label: "Órák száma", value: "duration" }
+      ];
+      const opts = { fields, delimiter: "," };
+      const csv = parse(studentsWithHours, opts);
+      
+      const csvWithBOM = '\uFEFF' + csv;
+
+      const fileName = `osszes_hallgato_orai_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      res.status(200).send(csvWithBOM);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  exportStudentHours = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const studentId = Number(req.params["studentId"]);
+      
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (isNaN(studentId)) {
+        return this.handleError(res, null, 400, "Invalid student ID");
+      }
+
+      const studentHours = await this.service.getStudentHoursForExport(user.id, studentId);
+
+      if (!studentHours || studentHours.length === 0) {
+        return res.status(404).json({ error: "No hours found for this student" });
+      }
+
+      const fields = [
+        { label: "Hallgató neve", value: row => `${row.firstname} ${row.lastname}` },
+        { label: "Email", value: "email" },
+        { label: "Egyetem", value: "university" },
+        { label: "Szak", value: "major" },
+        { label: "Dátum", value: "date" },
+        { label: "Kezdés", value: "startTime" },
+        { label: "Végzés", value: "endTime" },
+        { label: "Leírás", value: "description" },
+        { label: "Órák száma", value: "duration" }
+      ];
+      const opts = { fields, delimiter: "," };
+      const csv = parse(studentHours, opts);
+      
+      const csvWithBOM = '\uFEFF' + csv;
+
+      const studentName = studentHours[0] ? `${studentHours[0].firstname}_${studentHours[0].lastname}` : "hallgato";
+      const fileName = `${studentName}_orai_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
+      res.status(200).send(csvWithBOM);
     } catch (error) {
       this.handleError(res, error);
     }

@@ -417,7 +417,12 @@ export const hu: NestedI18n = {
             no_pending_hours: { text: "Minden óra jóváhagyva" }
         },
         export: {
-            to_csv: { text: "Exportálás CSV-be" }
+            to_csv: { text: "Exportálás CSV-be" },
+            success: { text: "Hallgatói adatok sikeresen exportálva" },
+            error: { text: "Hiba a hallgatói adatok exportálásakor" },
+            student_success: { text: "${studentName} órái sikeresen exportálva" },
+            student_error: { text: "Hiba a hallgató óráinak exportálásakor" },
+            individual: { text: "Órák Exportálása" }
         }
     },
     document_upload: {

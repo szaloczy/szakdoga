@@ -3,7 +3,7 @@
   <div class="profile-section">
     <app-profile-picture
       [currentPicture]="user.profilePicture"
-      [size]="'medium'"
+      [size]="isCollapsed ? 'small' : 'medium'"
       [editable]="false"
       (pictureChanged)="onProfilePictureChanged($event)"
     ></app-profile-picture>

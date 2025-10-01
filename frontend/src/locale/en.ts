@@ -419,7 +419,12 @@ export const en: NestedI18n = {
             no_pending_hours: { text: "All hours approved" }
         },
         export: {
-            to_csv: { text: "Export to CSV" }
+            to_csv: { text: "Export to CSV" },
+            success: { text: "Student data exported successfully" },
+            error: { text: "Error exporting student data" },
+            student_success: { text: "${studentName} hours exported successfully" },
+            student_error: { text: "Error exporting student hours" },
+            individual: { text: "Export Hours" }
         }
     },
     document_upload: {

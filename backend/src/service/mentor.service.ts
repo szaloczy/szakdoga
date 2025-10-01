@@ -257,4 +257,98 @@ export class MentorService {
 
     return studentsWithHours.sort((a, b) => a.lastname.localeCompare(b.lastname));
   }
+
+  async getAllStudentsHoursForExport(mentorUserId: number) {
+    const mentor = await this.getMentorByUserId(mentorUserId);
+    
+    if (!mentor) {
+      throw new Error("Mentor not found for this user");
+    }
+
+    const internships = await AppDataSource.getRepository("Internship").find({
+      where: { 
+        mentor: { id: mentor.id },
+        isApproved: true 
+      },
+      relations: ["student", "student.user", "hours"]
+    });
+
+    const allStudentsHours = [];
+    
+    for (const internship of internships) {
+      const approvedHours = (internship.hours || []).filter(hour => hour.status === 'approved');
+      
+      for (const hour of approvedHours) {
+        const start = new Date(`2000-01-01 ${hour.startTime}`);
+        const end = new Date(`2000-01-01 ${hour.endTime}`);
+        const diffMs = end.getTime() - start.getTime();
+        const duration = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100; // ms to hours
+
+        allStudentsHours.push({
+          firstname: internship.student.user.firstname,
+          lastname: internship.student.user.lastname,
+          email: internship.student.user.email,
+          university: internship.student.university || '',
+          major: internship.student.major || '',
+          date: hour.date,
+          startTime: hour.startTime,
+          endTime: hour.endTime,
+          description: hour.description,
+          duration: duration
+        });
+      }
+    }
+
+    return allStudentsHours.sort((a, b) => {
+      const nameCompare = a.lastname.localeCompare(b.lastname);
+      if (nameCompare !== 0) return nameCompare;
+      return new Date(a.date).getTime() - new Date(b.date).getTime();
+    });
+  }
+
+  async getStudentHoursForExport(mentorUserId: number, studentUserId: number) {
+    const mentor = await this.getMentorByUserId(mentorUserId);
+    
+    if (!mentor) {
+      throw new Error("Mentor not found for this user");
+    }
+
+    const internship = await AppDataSource.getRepository("Internship").findOne({
+      where: { 
+        mentor: { id: mentor.id },
+        student: { user: { id: studentUserId } },
+        isApproved: true 
+      },
+      relations: ["student", "student.user", "hours"]
+    });
+
+    if (!internship) {
+      throw new Error("Student not found or not assigned to this mentor");
+    }
+
+    const approvedHours = (internship.hours || []).filter(hour => hour.status === 'approved');
+    const studentHours = [];
+    
+    for (const hour of approvedHours) {
+      const start = new Date(`2000-01-01 ${hour.startTime}`);
+      const end = new Date(`2000-01-01 ${hour.endTime}`);
+      const diffMs = end.getTime() - start.getTime();
+      const duration = Math.round((diffMs / (1000 * 60 * 60)) * 100) / 100; // ms to hours
+
+      studentHours.push({
+        firstname: internship.student.user.firstname,
+        lastname: internship.student.user.lastname,
+        email: internship.student.user.email,
+        university: internship.student.university || '',
+        major: internship.student.major || '',
+        date: hour.date,
+        startTime: hour.startTime,
+        endTime: hour.endTime,
+        description: hour.description,
+        duration: duration
+      });
+    }
+
+    return studentHours.sort((a, b) => new Date(a.date).getTime() - new Date(b.date).getTime());
+  }
 }

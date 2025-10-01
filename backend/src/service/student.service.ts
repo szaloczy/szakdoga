@@ -15,8 +15,12 @@ export class StudentService {
     });
     if (!student || !student.internship) return [];
     const hours = student.internship.hours || [];
+    
+    // Csak az elfogadott órákat szűrjük ki
+    const approvedHours = hours.filter(hour => hour.status === 'approved');
+    
     // DTO mapping
-    return hours.map(hour => ({
+    return approvedHours.map(hour => ({
       date: hour.date,
       startTime: hour.startTime,
       endTime: hour.endTime,

@@ -6,7 +6,7 @@ export class StatisticsController {
 
   async getHoursPerMonth(req: Request, res: Response) {
     try {
-      const userId = req.user?.id; // Assumes auth middleware sets req.user
+      const userId = req.user?.id;
       if (!userId) {
         return res.status(401).json({ message: "Unauthorized" });
       }
@@ -43,7 +43,6 @@ export class StatisticsController {
     }
   }
 
-  // Mentor statisztikák
   async getMentorHoursPerMonth(req: Request, res: Response) {
     try {
       const mentorUserId = req.user?.id;

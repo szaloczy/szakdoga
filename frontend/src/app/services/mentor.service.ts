@@ -26,4 +26,19 @@ export class MentorService {
   getByCompany(companyId: number) { return this.http.get<MentorDTO[]>(`/api/mentor/company/${companyId}`)};
 
   search(query: string) { return this.http.get<MentorDTO[]>(`/api/mentor/search?q=${query}`)};
+
+  // Export methods
+  exportAllStudentsHours() { 
+    return this.http.get(`/api/mentor/export/all-students-hours`, { 
+      responseType: 'blob',
+      headers: { 'Accept': 'text/csv' }
+    });
+  }
+
+  exportStudentHours(studentId: number) { 
+    return this.http.get(`/api/mentor/export/student/${studentId}/hours`, { 
+      responseType: 'blob',
+      headers: { 'Accept': 'text/csv' }
+    });
+  }
 }

@@ -415,34 +415,41 @@ export class StudentsComponent implements OnInit {
   }
 
   exportStudentData(): void {
-    if (this.students.length === 0) {
-      this.toastService.showError('No students to export');
-      return;
-    }
+    this.mentorService.exportAllStudentsHours().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `all-students-hours-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toastService.showSuccess(this.i18nService.transform('mentor_students.export.success'));
+      },
+      error: (error) => {
+        console.error('Error exporting student data:', error);
+        this.toastService.showError(this.i18nService.transform('mentor_students.export.error'));
+      }
+    });
+  }
 
-    const data = this.students.map(student => ({
-      name: `${student.firstname} ${student.lastname}`,
-      email: student.email,
-      university: student.university,
-      totalHours: this.getTotalHours(student),
-      pendingHours: this.getPendingHours(student),
-      status: this.getStudentStatus(student),
-      completionPercentage: Math.round((this.getTotalHours(student) / 180) * 100)
-    }));
-
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + "Name,Email,University,Total Hours,Pending Hours,Status,Completion %\n"
-      + data.map(row => Object.values(row).join(",")).join("\n");
-
-    const encodedUri = encodeURI(csvContent);
-    const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
-    link.setAttribute("download", `students_report_${new Date().toISOString().split('T')[0]}.csv`);
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-
-    this.toastService.showSuccess('Student data exported successfully');
+  exportSingleStudentHours(student: extendedStudentDTO): void {
+    this.mentorService.exportStudentHours(student.id).subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${student.firstname}-${student.lastname}-hours-${new Date().toISOString().split('T')[0]}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+        this.toastService.showSuccess(this.i18nService.transform('mentor_students.export.student_success', { 
+          studentName: `${student.firstname} ${student.lastname}` 
+        }));
+      },
+      error: (error) => {
+        console.error('Error exporting student hours:', error);
+        this.toastService.showError(this.i18nService.transform('mentor_students.export.student_error'));
+      }
+    });
   }
 
   bulkApproveHours(): void {

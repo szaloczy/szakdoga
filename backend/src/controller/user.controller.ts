@@ -138,7 +138,7 @@ export class UserController extends Controller {
   }
 }
 
-  login = async (req, res) => {
+login = async (req, res) => {
     try {
       if (!req.body.email || !req.body.password) {
         return this.handleError(res, null, 400, "Email and password are required");
@@ -272,7 +272,6 @@ export class UserController extends Controller {
         return this.handleError(res, null, 404, "User not found");
       }
 
-      // Régi profilkép törlése ha létezik
       if (currentUser.profilePicture) {
         const oldFilePath = path.resolve(__dirname, "../../uploads/profile-pictures", currentUser.profilePicture);
         if (fs.existsSync(oldFilePath)) {
@@ -280,7 +279,6 @@ export class UserController extends Controller {
         }
       }
 
-      // Új profilkép mentése
       currentUser.profilePicture = req.file.filename;
       await this.repository.save(currentUser);
 
@@ -290,7 +288,6 @@ export class UserController extends Controller {
         profilePictureUrl: `/user/profile-picture/${req.file.filename}`
       });
     } catch (error) {
-      // Ha hiba történik, töröljük a feltöltött fájlt
       if (req.file) {
         const filePath = path.resolve(__dirname, "../../uploads/profile-pictures", req.file.filename);
         if (fs.existsSync(filePath)) {
@@ -321,13 +318,11 @@ export class UserController extends Controller {
         return this.handleError(res, null, 404, "No profile picture found");
       }
 
-      // Fájl törlése a lemezről
       const filePath = path.resolve(__dirname, "../../uploads/profile-pictures", currentUser.profilePicture);
       if (fs.existsSync(filePath)) {
         fs.unlinkSync(filePath);
       }
 
-      // Adatbázisban való törlés
       currentUser.profilePicture = null;
       await this.repository.save(currentUser);
 

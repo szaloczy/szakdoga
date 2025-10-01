@@ -14,11 +14,11 @@ export class StudentController extends Controller {
         const student = await this.service.getStudentByUserId(user.id);
         if (!student) return res.status(404).json({ error: "Student not found" });
 
-        // Lekérjük az órákat
+        // Lekérjük csak az elfogadott órákat
         const hours = await this.service.getStudentHoursForExport(student.id);
 
         if (!hours || hours.length === 0) {
-          return res.status(404).json({ error: "No hours found" });
+          return res.status(404).json({ error: "No approved hours found" });
         }
 
         // CSV generálás
@@ -31,11 +31,14 @@ export class StudentController extends Controller {
         ];
         const opts = { fields, delimiter: "," };
         const csv = parse(hours, opts);
+        
+        // UTF-8 BOM hozzáadása az ékezetes karakterek helyes megjelenítéséhez
+        const csvWithBOM = '\uFEFF' + csv;
 
-        const fileName = `my_hours_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
-        res.setHeader("Content-Type", "text/csv");
+        const fileName = `elfogadott_oraim_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+        res.setHeader("Content-Type", "text/csv; charset=utf-8");
         res.setHeader("Content-Disposition", `attachment; filename=\"${fileName}\"`);
-        res.status(200).send(csv);
+        res.status(200).send(csvWithBOM);
       } catch (err) {
         res.status(500).json({ error: err.message });
       }

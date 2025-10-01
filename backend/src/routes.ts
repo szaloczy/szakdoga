@@ -83,6 +83,10 @@ router.get("/mentor/company/:companyId", mentorController.getByCompany);
 router.get("/mentor/search", mentorController.searchMentors);
 router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId);
 
+// Mentor exportálási végpontok
+router.get("/mentor/export/all-students-hours", authMiddleware, mentorController.exportAllStudentsHours);
+router.get("/mentor/export/student/:studentId/hours", authMiddleware, mentorController.exportStudentHours);
+
 router.get("/mentor/:id", authMiddleware, mentorController.getById);
 router.post("/mentor", authMiddleware, mentorController.create);
 router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);
@@ -126,5 +130,4 @@ router.get("/statistics/mentor/hours-per-month", authMiddleware, statisticsContr
 router.get("/statistics/mentor/hour-status-distribution", authMiddleware, statisticsController.getMentorHourStatusDistribution.bind(statisticsController));
 router.get("/statistics/mentor/cumulative-hours", authMiddleware, statisticsController.getMentorCumulativeHours.bind(statisticsController));
 
-// Admin statisztikák
 router.get("/statistics/admin", authMiddleware, statisticsController.getAdminStatistics.bind(statisticsController));

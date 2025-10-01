@@ -95,7 +95,7 @@ export class InternshipHourService {
   }
 
 
-  async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
+async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
     const student = await this.studentRepo.findOne({
       where: { user: { id: userId } },
       relations: ["user"]

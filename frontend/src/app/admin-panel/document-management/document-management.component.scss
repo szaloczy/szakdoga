@@ -9,25 +9,20 @@
 h2 {
 	font-size: 2rem;
 	font-weight: 700;
-	color: #1976d2;
 	margin-bottom: 2rem;
 }
 
 .table {
-	border-radius: 12px;
+	
 	overflow: hidden;
 	box-shadow: 0 2px 12px rgba(25, 118, 210, 0.08);
 }
 
-.table thead {
-	background: #e3f2fd;
-}
-
 .table th {
-	color: #1976d2;
+	color: white;
 	font-weight: 600;
 	font-size: 1.05rem;
-	border-bottom: 2px solid #bbdefb;
+	background-color: black;
 }
 
 .table td {

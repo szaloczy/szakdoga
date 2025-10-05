@@ -658,7 +658,7 @@ export const hu: NestedI18n = {
                 invalid_format: {
                     text: "Kérjük, válasszon érvényes képfájlt (JPEG, PNG, GIF, WebP)"
                 }
-            }
+            },
         },
         user_management: {
             title: {
@@ -682,6 +682,7 @@ export const hu: NestedI18n = {
                 lastname: { text: "Vezetéknév" },
                 email: { text: "Email" },
                 active: { text: "Aktív" },
+                password: { text: "Jelszó" }
             },
             add_mentor_form: {
                 title: { text: "Új mentor hozzáadása" },
@@ -694,6 +695,26 @@ export const hu: NestedI18n = {
                 active: { text: "Aktív" },
                 inactive: { text: "Inaktív" }
             },
+            edit_student_form: {
+                title: { text: "Hallgató szerkesztése" },
+                firstname: { text: "Keresztnév" },
+                lastname: { text: "Vezetéknév" },
+                email: { text: "Email" },
+                active: { text: "Aktív" },
+                password: { text: "Jelszó" }
+            },
+            status: {
+                active: { text: "Aktív" },
+                inactive: { text: "Inaktív" }
+            },
+            options: {
+                active: { text: "Aktív" },
+                inactive: { text: "Inaktív" }
+            },
+            actions: {
+                edit: { text: "Szerkesztés" },
+                delete: { text: "Törlés" }
+            }
         },
         company_management: {
             title: {
@@ -739,7 +760,9 @@ export const hu: NestedI18n = {
                     approved: { text: "Jóváhagy" },
                     not_approved: { text: "Elutasít" }
                 }
-            }
+            },
+            edit_title: { text: "Gyakorlat szerkesztése" },
+            add_title: { text: "Új gyakorlat hozzáadása" }
         },
         document_management: {
             title: {

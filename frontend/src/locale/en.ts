@@ -704,6 +704,18 @@ export const en: NestedI18n = {
                 email: { text: "Email" },
                 active: { text: "Active" },
                 password: { text: "Password" }
+            },
+            status: {
+                active: { text: "Active" },
+                inactive: { text: "Inactive" }
+            },
+            options: {
+                active: { text: "Active" },
+                inactive: { text: "Inactive" }
+            },
+            actions: {
+                edit: { text: "Edit" },
+                delete: { text: "Delete" }
             }
         },
         company_management: {
@@ -756,7 +768,9 @@ export const en: NestedI18n = {
                 options: {
                     approved: { text: "Approved" },
                     not_approved: { text: "Not Approved" }
-                }
+                },
+                edit_title: { text: "Edit Internship" },
+                add_title: { text: "Add New Internship" }
             }
         },
         document_management: {

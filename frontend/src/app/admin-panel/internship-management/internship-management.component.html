@@ -11,7 +11,7 @@
 
   @if(showInternshipForm) {
   <form [formGroup]="internshipForm" (ngSubmit)="saveInternship()" class="card p-3 mb-4">
-    <h5>{{ isEdit ? "Edit Internship": "Add Internship" }}</h5>
+    <h5>{{ isEdit ? ('admin_panel.internship_management.edit_title' | translate) : ('admin_panel.internship_management.add_title' | translate) }}</h5>
     <div class="row g-2">
 
       <div class="col-md-6">
@@ -63,7 +63,7 @@
       </div>
 
       <div class="col-12">
-        <button type="submit" class="btn btn-success mt-2">Save</button>
+        <button type="submit" class="btn btn-success mt-2">{{ 'buttons.forms.save' | translate }}</button>
       </div>
     </div>
   </form>

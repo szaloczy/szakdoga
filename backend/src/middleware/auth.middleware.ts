@@ -26,7 +26,6 @@ export const authMiddleware = async (req, res, next) => {
       return res.status(404).json({ error: "User not found" });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (req as any).user = user;
     next();
   } catch (error) {

@@ -1,15 +1,12 @@
-
 import multer from "multer";
 import path from "path";
 import fs from "fs";
 
-// Uploads könyvtár létrehozása
 const uploadDir = path.resolve(__dirname, "../../uploads");
 if (!fs.existsSync(uploadDir)) {
   fs.mkdirSync(uploadDir, { recursive: true });
 }
 
-// Profile pictures könyvtár létrehozása
 const profilePicturesDir = path.resolve(__dirname, "../../uploads/profile-pictures");
 if (!fs.existsSync(profilePicturesDir)) {
   fs.mkdirSync(profilePicturesDir, { recursive: true });

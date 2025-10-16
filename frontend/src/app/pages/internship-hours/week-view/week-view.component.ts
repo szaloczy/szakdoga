@@ -83,6 +83,7 @@ exportToCSV(): void {
   hourForm!: FormGroup;
 
   isModalOpen = false;
+  editingHourId: number | null = null;
 
   @Input() internships: InternshipListDTO[] = [];
 
@@ -205,37 +206,63 @@ exportToCSV(): void {
 
   openModal(): void {
     this.isModalOpen = true;
+    this.editingHourId = null;
     this.hourForm.reset();
   }
 
   closeModal(): void {
     this.isModalOpen = false;
+    this.editingHourId = null;
     this.hourForm.reset();
   }
 
   addHour(): void {
     if (this.hourForm.invalid) return;
 
-    const payload: CreateInternshipHourDTO = {
-      ...this.hourForm.value,
-      date: this.formatDate(this.selectedDate),
-    };
+    if (this.editingHourId) {
+      // Update existing hour
+      const updatePayload = {
+        ...this.hourForm.value,
+        date: this.formatDate(this.selectedDate),
+      };
+      
+      this.internshipHourService.update(this.editingHourId, updatePayload).subscribe({
+        next: (response) => {
+          this.toastService.showSuccess(this.i18nService.transform('internship_hours.messages.update_hour.success'));
+          this.closeModal();
+          this.loadHours();
+        },
+        error: (err) => {
+          this.toastService.showError(this.i18nService.transform('internship_hours.messages.update_hour.failed'));
+        }
+      });
+    } else {
+      
+      const payload: CreateInternshipHourDTO = {
+        ...this.hourForm.value,
+        date: this.formatDate(this.selectedDate),
+      };
 
-     this.internshipHourService.create(payload).subscribe({
-      next: (response) => {
-        this.toastService.showSuccess(this.i18nService.transform('response.hour_created'))
-        this.closeModal();
-        this.loadHours();
-      },
-      error: (err) => {
-        console.log("response:" + err.error);
-        this.toastService.showError(this.i18nService.transform(err.error));
-      }
-    });
+      this.internshipHourService.create(payload).subscribe({
+        next: (response) => {
+          this.toastService.showSuccess(this.i18nService.transform('response.hour_created'))
+          this.closeModal();
+          this.loadHours();
+        },
+        error: (err) => {
+          console.log("response:" + err.error);
+          this.toastService.showError(this.i18nService.transform(err.error));
+        }
+      });
+    }
   }
 
   get hasApprovedInternship(): boolean {
     return this.internships.some((i: InternshipListDTO) => i.isApproved === true);
+  }
+
+  get isEditMode(): boolean {
+    return this.editingHourId !== null;
   }
 
   deleteHour(entryHour: InternshipHourDTO) {
@@ -251,21 +278,12 @@ exportToCSV(): void {
     }
 
     editHour(hourEntry: InternshipHourDTO) {
+      this.editingHourId = hourEntry.id;
       this.hourForm.patchValue({
         startTime: hourEntry.startTime,
         endTime: hourEntry.endTime,
         description: hourEntry.description
       });
-      this.openModal();
-
-      this.internshipHourService.update(hourEntry.id, this.hourForm.value).subscribe({
-        next: (response) => {
-          this.toastService.showSuccess(this.i18nService.transform('internship_hours.messages.update_hour.success'));
-          this.loadHours();
-        },
-        error: (err) => {
-          this.toastService.showError(this.i18nService.transform('internship_hours.messages.update_hour.failed'));
-        }
-      });
+      this.isModalOpen = true;
     }
 }

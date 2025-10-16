@@ -79,12 +79,14 @@
           </small>
         </div>
         <div class="ms-auto d-flex gap-2">
-          <button class="btn btn-danger btn-sm" (click)="deleteHour(entry)">
-            <i class="bi bi-trash"></i> {{ 'buttons.forms.delete' | translate }}
-          </button>
-          <button class="btn btn-primary btn-sm" (click)="editHour(entry)">
-            <i class="bi bi-pencil"></i> {{ 'buttons.forms.edit' | translate }}
-          </button>
+          @if (entry.status === 'pending') {
+            <button class="btn btn-danger btn-sm" (click)="deleteHour(entry)">
+              <i class="bi bi-trash"></i> {{ 'buttons.forms.delete' | translate }}
+            </button>
+            <button class="btn btn-primary btn-sm" (click)="editHour(entry)">
+              <i class="bi bi-pencil"></i> {{ 'buttons.forms.edit' | translate }}
+            </button>
+          }
         </div>
         <span class="badge bg-light text-dark ms-3">
           {{ getDuration(entry.startTime, entry.endTime) }}
@@ -109,7 +111,7 @@
       <form (ngSubmit)="addHour()" [formGroup]="hourForm">
         
         <div class="mb-3">
-          <h5>{{ 'internship_hours.add_hour_box.title' | translate }}</h5>
+          <h5>{{ isEditMode ? ('buttons.forms.edit' | translate) : ('internship_hours.add_hour_box.title' | translate) }}</h5>
         </div>
         <div class="mb-3">
           <label class="form-label">{{ 'internship_hours.add_hour_box.start' | translate }}</label>
@@ -128,7 +130,7 @@
 
         <div class="d-flex justify-content-end gap-2">
           <button type="button" class="btn btn-outline-secondary" (click)="closeModal()">{{ 'buttons.forms.cancel' | translate }}</button>
-          <button type="submit" class="btn btn-primary">{{ 'buttons.forms.save' | translate }}</button>
+          <button type="submit" class="btn btn-primary">{{ isEditMode ? ('buttons.forms.save' | translate) : ('buttons.forms.save' | translate) }}</button>
         </div>
       </form>
     </div>

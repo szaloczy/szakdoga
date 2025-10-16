@@ -4,9 +4,8 @@
   <span (click)="onToggleSidebar()" class="hamburger">
   <i class="bi bi-list"></i>
 </span>
-  <input type="text" placeholder="{{ 'navbar.search' | translate }}" />
+  <div class="searchbar-placeholder"></div>
   
-  <!-- Profile Picture -->
   <div class="profile-section">
     <app-profile-picture
       *ngIf="currentUser"

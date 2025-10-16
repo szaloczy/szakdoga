@@ -503,7 +503,7 @@ export const hu: NestedI18n = {
             },
             navigation: {
                 back_to_admin: {
-                    text: "Vissza az Adminhoz"
+                    text: "Vissza a kezdőlapra"
                 },
                 export_csv: {
                     text: "CSV Exportálás"

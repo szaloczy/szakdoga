@@ -1,4 +1,3 @@
-// Loading spinner animation
 .spin {
   animation: spin 1s linear infinite;
 }
@@ -8,7 +7,6 @@
   100% { transform: rotate(360deg); }
 }
 
-// Card hover effects
 .card {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   
@@ -18,12 +16,10 @@
   }
 }
 
-// Statistics page specific styles
 .container {
   max-width: 1200px;
 }
 
-// Navbar styling
 .navbar {
   background-color: #f8f9fa !important;
   border-bottom: 1px solid #dee2e6;
@@ -42,7 +38,7 @@
     color: #6c757d;
     
     &:hover {
-      background-color: #6c757d;
+      background-color: #c1c1c2;
       border-color: #6c757d;
     }
   }

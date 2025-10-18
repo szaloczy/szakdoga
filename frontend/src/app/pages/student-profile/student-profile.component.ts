@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { InternshipDTO, MentorDTO, MentorProfileDTO, ProfileDTO, ProfileInternshipDTO, StudentDTO, UserRole } from '../../../types';
+import { MentorProfileDTO, ProfileDTO, ProfileInternshipDTO, UserRole } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { AuthService } from '../../services/auth.service';
 import { InternshipService } from '../../services/internship.service';
@@ -79,7 +79,7 @@ export class StudentProfileComponent implements OnInit{
   onProfilePictureChanged(newPicture: string | undefined): void {
     this.profile.profilePicture = newPicture;
     this.profilePictureService.updateProfilePicture(newPicture);
-    // Optionally reload profile data to ensure consistency
+
     this.loadStudentData();
   }
 
@@ -259,7 +259,6 @@ export class StudentProfileComponent implements OnInit{
     this.toastService.showSuccess('Form reset to original values');
   }
 
-  // Helper methods for template
   isFieldInvalid(fieldName: string): boolean {
     const field = this.profileForm.get(fieldName);
     return !!(field && field.invalid && field.touched);

@@ -625,43 +625,6 @@ export const en: NestedI18n = {
                 }
             }
         },
-        profile_picture: {
-            upload: {
-                text: "Upload Profile Picture"
-            },
-            change: {
-                text: "Change Picture"
-            },
-            delete: {
-                text: "Delete Picture"
-            },
-            select_file: {
-                text: "Select Image File"
-            },
-            uploading: {
-                text: "Uploading..."
-            },
-            messages: {
-                upload_success: {
-                    text: "Profile picture uploaded successfully"
-                },
-                upload_error: {
-                    text: "Error uploading profile picture"
-                },
-                delete_success: {
-                    text: "Profile picture deleted successfully"
-                },
-                delete_error: {
-                    text: "Error deleting profile picture"
-                },
-                file_too_large: {
-                    text: "File size must be less than 5MB"
-                },
-                invalid_format: {
-                    text: "Please select a valid image file (JPEG, PNG, GIF, WebP)"
-                }
-            }
-        },
         user_management: {
             title: {
                 text: "User management"
@@ -1090,6 +1053,43 @@ export const en: NestedI18n = {
         reject_all: {
             no_approved_internship_for_student: { text: "No approved internship found for this student under your mentorship." },
             no_pending_hours_for_student: { text: "No pending hours found for this student." }
+        }
+    },
+    profile_picture: {
+        upload: {
+            text: "Upload Profile Picture"
+        },
+        change: {
+            text: "Change Picture"
+        },
+        delete: {
+            text: "Delete Picture"
+        },
+        select_file: {
+            text: "Select Image File"
+        },
+        uploading: {
+            text: "Uploading..."
+        },
+        messages: {
+            upload_success: {
+                text: "Profile picture uploaded successfully"
+            },
+            upload_error: {
+                text: "Error uploading profile picture"
+            },
+            delete_success: {
+                text: "Profile picture deleted successfully"
+            },
+            delete_error: {
+                text: "Error deleting profile picture"
+            },
+            file_too_large: {
+                text: "File size must be less than 5MB"
+            },
+            invalid_format: {
+                text: "Please select a valid image file (JPEG, PNG, GIF, WebP)"
+            }
         }
     }
 }

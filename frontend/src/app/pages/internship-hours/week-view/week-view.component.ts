@@ -220,7 +220,6 @@ exportToCSV(): void {
     if (this.hourForm.invalid) return;
 
     if (this.editingHourId) {
-      // Update existing hour
       const updatePayload = {
         ...this.hourForm.value,
         date: this.formatDate(this.selectedDate),

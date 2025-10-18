@@ -45,7 +45,6 @@ export class ProfilePictureComponent {
     if (input.files && input.files[0]) {
       const file = input.files[0];
       
-      // Validate file type
       const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
       if (!allowedTypes.includes(file.type)) {
         this.toastService.showError(this.i18nService.transform('profile_picture.messages.invalid_format'));
@@ -53,8 +52,7 @@ export class ProfilePictureComponent {
         return;
       }
 
-      // Validate file size (5MB max)
-      const maxSize = 5 * 1024 * 1024; // 5MB in bytes
+      const maxSize = 5 * 1024 * 1024;
       if (file.size > maxSize) {
         this.toastService.showError(this.i18nService.transform('profile_picture.messages.file_too_large'));
         input.value = '';

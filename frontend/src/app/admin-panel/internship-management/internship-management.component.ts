@@ -7,6 +7,7 @@ import { StudentService } from '../../services/student.service';
 import { CompanyService } from '../../services/company.service';
 import { MentorService } from '../../services/mentor.service';
 import { I18nService } from '../../shared/i18n.pipe';
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-internship-management',
@@ -24,6 +25,8 @@ export class InternshipManagementComponent implements OnInit{
   studentService = inject(StudentService);
   companyService = inject(CompanyService);
   mentorService = inject(MentorService);
+  i18nService = inject(I18nService);
+  toastService = inject(ToastService);
   fb = inject(FormBuilder);
 
   internships: InternshipListDTO[] = []
@@ -57,7 +60,7 @@ export class InternshipManagementComponent implements OnInit{
         this.internships = interships;
       },
       error: (err) => {
-        console.error(err);
+        this.toastService.showError(this.i18nService.transform("common_response.admin_panel.internship.error_while_loading"));
       }
     })
   }
@@ -84,29 +87,29 @@ export class InternshipManagementComponent implements OnInit{
       if (this.editingInternship && this.editingInternship.id !== undefined) {
         this.internshipService.update(this.editingInternship.id, this.internshipForm.value).subscribe({
           next: (response) => {
-            console.log("Internship updated successfully: ", response);
+            this.toastService.showSuccess(this.i18nService.transform("common_response.admin_panel.internship.success_edit"));
             this.loadInternships();
             this.showInternshipForm = false;
             this.internshipForm.reset();
             this.isEdit = false;
           },
           error: (err) => {
-            console.error("Error updating internship: ", err);
+            this.toastService.showError(this.i18nService.transform("common_response.admin_panel.internship.error_edit"));
           },
         });
       } else {
-        console.error("No internship selected for editing or missing id.");
+        this.toastService.showError("No internship selected for editing or missing id.");
       }
     } else {
       this.internshipService.create(this.internshipForm.value).subscribe({
         next: (response) => {
-          console.log("Internship created successfully: ", response);
+          this.toastService.showSuccess(this.i18nService.transform("common_response.admin_panel.internship.success_add"));
           this.loadInternships();
           this.showInternshipForm = false;
           this.internshipForm.reset();
         },
         error: (err) => {
-          console.error("Error creating internship: ", err);
+          this.toastService.showError(this.i18nService.transform("common_response.admin_panel.internship.error_add"));
         },
       });
     }
@@ -115,11 +118,11 @@ export class InternshipManagementComponent implements OnInit{
   deleteInternship(id: number) {
     this.internshipService.delete(id).subscribe({
       next: (response) => {
-        console.log("intrnship deleted sucessfully: " + response);
+        this.toastService.showSuccess(this.i18nService.transform("common_response.admin_panel.internship.success_delete"));
         this.loadInternships();
       },
       error: (err) => {
-        console.error(err);
+        this.toastService.showError(this.i18nService.transform("common_response.admin_panel.internship.error_delete"));
       }
     })
   }

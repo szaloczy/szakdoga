@@ -18,6 +18,7 @@ import {
 import { CompanyService } from '../../services/company.service';
 import { CommonModule } from '@angular/common';
 import { I18nService } from "../../shared/i18n.pipe";
+import { ToastService } from '../../services/toast.service';
 
 @Component({
   selector: 'app-user-management',
@@ -29,6 +30,8 @@ export class UserManagementComponent implements OnInit {
   userService = inject(UserService);
   mentorService = inject(MentorService);
   companyService = inject(CompanyService);
+  toastService = inject(ToastService);
+  i18nService = inject(I18nService);
   fb = inject(FormBuilder);
 
   showStudentForm = false;
@@ -97,8 +100,16 @@ startCreateMentor() {
       : this.userService.create(studentData);
 
     action$.subscribe({
-      next: () => this.loadUsers(),
-      error: (err) => console.error(err),
+      next: () => {
+        this.loadUsers();
+        const successKey = this.isEditMode ? 'common_response.admin_panel.user.success_student_edit' : 'common_response.admin_panel.user.success_student_add';
+        this.toastService.showSuccess(this.i18nService.transform(successKey));
+      },
+      error: (err) => {
+        console.error(err);
+        const errorKey = this.isEditMode ? 'common_response.admin_panel.user.error_student_edit' : 'common_response.admin_panel.user.error_student_add';
+        this.toastService.showError(this.i18nService.transform(errorKey));
+      },
     });
 
     this.showStudentForm = false;
@@ -114,24 +125,30 @@ startCreateMentor() {
     };
 
     if(this.isEditMode && this.editingUser) {
-      // Update existing mentor
       this.userService.update(this.editingUser.id, mentorData as any).subscribe({
         next: () => {
           this.loadUsers();
           this.showMentorForm = false;
           this.isEditMode = false;
           this.editingUser = null;
+          this.toastService.showSuccess(this.i18nService.transform('common_response.admin_panel.user.success_mentor_edit'));
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.toastService.showError(this.i18nService.transform('common_response.admin_panel.user.error_mentor_edit'));
+        },
       });
     } else {
-      // Create new mentor
       this.mentorService.create(mentorData).subscribe({
         next: () => {
           this.loadUsers();
           this.showMentorForm = false;
+          this.toastService.showSuccess(this.i18nService.transform('common_response.admin_panel.user.success_mentor_add'));
         },
-        error: (err) => console.error(err),
+        error: (err) => {
+          console.error(err);
+          this.toastService.showError(this.i18nService.transform('common_response.admin_panel.user.error_mentor_add'));
+        },
       });
     }
   }
@@ -139,7 +156,10 @@ startCreateMentor() {
   loadUsers() {
     this.userService.getAll().subscribe({
       next: (users) => (this.users = users),
-      error: (err) => console.error(err),
+      error: (err) => {
+        console.error(err);
+        this.toastService.showError(this.i18nService.transform('common_response.admin_panel.user.error_while_loading'));
+      },
     });
   }
 
@@ -172,8 +192,14 @@ startCreateMentor() {
 
   deleteUser(id: number) {
     this.userService.delete(id).subscribe({
-      next: () => this.loadUsers(),
-      error: (err) => console.error(err),
+      next: () => {
+        this.loadUsers();
+        this.toastService.showSuccess(this.i18nService.transform('common_response.admin_panel.user.success_delete'));
+      },
+      error: (err) => {
+        console.error(err);
+        this.toastService.showError(this.i18nService.transform('common_response.admin_panel.user.error_delete'));
+      },
     });
   }
 }

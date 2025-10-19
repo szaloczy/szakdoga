@@ -1,10 +1,10 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { DocumentService } from '../../services/document.service';
-import { Document } from '../../models/document.model';
 import { I18nService } from "../../shared/i18n.pipe";
 import { ToastService } from '../../services/toast.service';
 import { RouterLink } from '@angular/router';
+import { Document } from '../../../types';
 
 @Component({
   selector: 'app-document-management',
@@ -14,6 +14,7 @@ import { RouterLink } from '@angular/router';
 })
 export class DocumentManagementComponent implements OnInit {
   toastService = inject(ToastService);
+  i18nService = inject(I18nService);
 
   documents: Document[] = [];
   reviewNote = '';
@@ -48,14 +49,14 @@ export class DocumentManagementComponent implements OnInit {
         this.documents = docs;
       },
       error: (err) => {
-        this.toastService.showError('Hiba a dokumentumok betöltésekor: ' + err.message);
+        this.toastService.showError(this.i18nService.transform('common_response.admin_panel.document.error_while_loading'));
       }
     });
   }
 
   acceptDocument(doc: Document) {
     this.documentService.reviewDocument(doc.id, 'approved').subscribe(() => {
-      this.toastService.showSuccess('Dokumentum elfogadva!');
+      this.toastService.showSuccess(this.i18nService.transform('common_response.admin_panel.document.success_approve'));
       this.loadDocuments();
     });
   }
@@ -63,16 +64,14 @@ export class DocumentManagementComponent implements OnInit {
 
   rejectDocument(doc: Document) {
     this.documentService.reviewDocument(doc.id, 'rejected', this.reviewNote).subscribe(() => {
-      this.toastService.showError('Dokumentum elutasítva!');
+      this.toastService.showSuccess(this.i18nService.transform('common_response.admin_panel.document.success_reject'));
       this.loadDocuments();
       this.reviewNote = '';
       this.selectedId = null;
-      // Modal bezárása
     });
   }
 
   viewDocument(doc: Document) {
-    // Megtekintés logika (pl. modalban vagy új ablakban PDF preview)
     window.open(`/api/documents/${doc.id}/download`, '_blank');
   }
 }

@@ -1,6 +1,5 @@
 import { inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { UserRole } from '../../types';
 import { I18nService } from '../shared/i18n.pipe';
 
 @Injectable({

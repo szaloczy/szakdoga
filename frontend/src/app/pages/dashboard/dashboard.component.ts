@@ -7,7 +7,7 @@ import { UserDTO, UserRole, InternshipWithHours, MentorProfileDTO, StudentDTO, I
 import { StudentService } from '../../services/student.service';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { DocumentService } from '../../services/document.service';
-import { UploadedDocument } from '../../models/document.model';
+import { UploadedDocument } from '../../../types';
 import { UserService } from '../../services/user.service';
 import { MentorService } from '../../services/mentor.service';
 import { StatisticsService } from '../../services/statistics.service';

@@ -625,6 +625,43 @@ export const en: NestedI18n = {
                 }
             }
         },
+        profile_picture: {
+            upload: {
+                text: "Upload Profile Picture"
+            },
+            change: {
+                text: "Change Picture"
+            },
+            delete: {
+                text: "Delete Picture"
+            },
+            select_file: {
+                text: "Select Image File"
+            },
+            uploading: {
+                text: "Uploading..."
+            },
+            messages: {
+                upload_success: {
+                    text: "Profile picture uploaded successfully"
+                },
+                upload_error: {
+                    text: "Error uploading profile picture"
+                },
+                delete_success: {
+                    text: "Profile picture deleted successfully"
+                },
+                delete_error: {
+                    text: "Error deleting profile picture"
+                },
+                file_too_large: {
+                    text: "File size must be less than 5MB"
+                },
+                invalid_format: {
+                    text: "Please select a valid image file (JPEG, PNG, GIF, WebP)"
+                }
+            }
+        },
         user_management: {
             title: {
                 text: "User management"
@@ -1053,42 +1090,46 @@ export const en: NestedI18n = {
         reject_all: {
             no_approved_internship_for_student: { text: "No approved internship found for this student under your mentorship." },
             no_pending_hours_for_student: { text: "No pending hours found for this student." }
-        }
+        },
     },
-    profile_picture: {
-        upload: {
-            text: "Upload Profile Picture"
-        },
-        change: {
-            text: "Change Picture"
-        },
-        delete: {
-            text: "Delete Picture"
-        },
-        select_file: {
-            text: "Select Image File"
-        },
-        uploading: {
-            text: "Uploading..."
-        },
-        messages: {
-            upload_success: {
-                text: "Profile picture uploaded successfully"
+    common_response: {
+        admin_panel: {
+            company: {
+                success_add: { text: "Company added successfully." },
+                success_delete: { text: "Company deleted successfully." },
+                success_edit: { text: "Company updated successfully." },
+                error_add: { text: "Error adding company. Please try again." },
+                error_delete: { text: "Error deleting company. Please try again." },
+                error_edit: { text: "Error updating company. Please try again." }
             },
-            upload_error: {
-                text: "Error uploading profile picture"
+            document: {
+                success_approve: { text: "Document approved successfully." },
+                success_reject: { text: "Document rejected successfully." },
+                error_approve: { text: "Error approving document. Please try again." },
+                error_reject: { text: "Error rejecting document. Please try again." },
+                error_while_loading: { text: "Error while loading documents. Please try again." }   
             },
-            delete_success: {
-                text: "Profile picture deleted successfully"
+            internship: {
+                success_add: { text: "Internship added successfully." },
+                success_delete: { text: "Internship deleted successfully." },
+                success_edit: { text: "Internship updated successfully." },
+                error_add: { text: "Error adding internship. Please try again." },
+                error_delete: { text: "Error deleting internship. Please try again." },
+                error_edit: { text: "Error updating internship. Please try again." },
+                error_while_loading: { text: "Error while loading internships. Please try again." }
             },
-            delete_error: {
-                text: "Error deleting profile picture"
-            },
-            file_too_large: {
-                text: "File size must be less than 5MB"
-            },
-            invalid_format: {
-                text: "Please select a valid image file (JPEG, PNG, GIF, WebP)"
+            user: {
+                success_student_add: { text: "Student added successfully." },
+                success_mentor_add: { text: "Mentor added successfully." },
+                success_student_edit: { text: "Student updated successfully." },
+                success_mentor_edit: { text: "Mentor updated successfully." },
+                success_delete: { text: "User deleted successfully." },
+                error_student_add: { text: "Error adding student. Please try again." },
+                error_mentor_add: { text: "Error adding mentor. Please try again." },
+                error_student_edit: { text: "Error updating student. Please try again." },
+                error_mentor_edit: { text: "Error updating mentor. Please try again." },
+                error_delete: { text: "Error deleting user. Please try again." },
+                error_while_loading: { text: "Error while loading users. Please try again." }
             }
         }
     }

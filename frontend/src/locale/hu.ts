@@ -503,7 +503,7 @@ export const hu: NestedI18n = {
             },
             navigation: {
                 back_to_admin: {
-                    text: "Vissza a kezdőlapra"
+                    text: "Vissza az Adminhoz"
                 },
                 export_csv: {
                     text: "CSV Exportálás"
@@ -622,6 +622,43 @@ export const hu: NestedI18n = {
                     text: "Hiba a statisztikák betöltésekor"
                 }
             }
+        },
+        profile_picture: {
+            upload: {
+                text: "Profilkép Feltöltése"
+            },
+            change: {
+                text: "Kép Módosítása"
+            },
+            delete: {
+                text: "Kép Törlése"
+            },
+            select_file: {
+                text: "Kép Fájl Kiválasztása"
+            },
+            uploading: {
+                text: "Feltöltés..."
+            },
+            messages: {
+                upload_success: {
+                    text: "Profilkép sikeresen feltöltve"
+                },
+                upload_error: {
+                    text: "Hiba a profilkép feltöltésekor"
+                },
+                delete_success: {
+                    text: "Profilkép sikeresen törölve"
+                },
+                delete_error: {
+                    text: "Hiba a profilkép törlésekor"
+                },
+                file_too_large: {
+                    text: "A fájl mérete nem lehet nagyobb 5MB-nál"
+                },
+                invalid_format: {
+                    text: "Kérjük, válasszon érvényes képfájlt (JPEG, PNG, GIF, WebP)"
+                }
+            },
         },
         user_management: {
             title: {
@@ -1044,40 +1081,44 @@ export const hu: NestedI18n = {
             no_pending_hours_for_student: { text: "Nincs függőben lévő óra ennek a hallgatónak." }
         }
     },
-    profile_picture: {
-        upload: {
-            text: "Profilkép Feltöltése"
-        },
-        change: {
-            text: "Kép Módosítása"
-        },
-        delete: {
-            text: "Kép Törlése"
-        },
-        select_file: {
-            text: "Kép Fájl Kiválasztása"
-        },
-        uploading: {
-            text: "Feltöltés..."
-        },
-        messages: {
-            upload_success: {
-                text: "Profilkép sikeresen feltöltve"
+    common_response: {
+        admin_panel: {
+            company: {
+                success_add: { text: "Cég sikeresen hozzáadva." },
+                success_delete: { text: "Cég sikeresen törölve." },
+                success_edit: { text: "Cég sikeresen frissítve." },
+                error_add: { text: "Hiba a cég hozzáadása során." },
+                error_delete: { text: "Hiba a cég törlése során." },
+                error_edit: { text: "Hiba a cég frissítése során." }
             },
-            upload_error: {
-                text: "Hiba a profilkép feltöltésekor"
+            document: {
+                success_approve: { text: "Dokumentum jóváhagyva." },
+                success_reject: { text: "Dokumentum elutasítva." },
+                error_approve: { text: "Hiba a dokumentum jóváhagyása során. Kérjük, próbálja újra." },
+                error_reject: { text: "Hiba a dokumentum elutasítása során. Kérjük, próbálja újra." },
+                error_while_loading: { text: "Hiba a dokumentumok betöltése során. Kérjük, próbálja újra." }
             },
-            delete_success: {
-                text: "Profilkép sikeresen törölve"
+            internship: {
+                success_add: { text: "Gyakornoki hely sikeresen hozzáadva." },
+                success_delete: { text: "Gyakornoki hely sikeresen törölve." },
+                success_edit: { text: "Gyakornoki hely sikeresen frissítve." },
+                error_add: { text: "Hiba a gyakornoki hely hozzáadása során. Kérjük, próbálja újra." },
+                error_delete: { text: "Hiba a gyakornoki hely törlése során. Kérjük, próbálja újra." },
+                error_edit: { text: "Hiba a gyakornoki hely frissítése során. Kérjük, próbálja újra." },
+                error_while_loading: { text: "Hiba a gyakornoki helyek betöltése során. Kérjük, próbálja újra." }
             },
-            delete_error: {
-                text: "Hiba a profilkép törlésekor"
-            },
-            file_too_large: {
-                text: "A fájl mérete nem lehet nagyobb 5MB-nál"
-            },
-            invalid_format: {
-                text: "Kérjük, válasszon érvényes képfájlt (JPEG, PNG, GIF, WebP)"
+            user: {
+                success_student_add: { text: "Hallgató sikeresen hozzáadva." },
+                success_mentor_add: { text: "Mentor sikeresen hozzáadva." },
+                success_student_edit: { text: "Hallgató sikeresen frissítve." },
+                success_mentor_edit: { text: "Mentor sikeresen frissítve." },
+                success_delete: { text: "Felhasználó sikeresen törölve." },
+                error_student_add: { text: "Hiba a hallgató hozzáadása során. Kérjük, próbálja újra." },
+                error_mentor_add: { text: "Hiba a mentor hozzáadása során. Kérjük, próbálja újra." },
+                error_student_edit: { text: "Hiba a hallgató frissítése során. Kérjük, próbálja újra." },
+                error_mentor_edit: { text: "Hiba a mentor frissítése során. Kérjük, próbálja újra." },
+                error_delete: { text: "Hiba a felhasználó törlése során. Kérjük, próbálja újra." },
+                error_while_loading: { text: "Hiba a felhasználók betöltése során. Kérjük, próbálja újra." }
             }
         }
     }

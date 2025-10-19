@@ -18,6 +18,7 @@ import { I18nService } from '../../shared/i18n.pipe';
 })
 export class CompanyManagementComponent {
 
+  in18nService = inject(I18nService);
   companyService = inject(CompanyService);
   toastService = inject(ToastService);
   fb = inject(FormBuilder);
@@ -60,12 +61,11 @@ export class CompanyManagementComponent {
   deleteCompany(id: number) {
     this.companyService.delete(id).subscribe({
       next: (response) => {
-        console.log("Company deleted sucessfully");
         this.loadCompanies();
-        this.toastService.showSuccess("Company deleted sucessfully");
+        this.toastService.showSuccess(this.in18nService.transform("common_response.admin_panel.company.success_delete"));
       },
       error: (err) => {
-        console.error(err);
+        this.toastService.showError(this.in18nService.transform("common_response.admin_panel.company.error_delete"));
       }
     });
   }
@@ -81,25 +81,25 @@ export class CompanyManagementComponent {
         if (this.editingCompany && this.editingCompany.id !== undefined) {
           this.companyService.update(this.editingCompany.id, this.companyForm.value).subscribe({
             next: (response) => {
-              console.log("Company updated successfully: " + response);
               this.loadCompanies();
-              this.toastService.showSuccess("Company updated successfully");
+              this.toastService.showSuccess(this.in18nService.transform("common_response.admin_panel.company.success_edit"));
             },
             error: (err) => {
-              console.error(err);
+              this.toastService.showError(this.in18nService.transform("common_response.admin_panel.company.error_edit"));
             }
           });
         } else {
           console.error("Editing company or its id is undefined.");
+          this.toastService.showError(this.in18nService.transform("common_response.admin_panel.company.error_edit"));
         }
       } else {
         this.companyService.create(this.companyForm.value).subscribe({
           next: (response) => {
-            console.log("Company created suceesully: " + response);
+            this.toastService.showSuccess(this.in18nService.transform("common_response.admin_panel.company.success_add"));
             this.loadCompanies();
           },
           error: (err) => {
-            console.error(err);
+            this.toastService.showError(this.in18nService.transform("common_response.admin_panel.company.error_add"));
           }
       });
       }

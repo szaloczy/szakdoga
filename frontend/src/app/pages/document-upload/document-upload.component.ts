@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { DocumentService } from '../../services/document.service';
-import { UploadedDocument } from '../../models/document.model';
+import { UploadedDocument } from '../../../types';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { I18nService } from "../../shared/i18n.pipe";

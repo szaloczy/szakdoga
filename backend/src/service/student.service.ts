@@ -8,7 +8,6 @@ export class StudentService {
   private userRepository = AppDataSource.getRepository(User);
 
   async getStudentHoursForExport(studentId: number) {
-    // Lekérjük a hallgatóhoz tartozó internship-et és annak óráit
     const student = await this.studentRepository.findOne({
       where: { id: studentId },
       relations: ["internship", "internship.hours"]
@@ -16,10 +15,8 @@ export class StudentService {
     if (!student || !student.internship) return [];
     const hours = student.internship.hours || [];
     
-    // Csak az elfogadott órákat szűrjük ki
     const approvedHours = hours.filter(hour => hour.status === 'approved');
     
-    // DTO mapping
     return approvedHours.map(hour => ({
       date: hour.date,
       startTime: hour.startTime,
@@ -47,7 +44,6 @@ export class StudentService {
 
     const students = await query.getMany();
 
-    // Formázás CSV-hez, órák összesítése
     return students.map(s => {
       let completedHours = 0;
       let pendingHours = 0;
@@ -65,7 +61,6 @@ export class StudentService {
         lastname: s.user?.lastname ?? "",
         email: s.user?.email ?? "",
         university: s.university ?? "",
-  // status: s.status ?? "", // kihagyva
         completedHours: Math.round(completedHours * 100) / 100,
         pendingHours: Math.round(pendingHours * 100) / 100
       };
@@ -116,12 +111,10 @@ export class StudentService {
       throw new Error("Student not found");
     }
 
-    // User adatok frissítése
     if (updateData.email) student.user.email = updateData.email;
     if (updateData.firstname) student.user.firstname = updateData.firstname;
     if (updateData.lastname) student.user.lastname = updateData.lastname;
 
-    // Student adatok frissítése
     if (updateData.student) {
       if (updateData.student.phone !== undefined) student.phone = updateData.student.phone;
       if (updateData.student.major) student.major = updateData.student.major;
@@ -136,10 +129,9 @@ export class StudentService {
   async updateStudentProfileByUserId(userId: number, updateData: UpdateProfileDTO): Promise<void> {
     let student: Student | null = null;
     
-    // Először userId alapján próbáljuk megtalálni
     student = await this.getStudentByUserId(userId);
     
-    // Ha nem találjuk userId alapján és van student ID a payload-ban, akkor azt próbáljuk
+
     if (!student && updateData.student?.id) {
       student = await this.getStudentById(updateData.student.id);
     }
@@ -148,12 +140,11 @@ export class StudentService {
       throw new Error(`Student not found for user ID ${userId}`);
     }
 
-    // User adatok frissítése
     if (updateData.email) student.user.email = updateData.email;
     if (updateData.firstname) student.user.firstname = updateData.firstname;
     if (updateData.lastname) student.user.lastname = updateData.lastname;
 
-    // Student adatok frissítése
+
     if (updateData.student) {
       if (updateData.student.phone !== undefined) student.phone = updateData.student.phone;
       if (updateData.student.major) student.major = updateData.student.major;

@@ -19,12 +19,12 @@ export class InternshipService {
       endDate: string;
       mentorId: number;
       companyId: number;
-      studentId?: number; // Hozzáadom a studentId opcionális mezőt
-      isApproved?: boolean; // Hozzáadom az isApproved opcionális mezőt
-      requiredWeeks?: number; // Kötelező hetek száma
+      studentId?: number;
+      isApproved?: boolean;
+      requiredWeeks?: number;
     }
   ): Promise<Internship> {
-    // Ha van studentId, azt használjuk, különben userId alapján keresünk
+    
     let student: Student;
     if (data.studentId) {
       student = await this.getStudent(data.studentId);
@@ -32,7 +32,6 @@ export class InternshipService {
       student = await this.getStudentByUserId(userId);
     }
     
-    // Ellenőrizzük, hogy nincs-e már aktív gyakornokság
     const existingInternship = await this.getActiveInternshipByStudentId(student.id);
     if (existingInternship) {
       throw new Error("Student already has an active internship");
@@ -41,7 +40,6 @@ export class InternshipService {
     const mentor = await this.getMentor(data.mentorId);
     const company = await this.getCompany(data.companyId);
 
-    // Dátum validáció
     this.validateDates(data.startDate, data.endDate);
 
     const internship = this.internshipRepo.create({
@@ -51,7 +49,7 @@ export class InternshipService {
       startDate: new Date(data.startDate),
       endDate: new Date(data.endDate),
       isApproved: data.isApproved !== undefined ? data.isApproved : false,
-      requiredWeeks: data.requiredWeeks || null,
+      requiredWeeks: data.requiredWeeks || 6,
     });
 
     return await this.internshipRepo.save(internship);
@@ -95,11 +93,9 @@ export class InternshipService {
     const end = new Date(endDate);
     const today = new Date();
     
-    // Csak a dátum részt hasonlítjuk össze, nem az időt
     const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
     const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     
-    // Engedélyezzük a mai napot és az elmúlt 1 napot is (rugalmasság miatt)
     const oneDayAgo = new Date(todayDateOnly);
     oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
@@ -228,17 +224,14 @@ export class InternshipService {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük a jogosultságot - admin mindent módosíthat
     if (!isAdmin && internship.student.user.id !== userId) {
       throw new Error("You can only update your own internship");
     }
 
-    // Csak nem jóváhagyott gyakornokságot lehet módosítani (admin kivétel)
     if (!isAdmin && internship.isApproved) {
       throw new Error("Cannot update approved internship");
     }
 
-    // Frissítés
     if (data.startDate) internship.startDate = new Date(data.startDate);
     if (data.endDate) internship.endDate = new Date(data.endDate);
 
@@ -252,17 +245,14 @@ export class InternshipService {
       internship.company = company;
     }
 
-    // isApproved frissítés (csak admin vagy ha explicit módon van beállítva)
     if (data.isApproved !== undefined) {
       internship.isApproved = data.isApproved;
     }
 
-    // requiredWeeks frissítés
     if (data.requiredWeeks !== undefined) {
       internship.requiredWeeks = data.requiredWeeks;
     }
 
-    // Dátum validáció ha változtak
     if (data.startDate || data.endDate) {
       this.validateDates(
         internship.startDate.toISOString(),
@@ -279,12 +269,10 @@ export class InternshipService {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük a jogosultságot - admin mindent törölhet
     if (!isAdmin && internship.student.user.id !== userId) {
       throw new Error("You can only delete your own internship");
     }
 
-    // Csak nem jóváhagyott gyakornokságot lehet törölni (admin kivétel)
     if (!isAdmin && internship.isApproved) {
       throw new Error("Cannot delete approved internship");
     }
@@ -298,7 +286,6 @@ export class InternshipService {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük, hogy a mentor jogosult-e jóváhagyni
     if (internship.mentor.user.id !== mentorUserId) {
       throw new Error("You can only approve your own students' internships");
     }
@@ -313,7 +300,6 @@ export class InternshipService {
       throw new Error("Internship not found");
     }
 
-    // Ellenőrizzük, hogy a mentor jogosult-e elutasítani
     if (internship.mentor.user.id !== mentorUserId) {
       throw new Error("You can only reject your own students' internships");
     }

@@ -81,16 +81,16 @@ export class LoginComponent implements OnInit{
     if(this.loginForm.valid) {
       this.userService.login(this.loginForm.value).subscribe({
         next: (response) => {
-          this.toastService.showSuccess(this.i18nService.transform('login.success'));
+          this.toastService.showSuccess(this.i18nService.transform('common_response.login.success_login'));
           this.authService.setToken(response.accessToken);
           if (this.authService.decodeToken()?.role == "admin") {
-            this.router.navigateByUrl("/admin")
+            this.router.navigateByUrl("/admin");
           } else {
             this.router.navigateByUrl("");
           }
         },
         error: (err) => {
-          this.toastService.showError(err.error.message);
+          this.toastService.showError(this.i18nService.transform('common_response.login.error_login'));
         }
       })
     }

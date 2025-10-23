@@ -2,7 +2,6 @@
   <h2>{{ 'dashboard.title' | translate }} {{user?.firstname}} {{user?.lastname}}!</h2>
 
   @if (authService.getRole() === "student") {
-    <!-- Student Dashboard - Modern Design -->
     <div class="row g-4 my-4">
       @for (card of summaryCards; track card) {
       <div class="col-12 col-md-6 col-lg-3">

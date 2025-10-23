@@ -50,10 +50,10 @@ export const en: NestedI18n = {
             },
             terms: {
                 statements: {
-                    text: "I agree all statements in"
+                    text: "I accept the"
                 },
                 link: {
-                    text: "Terms of service"
+                    text: "Privacy Policy"
                 }
             },
             button: {
@@ -139,7 +139,7 @@ export const en: NestedI18n = {
             text: "*Password field is required"
         },
         terms_required: {
-            text: "*Terms must be accepted"
+            text: "*You must accept the Privacy Policy"
         },
     },
     response: {
@@ -753,6 +753,7 @@ export const en: NestedI18n = {
                 student: { text: "Student" },
                 mentor: { text: "Mentor" },
                 company: { text: "Company" },
+                required_weeks: { text: "Required Weeks" },
                 start_date: { text: "Start Date" },
                 is_approved: { text: "Approval Status" },
                 actions: { text: "Actions" }
@@ -764,6 +765,7 @@ export const en: NestedI18n = {
                 company: { text: "Select Company" },
                 start_date: { text: "Start Date" },
                 end_date: { text: "End Date" },
+                required_weeks: { text: "Required Weeks" },
                 is_approved: { text: "Approval Status" },
                 options: {
                     approved: { text: "Approved" },
@@ -1130,7 +1132,15 @@ export const en: NestedI18n = {
                 error_mentor_edit: { text: "Error updating mentor. Please try again." },
                 error_delete: { text: "Error deleting user. Please try again." },
                 error_while_loading: { text: "Error while loading users. Please try again." }
+            },
+        },
+        login: {
+                success_login: { text: "Successful login." },
+                error_login: { text: "Invalid email or password. Please try again." }
+            },
+            register: {
+                success_register: { text: "Registration successful." },
+                error_register: { text: "Error during registration. Please try again." }
             }
-        }
     }
 }

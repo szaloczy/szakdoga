@@ -44,6 +44,11 @@
         <label class="form-check-label" for="termsCheck">
           {{ 'register.form.terms.statements' | translate }} <a href="#">{{ 'register.form.terms.link' | translate }}</a>
         </label>
+        @if(registerForm.get("terms")?.invalid && (registerForm.get("terms")?.touched || registerForm.get("terms")?.dirty)) {
+          @if(registerForm.get("terms")?.errors?.["required"]) {
+            <small class="error-message d-block">{{ 'error_message.terms_required' | translate }}</small>
+          }
+        }
       </div>
 
       <button class="btn w-100 text-white" [disabled]="registerForm.invalid">

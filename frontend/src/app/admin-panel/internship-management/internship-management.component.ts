@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CompanyDTO, InternshipListDTO, MentorDTO, StudentDTO } from '../../../types';
+import { CompanyDTO, InternshipListDTO, MentorDTO, StudentDTO, CreateInternshipDTO } from '../../../types';
 import { InternshipService } from '../../services/internship.service';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -51,6 +51,7 @@ export class InternshipManagementComponent implements OnInit{
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
       isApproved: [true, [Validators.required]],
+      requiredWeeks: [6, [Validators.required, Validators.min(1)]],
     });
   }
 
@@ -148,7 +149,8 @@ export class InternshipManagementComponent implements OnInit{
       company: company?.id || '',
       startDate: internship.startDate,
       endDate: internship.endDate,
-      isApproved: internship.isApproved
+      isApproved: internship.isApproved,
+      requiredWeeks: internship.requiredWeeks || 6
     });
   }
 }

@@ -13,7 +13,6 @@ export class InternshipHourService {
   private studentRepo = AppDataSource.getRepository(Student);
   private mentorRepo = AppDataSource.getRepository(Mentor);
 
-
   async createHourForStudent(
     userId: number,
     data: {
@@ -557,6 +556,9 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
       }
     }
 
+    // Calculate required hours based on internship weeks
+    const requiredHours = internship.requiredWeeks ? internship.requiredWeeks * 40 : 180;
+
     return {
       student: {
         id: student.user.id,
@@ -576,8 +578,8 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
         approvedHours: Math.round(approvedHours * 100) / 100,
         pendingHours: Math.round(pendingHours * 100) / 100,
         rejectedHours: Math.round(rejectedHours * 100) / 100,
-        completionPercentage: Math.round((approvedHours / 180) * 100),
-        remainingHours: Math.max(0, 180 - approvedHours)
+        completionPercentage: Math.round((approvedHours / requiredHours) * 100),
+        remainingHours: Math.max(0, requiredHours - approvedHours)
       },
       hours: hours.map(hour => ({
         id: hour.id,

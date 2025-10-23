@@ -157,10 +157,21 @@ export interface InternshipListDTO {
     startDate: Date;
     endDate: Date;
     isApproved: boolean;
+    requiredWeeks: number;
     studentName: string;
     studentNeptun: string;
     mentorName: string;
     companyName: string;
+}
+
+export interface CreateInternshipDTO {
+    student: number;
+    mentor: number;
+    company: number;
+    startDate: string;
+    endDate: string;
+    isApproved: boolean;
+    requiredWeeks: number;
 }
 
 export interface ProfileInternshipDTO {

@@ -50,10 +50,10 @@ export const hu: NestedI18n = {
             },
             terms: {
                 statements: {
-                    text: 'Egyetértek minden feltétellel az'
+                    text: 'Elfogadom az'
                 },
                 link: {
-                    text: 'Adatkezelési szabályzatban'
+                    text: 'Adatkezelési Tájékoztatót'
                 }
             },
             button: {
@@ -136,7 +136,7 @@ export const hu: NestedI18n = {
             text: "*Jelszó megadása kötelező"
         },
         terms_required: {
-            text: "*Feltételek elfogadása szükséges"
+            text: "*Az Adatkezelési Tájékoztató elfogadása kötelező"
         },  
     },
     response: {
@@ -744,6 +744,7 @@ export const hu: NestedI18n = {
                 student: { text: "Hallgató" },
                 mentor: { text: "Mentor" },
                 company: { text: "Cég" },
+                required_weeks: { text: "Szükséges hetek" },
                 start_date: { text: "Kezdési dátum" },
                 is_approved: { text: "Jóváhagyási státusz" },
                 actions: { text: "Műveletek" }
@@ -755,6 +756,7 @@ export const hu: NestedI18n = {
                 company: { text: "Cég kiválasztása" },
                 start_date: { text: "Kezdési dátum" },
                 end_date: { text: "Befejezési dátum" },
+                required_weeks: { text: "Szükséges hetek" },
                 is_approved: { text: "Jóváhagyási státusz" },
                 options: {
                     approved: { text: "Jóváhagy" },
@@ -1120,6 +1122,14 @@ export const hu: NestedI18n = {
                 error_delete: { text: "Hiba a felhasználó törlése során. Kérjük, próbálja újra." },
                 error_while_loading: { text: "Hiba a felhasználók betöltése során. Kérjük, próbálja újra." }
             }
+        },
+        login: {
+            success_login: { text: "Sikeres bejelentkezés." },
+            error_login: { text: "Hibás email vagy jelszó. Kérjük, próbálja újra." }
+        },
+        register: {
+            success_register: { text: "Sikeres regisztráció. Kérjük, ellenőrizze email fiókját a további utasításokért." },
+            error_register: { text: "Hiba a regisztráció során. Kérjük, próbálja újra." }
         }
     }
 }

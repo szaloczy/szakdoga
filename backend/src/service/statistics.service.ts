@@ -85,7 +85,6 @@ export class StatisticsService {
     return { labels: weekLabels, data: weekData };
   }
 
-  // Mentor statisztikák - összes mentorált diák órái havonta
   async getMentorHoursPerMonth(mentorUserId: number) {
     const hours = await this.hourRepo.find({ 
       where: { 

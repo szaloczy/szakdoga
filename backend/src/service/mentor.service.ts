@@ -118,12 +118,10 @@ export class MentorService {
       throw new Error("Mentor not found");
     }
 
-    // User adatok frissítése
     if (updateData.email) mentor.user.email = updateData.email;
     if (updateData.firstname) mentor.user.firstname = updateData.firstname;
     if (updateData.lastname) mentor.user.lastname = updateData.lastname;
 
-    // Mentor specifikus adatok frissítése
     if (updateData.position) mentor.position = updateData.position;
     if (updateData.companyId) {
       const company = await this.companyRepository.findOne({

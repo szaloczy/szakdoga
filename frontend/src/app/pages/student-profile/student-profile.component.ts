@@ -370,8 +370,9 @@ export class StudentProfileComponent implements OnInit{
     if (this.passwordForm.valid) {
       this.isPasswordLoading = true;
       const newPassword = this.passwordForm.get('newPassword')?.value;
+      const confirmPassword = this.passwordForm.get('confirmPassword')?.value;
       
-      this.userService.changePassword(this.authService.getUserId(), newPassword).subscribe({
+      this.userService.changePassword(this.authService.getUserId(), newPassword, confirmPassword).subscribe({
         next: () => {
           this.toastService.showSuccess(this.i18nService.transform('profile.reset_password.success'));
           this.closePasswordModal();

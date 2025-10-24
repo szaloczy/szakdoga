@@ -17,21 +17,18 @@ const userController = new UserController();
 
 router.get("/user", userController.getAll);
 
-// Specifikus útvonalak ELŐSZÖR (ezek nem illeszkedhetnek a :id pattern-re)
 router.post("/user/register", userController.register);
 router.post("/user/login", userController.login);
 router.post("/user/forgot-password", userController.forgotPassword);
-router.post("/user/reset-password", userController.resetPassword); 
+router.post("/user/reset-password", userController.resetPassword);
+router.put("/user/change-password", authMiddleware, userController.changePassword); 
 
-// Profilkép végpontok
 router.post("/user/profile-picture", authMiddleware, profilePictureUpload.single("file"), userController.uploadProfilePicture);
 router.delete("/user/profile-picture", authMiddleware, userController.deleteProfilePicture);
 router.get("/user/profile-picture/:filename", userController.getProfilePicture);
 
-// Dinamikus :id útvonalak UTOLJÁRA
 router.get("/user/:id", userController.getOne);
-router.put("/user/:id", authMiddleware, userController.update); 
-router.put("/user/:id/change-password", authMiddleware, userController.changePassword);
+router.put("/user/:id", authMiddleware, userController.update);
 router.delete("/user/:id", authMiddleware, userController.delete);
 
 router.get("/profile/:id", userController.getProfile);

@@ -351,21 +351,19 @@ login = async (req, res) => {
 
   changePassword = async (req, res) => {
     try {
-      const userId = Number(req.params.id);
-      const { currentPassword, newPassword } = req.body;
+      const { newPassword, confirmPassword } = req.body;
       const user = (req as any).user;
 
-      if (isNaN(userId)) {
-        return this.handleError(res, null, 400, "Invalid user ID");
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
       }
 
-      // Check if user is trying to change their own password or is admin
-      if (user.id !== userId && user.role !== "admin") {
-        return this.handleError(res, null, 403, "You can only change your own password");
+      if (!newPassword || !confirmPassword) {
+        return this.handleError(res, null, 400, "New password and confirmation are required");
       }
 
-      if (!currentPassword || !newPassword) {
-        return this.handleError(res, null, 400, "Current password and new password are required");
+      if (newPassword !== confirmPassword) {
+        return this.handleError(res, null, 400, "Passwords do not match");
       }
 
       if (newPassword.length < 6) {
@@ -373,25 +371,11 @@ login = async (req, res) => {
       }
 
       const targetUser = await this.repository.findOne({
-        where: { id: userId }
+        where: { id: user.id }
       });
 
       if (!targetUser) {
         return this.handleError(res, null, 404, "User not found");
-      }
-
-      // Verify current password (skip for admin changing other user's password)
-      if (user.id === userId) {
-        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, targetUser.password);
-        if (!isCurrentPasswordValid) {
-          return this.handleError(res, null, 400, "Current password is incorrect");
-        }
-
-        // Check if new password is different from current
-        const isSamePassword = await bcrypt.compare(newPassword, targetUser.password);
-        if (isSamePassword) {
-          return this.handleError(res, null, 400, "New password must be different from current password");
-        }
       }
 
       // Hash new password

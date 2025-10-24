@@ -31,6 +31,7 @@ router.get("/user/profile-picture/:filename", userController.getProfilePicture);
 // Dinamikus :id útvonalak UTOLJÁRA
 router.get("/user/:id", userController.getOne);
 router.put("/user/:id", authMiddleware, userController.update); 
+router.put("/user/:id/change-password", authMiddleware, userController.changePassword);
 router.delete("/user/:id", authMiddleware, userController.delete);
 
 router.get("/profile/:id", userController.getProfile);

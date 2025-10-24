@@ -41,7 +41,7 @@ export class RegisterComponent implements OnInit {
     if (this.registerForm.valid) {
       this.userService.register(this.registerForm.value).subscribe({
         next: (res) => {
-          this.toastService.showSuccess(this.i18nService.transform('register.success'));
+          this.toastService.showSuccess(this.i18nService.transform('common_response.register.success_register'));
           this.router.navigateByUrl("/login");
         },
         error: (err) => {

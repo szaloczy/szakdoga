@@ -27,15 +27,19 @@ export class StudentProfileComponent implements OnInit{
   studentService = inject(StudentService);
   toastService = inject(ToastService);
   profilePictureService = inject(ProfilePictureService);
+  i18nService = inject(I18nService);
   
   fb = inject(FormBuilder);
   profileForm!: FormGroup;
   companyForm!: FormGroup;
+  passwordForm!: FormGroup;
 
   isLoading = false;
   isProfileLoading = false;
   isInternshipLoading = false;
   isMentorLoading = false;
+  isPasswordModalOpen = false;
+  isPasswordLoading = false;
 
   originalFormValues: any = {};
   hasUnsavedChanges = false;
@@ -107,6 +111,11 @@ export class StudentProfileComponent implements OnInit{
       major: [''],
       neptun: ['']
     });
+
+    this.passwordForm = this.fb.group({
+      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      confirmPassword: ['', [Validators.required]]
+    }, { validators: this.passwordMatchValidator });
 
     this.companyForm = this.fb.group({
     });
@@ -325,5 +334,71 @@ export class StudentProfileComponent implements OnInit{
       const encodedAddress = encodeURIComponent(address);
       window.open(`https://maps.google.com/maps?q=${encodedAddress}`, '_blank');
     }
+  }
+
+  // Password change methods
+  openPasswordModal() {
+    this.isPasswordModalOpen = true;
+    this.passwordForm.reset();
+  }
+
+  closePasswordModal() {
+    this.isPasswordModalOpen = false;
+    this.passwordForm.reset();
+  }
+
+  passwordMatchValidator(form: FormGroup) {
+    const newPassword = form.get('newPassword');
+    const confirmPassword = form.get('confirmPassword');
+    
+    if (newPassword && confirmPassword && newPassword.value !== confirmPassword.value) {
+      confirmPassword.setErrors({ mismatch: true });
+      return { mismatch: true };
+    }
+    
+    if (confirmPassword?.errors?.['mismatch']) {
+      delete confirmPassword.errors['mismatch'];
+      if (Object.keys(confirmPassword.errors).length === 0) {
+        confirmPassword.setErrors(null);
+      }
+    }
+    
+    return null;
+  }
+
+  onSubmitPasswordChange() {
+    if (this.passwordForm.valid) {
+      this.isPasswordLoading = true;
+      const newPassword = this.passwordForm.get('newPassword')?.value;
+      
+      this.userService.changePassword(this.authService.getUserId(), newPassword).subscribe({
+        next: () => {
+          this.toastService.showSuccess(this.i18nService.transform('profile.reset_password.success'));
+          this.closePasswordModal();
+          this.isPasswordLoading = false;
+        },
+        error: (err) => {
+          this.toastService.showError(this.i18nService.transform('profile.reset_password.error'));
+          this.isPasswordLoading = false;
+        }
+      });
+    } else {
+      this.markFormGroupTouched(this.passwordForm);
+    }
+  }
+
+  isPasswordFieldInvalid(fieldName: string): boolean {
+    const field = this.passwordForm.get(fieldName);
+    return !!(field && field.invalid && field.touched);
+  }
+
+  getPasswordFieldError(fieldName: string): string {
+    const field = this.passwordForm.get(fieldName);
+    if (field && field.errors && field.touched) {
+      if (field.errors['required']) return this.i18nService.transform(`profile.reset_password.errors.${fieldName}_required`);
+      if (field.errors['minlength']) return this.i18nService.transform('profile.reset_password.errors.min_length');
+      if (field.errors['mismatch']) return this.i18nService.transform('profile.reset_password.errors.mismatch');
+    }
+    return '';
   }
 }

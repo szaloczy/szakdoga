@@ -189,11 +189,11 @@
           </button>
           <button 
             type="button" 
-            class="btn btn-secondary modify-password-button" 
-            (click)="resetProfile()"
+            class="btn btn-primary modify-password-button" 
+            (click)="openPasswordModal()"
             [disabled]="isLoading"
           >
-            🔄 {{ 'profile.reset_password.title' | translate }}
+            {{ 'profile.reset_password.title' | translate }}
           </button>
         </div>
       </form>
@@ -340,4 +340,77 @@
     } 
   </div> 
   } 
-</div> 
+</div>
+
+<!-- Password Change Modal -->
+@if (isPasswordModalOpen) {
+  <div class="modal show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'profile.reset_password.title' | translate }}</h5>
+          <button type="button" class="btn-close" (click)="closePasswordModal()" [disabled]="isPasswordLoading"></button>
+        </div>
+        <div class="modal-body">
+          <form [formGroup]="passwordForm" (ngSubmit)="onSubmitPasswordChange()">
+            <div class="mb-3">
+              <label for="newPassword" class="form-label">{{ 'profile.reset_password.new_password' | translate }} *</label>
+              <input
+                type="password"
+                id="newPassword"
+                class="form-control"
+                formControlName="newPassword"
+                placeholder="{{ 'profile.reset_password.new_password_placeholder' | translate }}"
+                [class.is-invalid]="isPasswordFieldInvalid('newPassword')"
+              />
+              @if (isPasswordFieldInvalid('newPassword')) {
+                <div class="invalid-feedback">{{ getPasswordFieldError('newPassword') }}</div>
+              }
+            </div>
+            
+            <div class="mb-3">
+              <label for="confirmPassword" class="form-label">{{ 'profile.reset_password.confirm_password' | translate }} *</label>
+              <input
+                type="password"
+                id="confirmPassword"
+                class="form-control"
+                formControlName="confirmPassword"
+                placeholder="{{ 'profile.reset_password.confirm_password_placeholder' | translate }}"
+                [class.is-invalid]="isPasswordFieldInvalid('confirmPassword')"
+              />
+              @if (isPasswordFieldInvalid('confirmPassword')) {
+                <div class="invalid-feedback">{{ getPasswordFieldError('confirmPassword') }}</div>
+              }
+            </div>
+            
+            <div class="alert alert-info">
+              <i class="bi bi-info-circle me-2"></i>
+              {{ 'profile.reset_password.info' | translate }}
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button 
+            type="button" 
+            class="btn btn-secondary" 
+            (click)="closePasswordModal()"
+            [disabled]="isPasswordLoading"
+          >
+            {{ 'buttons.forms.cancel' | translate }}
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-primary" 
+            (click)="onSubmitPasswordChange()"
+            [disabled]="passwordForm.invalid || isPasswordLoading"
+          >
+            @if (isPasswordLoading) {
+              <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+            }
+            {{ 'buttons.forms.save' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

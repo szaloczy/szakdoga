@@ -305,7 +305,20 @@ export const hu: NestedI18n = {
             }
         },
         reset_password: {
-            title: { text: "Jelszó módosítása" },
+            title: { text: "Jelszó változtatása" },
+            new_password: { text: "Új jelszó" },
+            confirm_password: { text: "Jelszó megerősítése" },
+            new_password_placeholder: { text: "Új jelszó megadása" },
+            confirm_password_placeholder: { text: "Új jelszó megerősítése" },
+            info: { text: "A jelszónak legalább 6 karakter hosszúságúnak kell lennie." },
+            success: { text: "Jelszó sikeresen megváltoztatva!" },
+            error: { text: "Jelszó változtatása sikertelen. Kérjük, próbálja újra." },
+            errors: {
+                newPassword_required: { text: "Az új jelszó megadása kötelező." },
+                confirmPassword_required: { text: "A jelszó megerősítése kötelező." },
+                min_length: { text: "A jelszónak legalább 6 karakter hosszúságúnak kell lennie." },
+                mismatch: { text: "A jelszavak nem egyeznek." }
+            }
         }
     },
     internship_hours:{
@@ -1128,7 +1141,7 @@ export const hu: NestedI18n = {
             error_login: { text: "Hibás email vagy jelszó. Kérjük, próbálja újra." }
         },
         register: {
-            success_register: { text: "Sikeres regisztráció. Kérjük, ellenőrizze email fiókját a további utasításokért." },
+            success_register: { text: "Sikeres regisztráció." },
             error_register: { text: "Hiba a regisztráció során. Kérjük, próbálja újra." }
         }
     }

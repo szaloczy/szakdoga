@@ -308,7 +308,20 @@ export const en: NestedI18n = {
             }
         },
         reset_password: {
-            title: { text: "Modify Password" },
+            title: { text: "Change Password" },
+            new_password: { text: "New Password" },
+            confirm_password: { text: "Confirm Password" },
+            new_password_placeholder: { text: "Enter new password" },
+            confirm_password_placeholder: { text: "Confirm new password" },
+            info: { text: "Password must be at least 6 characters long." },
+            success: { text: "Password changed successfully!" },
+            error: { text: "Failed to change password. Please try again." },
+            errors: {
+                newPassword_required: { text: "New password is required." },
+                confirmPassword_required: { text: "Password confirmation is required." },
+                min_length: { text: "Password must be at least 6 characters long." },
+                mismatch: { text: "Passwords do not match." }
+            }
         }
     },
     internship_hours:{

@@ -556,7 +556,6 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
       }
     }
 
-    // Calculate required hours based on internship weeks
     const requiredHours = internship.requiredWeeks ? internship.requiredWeeks * 40 : 180;
 
     return {

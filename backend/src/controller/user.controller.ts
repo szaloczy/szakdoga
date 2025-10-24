@@ -252,6 +252,8 @@ login = async (req, res) => {
     }
   };
 
+
+
   uploadProfilePicture = async (req, res) => {
     try {
       const user = (req as any).user;
@@ -342,6 +344,63 @@ login = async (req, res) => {
       }
 
       res.sendFile(filePath);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  changePassword = async (req, res) => {
+    try {
+      const userId = Number(req.params.id);
+      const { currentPassword, newPassword } = req.body;
+      const user = (req as any).user;
+
+      if (isNaN(userId)) {
+        return this.handleError(res, null, 400, "Invalid user ID");
+      }
+
+      // Check if user is trying to change their own password or is admin
+      if (user.id !== userId && user.role !== "admin") {
+        return this.handleError(res, null, 403, "You can only change your own password");
+      }
+
+      if (!currentPassword || !newPassword) {
+        return this.handleError(res, null, 400, "Current password and new password are required");
+      }
+
+      if (newPassword.length < 6) {
+        return this.handleError(res, null, 400, "New password must be at least 6 characters long");
+      }
+
+      const targetUser = await this.repository.findOne({
+        where: { id: userId }
+      });
+
+      if (!targetUser) {
+        return this.handleError(res, null, 404, "User not found");
+      }
+
+      // Verify current password (skip for admin changing other user's password)
+      if (user.id === userId) {
+        const isCurrentPasswordValid = await bcrypt.compare(currentPassword, targetUser.password);
+        if (!isCurrentPasswordValid) {
+          return this.handleError(res, null, 400, "Current password is incorrect");
+        }
+
+        // Check if new password is different from current
+        const isSamePassword = await bcrypt.compare(newPassword, targetUser.password);
+        if (isSamePassword) {
+          return this.handleError(res, null, 400, "New password must be different from current password");
+        }
+      }
+
+      // Hash new password
+      const hashedNewPassword = await bcrypt.hash(newPassword, 10);
+      
+      targetUser.password = hashedNewPassword;
+      await this.repository.save(targetUser);
+
+      res.json({ message: "Password changed successfully" });
     } catch (error) {
       this.handleError(res, error);
     }

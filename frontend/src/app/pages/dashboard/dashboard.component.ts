@@ -15,6 +15,8 @@ import { StudentListComponent } from '../../components/student-list/student-list
 import { HourApprovalModalComponent } from '../../components/hour-approval-modal/hour-approval-modal.component';
 import { DocumentUploadModalComponent } from '../../components/document-upload-modal/document-upload-modal.component';
 import { StudentsListModalComponent } from '../../components/students-list-modal/students-list-modal.component';
+import { HourLoggingModalComponent } from '../../components/hour-logging-modal/hour-logging-modal.component';
+import { MyHoursModalComponent } from '../../components/my-hours-modal/my-hours-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -27,6 +29,8 @@ import { StudentsListModalComponent } from '../../components/students-list-modal
     HourApprovalModalComponent,
     DocumentUploadModalComponent,
     StudentsListModalComponent,
+    HourLoggingModalComponent,
+    MyHoursModalComponent,
   ],
 
   templateUrl: './dashboard.component.html',
@@ -71,6 +75,12 @@ export class DashboardComponent implements OnInit{
 
   // Students list modal
   showStudentsListModal = false;
+
+  // Hour logging modal
+  showHourLoggingModal = false;
+
+  // My hours modal
+  showMyHoursModal = false;
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -252,5 +262,27 @@ export class DashboardComponent implements OnInit{
 
   closeStudentsListModal() {
     this.showStudentsListModal = false;
+  }
+
+  openHourLoggingModal() {
+    this.showHourLoggingModal = true;
+  }
+
+  closeHourLoggingModal() {
+    this.showHourLoggingModal = false;
+  }
+
+  onHourLogged() {
+    // Reload student dashboard data
+    const userId = this.authService.getUserId();
+    this.loadStudentDashboard(userId);
+  }
+
+  openMyHoursModal() {
+    this.showMyHoursModal = true;
+  }
+
+  closeMyHoursModal() {
+    this.showMyHoursModal = false;
   }
 }

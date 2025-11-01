@@ -1,0 +1,34 @@
+// My hours modal styles
+.modal {
+  &.show {
+    display: block;
+  }
+}
+
+.description-text {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.table {
+  td, th {
+    vertical-align: middle;
+  }
+}
+
+.btn-group {
+  .btn {
+    flex: 1;
+  }
+}
+
+.alert-info {
+  background-color: #e7f3ff;
+  border-color: #b6d4fe;
+  
+  .row > div {
+    padding: 10px 0;
+  }
+}

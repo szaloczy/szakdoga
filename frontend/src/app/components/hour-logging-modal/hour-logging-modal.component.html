@@ -1,0 +1,129 @@
+<!-- Hour Logging Modal -->
+@if (show) {
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-clock-history me-2"></i>
+          {{ 'dashboard.student.hour_logging.title' | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="hourForm" (ngSubmit)="onSubmit()">
+          <div class="mb-3">
+            <label for="date" class="form-label">
+              <i class="bi bi-calendar me-1"></i>
+              {{ 'dashboard.student.hour_logging.date' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <input 
+              type="date" 
+              class="form-control" 
+              id="date" 
+              formControlName="date"
+              [max]="maxDate"
+              [class.is-invalid]="hourForm.get('date')?.invalid && hourForm.get('date')?.touched">
+            @if (hourForm.get('date')?.invalid && hourForm.get('date')?.touched) {
+              <div class="invalid-feedback">
+                {{ 'dashboard.student.hour_logging.date_required' | translate }}
+              </div>
+            }
+          </div>
+
+          <div class="row">
+            <div class="col-md-6 mb-3">
+              <label for="startTime" class="form-label">
+                <i class="bi bi-clock me-1"></i>
+                {{ 'dashboard.student.hour_logging.start_time' | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="time" 
+                class="form-control" 
+                id="startTime" 
+                formControlName="startTime"
+                [class.is-invalid]="hourForm.get('startTime')?.invalid && hourForm.get('startTime')?.touched">
+              @if (hourForm.get('startTime')?.invalid && hourForm.get('startTime')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'dashboard.student.hour_logging.start_time_required' | translate }}
+                </div>
+              }
+            </div>
+
+            <div class="col-md-6 mb-3">
+              <label for="endTime" class="form-label">
+                <i class="bi bi-clock-fill me-1"></i>
+                {{ 'dashboard.student.hour_logging.end_time' | translate }}
+                <span class="text-danger">*</span>
+              </label>
+              <input 
+                type="time" 
+                class="form-control" 
+                id="endTime" 
+                formControlName="endTime"
+                [class.is-invalid]="hourForm.get('endTime')?.invalid && hourForm.get('endTime')?.touched">
+              @if (hourForm.get('endTime')?.invalid && hourForm.get('endTime')?.touched) {
+                <div class="invalid-feedback">
+                  {{ 'dashboard.student.hour_logging.end_time_required' | translate }}
+                </div>
+              }
+            </div>
+          </div>
+
+          @if (hourForm.get('startTime')?.value && hourForm.get('endTime')?.value) {
+            <div class="alert alert-info mb-3">
+              <i class="bi bi-info-circle me-2"></i>
+              <strong>{{ 'dashboard.student.hour_logging.duration' | translate }}:</strong>
+              {{ calculateDuration() }}
+            </div>
+          }
+
+          <div class="mb-3">
+            <label for="description" class="form-label">
+              <i class="bi bi-pencil me-1"></i>
+              {{ 'dashboard.student.hour_logging.description' | translate }}
+              <span class="text-danger">*</span>
+            </label>
+            <textarea 
+              class="form-control" 
+              id="description" 
+              rows="4" 
+              formControlName="description"
+              [placeholder]="'dashboard.student.hour_logging.description_placeholder' | translate"
+              [class.is-invalid]="hourForm.get('description')?.invalid && hourForm.get('description')?.touched"></textarea>
+            @if (hourForm.get('description')?.invalid && hourForm.get('description')?.touched) {
+              <div class="invalid-feedback">
+                @if (hourForm.get('description')?.errors?.['required']) {
+                  {{ 'dashboard.student.hour_logging.description_required' | translate }}
+                } @else if (hourForm.get('description')?.errors?.['minlength']) {
+                  {{ 'dashboard.student.hour_logging.description_min_length' | translate }}
+                }
+              </div>
+            }
+            <small class="text-muted">
+              {{ 'dashboard.student.hour_logging.description_help' | translate }}
+            </small>
+          </div>
+
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" (click)="close()" [disabled]="isSubmitting">
+              <i class="bi bi-x-circle me-2"></i>
+              {{ 'dashboard.student.hour_logging.cancel' | translate }}
+            </button>
+            <button type="submit" class="btn btn-primary" [disabled]="hourForm.invalid || isSubmitting">
+              @if (isSubmitting) {
+                <span class="spinner-border spinner-border-sm me-2"></span>
+              } @else {
+                <i class="bi bi-check-circle me-2"></i>
+              }
+              {{ 'dashboard.student.hour_logging.submit' | translate }}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+}

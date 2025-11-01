@@ -237,6 +237,9 @@ export const en: NestedI18n = {
             upload_documents: { text: "Upload documents" },
             approve_pending_hours: { text: "Approve Pending Hours" },
             no_pending_hours: { text: "No pending hours to approve." },
+            pending_hours_count: { text: "pending hour(s)" },
+            approve_all: { text: "Approve All" },
+            reject_all: { text: "Reject All" },
             select_all: { text: "Select All" },
             deselect_all: { text: "Deselect All" },
             date: { text: "Date" },
@@ -248,7 +251,26 @@ export const en: NestedI18n = {
             approve_selected: { text: "Approve Selected" },
             no_hours_selected: { text: "No hours selected." },
             hours_approved_success: { text: "{{count}} hour(s) approved successfully!" },
-            hours_approved_error: { text: "Failed to approve {{count}} hour(s)." }
+            hours_approved_error: { text: "Failed to approve {{count}} hour(s)." },
+            hours_rejected_success: { text: "{{count}} hour(s) rejected successfully!" },
+            hours_rejected_error: { text: "Failed to reject {{count}} hour(s)." },
+            no_activity: { text: "No activity" },
+            students_list: {
+                title: { text: "All Students" },
+                email: { text: "Email" },
+                neptun: { text: "Neptun" },
+                university: { text: "University" },
+                major: { text: "Major" },
+                not_provided: { text: "Not provided" },
+                hours_summary: { text: "Hours Summary" },
+                approved: { text: "Approved" },
+                pending: { text: "Pending" },
+                rejected: { text: "Rejected" },
+                total: { text: "Total" },
+                hours: { text: "hours" },
+                view_profile: { text: "View Profile" },
+                close: { text: "Close" }
+            }
         }
     },
     profile: {

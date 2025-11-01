@@ -27,7 +27,7 @@ export class HourApprovalModalComponent {
     pendingHours: InternshipHourDTO[];
   }> = [];
   isLoadingPendingHours = false;
-  selectedStudentHours: { [studentId: number]: number[] } = {};
+  processingStudents: { [studentId: number]: boolean } = {};
 
   ngOnChanges() {
     if (this.show && this.students.length > 0) {
@@ -38,7 +38,6 @@ export class HourApprovalModalComponent {
   loadPendingHours() {
     this.isLoadingPendingHours = true;
     this.studentsWithPendingHours = [];
-    this.selectedStudentHours = {};
 
     const pendingStudents: Array<{student: extendedStudentDTO; pendingHours: InternshipHourDTO[]}> = [];
     let processedCount = 0;
@@ -49,8 +48,6 @@ export class HourApprovalModalComponent {
           const pendingHours = (details.hours || []).filter((h: InternshipHourDTO) => h.status === 'pending');
           if (pendingHours.length > 0) {
             pendingStudents.push({ student, pendingHours });
-            // Pre-select all pending hours
-            this.selectedStudentHours[student.id] = pendingHours.map((h: InternshipHourDTO) => h.id);
           }
           processedCount++;
           if (processedCount === this.students.length) {
@@ -73,77 +70,99 @@ export class HourApprovalModalComponent {
     this.closeModal.emit();
   }
 
-  toggleHourSelection(studentId: number, hourId: number) {
-    if (!this.selectedStudentHours[studentId]) {
-      this.selectedStudentHours[studentId] = [];
-    }
-    
-    const index = this.selectedStudentHours[studentId].indexOf(hourId);
-    if (index > -1) {
-      this.selectedStudentHours[studentId].splice(index, 1);
-    } else {
-      this.selectedStudentHours[studentId].push(hourId);
-    }
-  }
-
-  isHourSelected(studentId: number, hourId: number): boolean {
-    return this.selectedStudentHours[studentId]?.includes(hourId) || false;
-  }
-
-  selectAllHoursForStudent(studentId: number, hours: InternshipHourDTO[]) {
-    this.selectedStudentHours[studentId] = hours.map(h => h.id);
-  }
-
-  deselectAllHoursForStudent(studentId: number) {
-    this.selectedStudentHours[studentId] = [];
-  }
-
-  approveSelectedHours() {
-    const allSelectedHourIds: number[] = [];
-    Object.values(this.selectedStudentHours).forEach(hourIds => {
-      allSelectedHourIds.push(...hourIds);
-    });
-
-    if (allSelectedHourIds.length === 0) {
-      this.toastService.showError(this.i18nService.transform('dashboard.mentor.no_hours_selected'));
-      return;
-    }
-
+  approveAllForStudent(studentId: number, hours: InternshipHourDTO[]) {
+    this.processingStudents[studentId] = true;
     let approvedCount = 0;
     let errorCount = 0;
-    const totalToApprove = allSelectedHourIds.length;
+    const totalToApprove = hours.length;
 
-    allSelectedHourIds.forEach(hourId => {
-      this.internshipHourService.approveHour(hourId).subscribe({
+    hours.forEach(hour => {
+      this.internshipHourService.approveHour(hour.id).subscribe({
         next: () => {
           approvedCount++;
           if (approvedCount + errorCount === totalToApprove) {
-            this.handleApprovalComplete(approvedCount, errorCount);
+            this.handleStudentApprovalComplete(studentId, approvedCount, errorCount);
           }
         },
         error: () => {
           errorCount++;
           if (approvedCount + errorCount === totalToApprove) {
-            this.handleApprovalComplete(approvedCount, errorCount);
+            this.handleStudentApprovalComplete(studentId, approvedCount, errorCount);
           }
         }
       });
     });
   }
 
-  private handleApprovalComplete(approvedCount: number, errorCount: number) {
+  rejectAllForStudent(studentId: number, hours: InternshipHourDTO[]) {
+    this.processingStudents[studentId] = true;
+    let rejectedCount = 0;
+    let errorCount = 0;
+    const totalToReject = hours.length;
+
+    hours.forEach(hour => {
+      this.internshipHourService.rejectHour(hour.id).subscribe({
+        next: () => {
+          rejectedCount++;
+          if (rejectedCount + errorCount === totalToReject) {
+            this.handleStudentRejectionComplete(studentId, rejectedCount, errorCount);
+          }
+        },
+        error: () => {
+          errorCount++;
+          if (rejectedCount + errorCount === totalToReject) {
+            this.handleStudentRejectionComplete(studentId, rejectedCount, errorCount);
+          }
+        }
+      });
+    });
+  }
+
+  private handleStudentApprovalComplete(studentId: number, approvedCount: number, errorCount: number) {
+    this.processingStudents[studentId] = false;
+    
     if (approvedCount > 0) {
       this.toastService.showSuccess(
-        this.i18nService.transform('dashboard.mentor.hours_approved_success', { count: approvedCount.toString() })
+        this.i18nService.transform('dashboard.mentor.hours_approved_success')
       );
     }
     if (errorCount > 0) {
       this.toastService.showError(
-        this.i18nService.transform('dashboard.mentor.hours_approved_error', { count: errorCount.toString() })
+        this.i18nService.transform('dashboard.mentor.hours_approved_error')
       );
     }
+
+    this.studentsWithPendingHours = this.studentsWithPendingHours.filter(s => s.student.id !== studentId);
     
-    this.approvalComplete.emit();
-    this.close();
+    if (this.studentsWithPendingHours.length === 0) {
+      this.approvalComplete.emit();
+      this.close();
+    } else {
+      this.approvalComplete.emit();
+    }
+  }
+
+  private handleStudentRejectionComplete(studentId: number, rejectedCount: number, errorCount: number) {
+    this.processingStudents[studentId] = false;
+    
+    if (rejectedCount > 0) {
+      this.toastService.showSuccess(
+        this.i18nService.transform('dashboard.mentor.hours_rejected_success')
+      );
+    }
+    if (errorCount > 0) {
+      this.toastService.showError(
+        this.i18nService.transform('dashboard.mentor.hours_rejected_error')
+      );
+    }
+
+    this.studentsWithPendingHours = this.studentsWithPendingHours.filter(s => s.student.id !== studentId);
+
+    if (this.studentsWithPendingHours.length === 0) {
+      this.approvalComplete.emit();
+      this.close();
+    } else {
+      this.approvalComplete.emit();
+    }
   }
 }

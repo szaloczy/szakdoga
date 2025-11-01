@@ -234,6 +234,9 @@ export const hu: NestedI18n = {
             upload_documents: { text: "Dokumentumok feltöltése" },
             approve_pending_hours: { text: "Függőben lévő órák jóváhagyása" },
             no_pending_hours: { text: "Nincs jóváhagyásra váró óra." },
+            pending_hours_count: { text: "függőben lévő óra" },
+            approve_all: { text: "Összes elfogadása" },
+            reject_all: { text: "Összes elutasítása" },
             select_all: { text: "Összes kijelölése" },
             deselect_all: { text: "Kijelölés törlése" },
             date: { text: "Dátum" },
@@ -245,7 +248,26 @@ export const hu: NestedI18n = {
             approve_selected: { text: "Kijelöltek jóváhagyása" },
             no_hours_selected: { text: "Nincs kijelölt óra." },
             hours_approved_success: { text: "{{count}} óra sikeresen jóváhagyva!" },
-            hours_approved_error: { text: "{{count}} óra jóváhagyása sikertelen." }
+            hours_approved_error: { text: "{{count}} óra jóváhagyása sikertelen." },
+            hours_rejected_success: { text: "{{count}} óra sikeresen elutasítva!" },
+            hours_rejected_error: { text: "{{count}} óra elutasítása sikertelen." },
+            no_activity: { text: "Nincs tevékenység" },
+            students_list: {
+                title: { text: "Összes hallgató" },
+                email: { text: "Email" },
+                neptun: { text: "Neptun" },
+                university: { text: "Egyetem" },
+                major: { text: "Szak" },
+                not_provided: { text: "Nincs megadva" },
+                hours_summary: { text: "Órák összesítése" },
+                approved: { text: "Jóváhagyott" },
+                pending: { text: "Függőben" },
+                rejected: { text: "Elutasított" },
+                total: { text: "Összesen" },
+                hours: { text: "óra" },
+                view_profile: { text: "Profil megtekintése" },
+                close: { text: "Bezárás" }
+            }
         }
     },
     profile: {

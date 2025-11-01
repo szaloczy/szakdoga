@@ -1,0 +1,111 @@
+<!-- Students List Modal -->
+@if (show) {
+<div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
+  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">
+          <i class="bi bi-people-fill me-2"></i>
+          {{ 'dashboard.mentor.students_list.title' | translate }}
+        </h5>
+        <button type="button" class="btn-close btn-close-white" (click)="close()"></button>
+      </div>
+      <div class="modal-body">
+        @if (students.length === 0) {
+          <div class="text-center text-muted py-5">
+            <i class="bi bi-people fs-1 d-block mb-3"></i>
+            <p>{{ 'dashboard.mentor.no_students_assigned' | translate }}</p>
+          </div>
+        } @else {
+          <div class="list-group list-group-flush">
+            @for(student of students; track student.id) {
+              <div class="list-group-item">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div class="flex-grow-1">
+                    <div class="d-flex align-items-center mb-2">
+                      <h6 class="mb-0 me-2">
+                        <i class="bi bi-person-circle me-1"></i>
+                        {{ student.firstname }} {{ student.lastname }}
+                      </h6>
+                      <span class="badge" [ngClass]="getStatusBadgeClass(student)">
+                        {{ getStatusText(student) | translate }}
+                      </span>
+                    </div>
+                    
+                    <div class="row g-2 mb-2">
+                      <div class="col-md-6">
+                        <small class="text-muted">
+                          <i class="bi bi-envelope me-1"></i>
+                          <strong>{{ 'dashboard.mentor.students_list.email' | translate }}:</strong> 
+                          {{ student.email }}
+                        </small>
+                      </div>
+                      <div class="col-md-6">
+                        <small class="text-muted">
+                          <i class="bi bi-clock me-1"></i>
+                          <strong>{{ 'dashboard.mentor.students_list.total' | translate }}:</strong> 
+                          {{ student.totalSubmittedHours || 0 }} {{ 'dashboard.mentor.students_list.hours' | translate }}
+                        </small>
+                      </div>
+                    </div>
+
+                    <div class="row g-2 mb-2">
+                      <div class="col-md-6">
+                        <small class="text-muted">
+                          <i class="bi bi-building me-1"></i>
+                          <strong>{{ 'dashboard.mentor.students_list.university' | translate }}:</strong> 
+                          {{ student.university || ('dashboard.mentor.students_list.not_provided' | translate) }}
+                        </small>
+                      </div>
+                      <div class="col-md-6">
+                        <small class="text-muted">
+                          <i class="bi bi-book me-1"></i>
+                          <strong>{{ 'dashboard.mentor.students_list.major' | translate }}:</strong> 
+                          {{ student.major || ('dashboard.mentor.students_list.not_provided' | translate) }}
+                        </small>
+                      </div>
+                    </div>
+
+                    @if (studentHourStats[student.id]) {
+                      <div class="mt-2">
+                        <small class="text-muted">
+                          <i class="bi bi-clock-history me-1"></i>
+                          <strong>{{ 'dashboard.mentor.students_list.hours_summary' | translate }}:</strong>
+                        </small>
+                        <div class="d-flex gap-2 mt-1">
+                          <span class="badge bg-success">
+                            <i class="bi bi-check-circle me-1"></i>
+                            {{ 'dashboard.mentor.students_list.approved' | translate }}: {{ studentHourStats[student.id].approved }}
+                          </span>
+                          <span class="badge bg-warning text-dark">
+                            <i class="bi bi-hourglass-split me-1"></i>
+                            {{ 'dashboard.mentor.students_list.pending' | translate }}: {{ studentHourStats[student.id].pending }}
+                          </span>
+                          <span class="badge bg-danger">
+                            <i class="bi bi-x-circle me-1"></i>
+                            {{ 'dashboard.mentor.students_list.rejected' | translate }}: {{ studentHourStats[student.id].rejected }}
+                          </span>
+                          <span class="badge bg-info">
+                            <i class="bi bi-clock me-1"></i>
+                            {{ 'dashboard.mentor.students_list.total' | translate }}: {{ studentHourStats[student.id].total }}
+                          </span>
+                        </div>
+                      </div>
+                    }
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        }
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="close()">
+          <i class="bi bi-x-circle me-2"></i>
+          {{ 'dashboard.mentor.students_list.close' | translate }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+}

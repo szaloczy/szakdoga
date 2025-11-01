@@ -230,7 +230,8 @@
             
             <div class="col-md-6 col-lg-3 mb-3">
               <button 
-                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                class="btn btn-outline-primary w-100 h-100 position-relative"
+                (click)="openStudentsListModal()">
                 <i class="fs-4 d-block mb-2"></i>
                 <span class="d-block">{{ 'dashboard.mentor.view_all_students' | translate }}</span>
                 <i class="bi bi-eye me-2"></i>
@@ -301,5 +302,13 @@
   (closeModal)="closeDocumentUploadModal()"
   (uploadComplete)="onDocumentUploadComplete()">
 </app-document-upload-modal>
+
+<!-- Students List Modal Component -->
+<app-students-list-modal
+  [show]="showStudentsListModal"
+  [students]="mentorStudents"
+  [studentHourStats]="mentorStudentHourStats"
+  (closeModal)="closeStudentsListModal()">
+</app-students-list-modal>
 
 

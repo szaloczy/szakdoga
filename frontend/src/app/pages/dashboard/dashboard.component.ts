@@ -14,6 +14,7 @@ import { StatisticsService } from '../../services/statistics.service';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
 import { HourApprovalModalComponent } from '../../components/hour-approval-modal/hour-approval-modal.component';
 import { DocumentUploadModalComponent } from '../../components/document-upload-modal/document-upload-modal.component';
+import { StudentsListModalComponent } from '../../components/students-list-modal/students-list-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -25,6 +26,7 @@ import { DocumentUploadModalComponent } from '../../components/document-upload-m
     DatePipe,
     HourApprovalModalComponent,
     DocumentUploadModalComponent,
+    StudentsListModalComponent,
   ],
 
   templateUrl: './dashboard.component.html',
@@ -66,6 +68,9 @@ export class DashboardComponent implements OnInit{
 
   // Document upload modal
   showDocumentUploadModal = false;
+
+  // Students list modal
+  showStudentsListModal = false;
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -239,5 +244,13 @@ export class DashboardComponent implements OnInit{
         }
       });
     }
+  }
+
+  openStudentsListModal() {
+    this.showStudentsListModal = true;
+  }
+
+  closeStudentsListModal() {
+    this.showStudentsListModal = false;
   }
 }

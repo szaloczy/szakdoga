@@ -1,0 +1,19 @@
+// Students list modal styles
+.modal {
+  &.show {
+    display: block;
+  }
+}
+
+.list-group-item {
+  transition: background-color 0.2s ease;
+
+  &:hover {
+    background-color: #f8f9fa;
+  }
+}
+
+.badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+}

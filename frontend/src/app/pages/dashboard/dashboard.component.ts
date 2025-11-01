@@ -12,6 +12,8 @@ import { UserService } from '../../services/user.service';
 import { MentorService } from '../../services/mentor.service';
 import { StatisticsService } from '../../services/statistics.service';
 import { StudentListComponent } from '../../components/student-list/student-list.component';
+import { HourApprovalModalComponent } from '../../components/hour-approval-modal/hour-approval-modal.component';
+import { DocumentUploadModalComponent } from '../../components/document-upload-modal/document-upload-modal.component';
 
 @Component({
   selector: 'app-dashboard',
@@ -21,6 +23,8 @@ import { StudentListComponent } from '../../components/student-list/student-list
     StudentListComponent,
     CommonModule,
     DatePipe,
+    HourApprovalModalComponent,
+    DocumentUploadModalComponent,
   ],
 
   templateUrl: './dashboard.component.html',
@@ -56,6 +60,12 @@ export class DashboardComponent implements OnInit{
 
   mentorCards: any[] = [];
   isLoadingMentorData = false;
+
+  // Approval modal
+  showApprovalModal = false;
+
+  // Document upload modal
+  showDocumentUploadModal = false;
 
   ngOnInit(): void {
     const userId = this.authService.getUserId();
@@ -198,5 +208,36 @@ export class DashboardComponent implements OnInit{
 
   hasPendingHours(student: InternshipWithHours): boolean {
     return student.hours ? student.hours.some(h => h.status === 'pending') : false;
+  }
+
+  openApprovalModal() {
+    this.showApprovalModal = true;
+  }
+
+  closeApprovalModal() {
+    this.showApprovalModal = false;
+  }
+
+  onApprovalComplete() {
+    this.loadMentorDashboard(this.authService.getUserId());
+  }
+
+  openDocumentUploadModal() {
+    this.showDocumentUploadModal = true;
+  }
+
+  closeDocumentUploadModal() {
+    this.showDocumentUploadModal = false;
+  }
+
+  onDocumentUploadComplete() {
+    // Reload documents if needed
+    if (this.authService.getRole() === 'student') {
+      this.documentService.getStudentDocuments().subscribe({
+        next: (docs) => {
+          this.studentDocuments = docs;
+        }
+      });
+    }
   }
 }

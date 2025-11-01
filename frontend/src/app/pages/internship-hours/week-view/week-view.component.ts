@@ -41,7 +41,7 @@ refreshData(): void {
 
 exportToCSV(): void {
   if (this.entries.length === 0) {
-    this.toastService.showError('No data to export');
+    this.toastService.showError(this.i18nService.transform('common_response.csv_export.no_data_error'));
     return;
   }
 
@@ -66,7 +66,7 @@ exportToCSV(): void {
   a.download = `internship-hours-week-${new Date().toISOString().split('T')[0]}.csv`;
   a.click();
   window.URL.revokeObjectURL(url);
-  this.toastService.showSuccess('Data exported successfully');
+  this.toastService.showSuccess(this.i18nService.transform('common_response.csv_export.success_export'));
 }
 
   fb = inject(FormBuilder);

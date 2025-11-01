@@ -230,8 +230,22 @@ export const hu: NestedI18n = {
             up_to_date: { text: "Naprakész" },
             view_all_students: { text: "Összes hallgató megtekintése" },
             no_students_assigned: { text: "Még nincsenek hozzárendelt hallgatók." },
-            approve_hour: { text: "Óra jóváhagyása" },
+            approve_hour: { text: "Órák jóváhagyása" },
             upload_documents: { text: "Dokumentumok feltöltése" },
+            approve_pending_hours: { text: "Függőben lévő órák jóváhagyása" },
+            no_pending_hours: { text: "Nincs jóváhagyásra váró óra." },
+            select_all: { text: "Összes kijelölése" },
+            deselect_all: { text: "Kijelölés törlése" },
+            date: { text: "Dátum" },
+            start_time: { text: "Kezdés" },
+            end_time: { text: "Befejezés" },
+            duration: { text: "Időtartam" },
+            description: { text: "Leírás" },
+            close: { text: "Bezárás" },
+            approve_selected: { text: "Kijelöltek jóváhagyása" },
+            no_hours_selected: { text: "Nincs kijelölt óra." },
+            hours_approved_success: { text: "{{count}} óra sikeresen jóváhagyva!" },
+            hours_approved_error: { text: "{{count}} óra jóváhagyása sikertelen." }
         }
     },
     profile: {
@@ -442,6 +456,8 @@ export const hu: NestedI18n = {
         title: { text: "Dokumentum feltöltése (PDF)" },
         upload_section: {
             title: { text: "Dokumentumok feltöltése (PDF)" },
+            subtitle: { text: "Töltse fel a gyakorlathoz kapcsolódó dokumentumokat" },
+            file_label: { text: "PDF fájl kiválasztása" },
             select_file: { text: "Fájl kiválasztása" },
             no_file: { text: "Nincs fájl kiválasztva" },
             upload_button: { text: "Feltöltés" },
@@ -449,12 +465,14 @@ export const hu: NestedI18n = {
             success: { text: "Fájl sikeresen feltöltve!" },
             error: { text: "Hiba a fájl feltöltésekor. Kérjük, próbálja újra." },
             invalid_file: { text: "Érvénytelen fájltípus. Kérjük, töltsön fel egy PDF-et." },
-            empty: { text: "Nincs feltöltött fájl." }
+            empty: { text: "Nincs feltöltött fájl." },
+            info: { text: "Csak maximum 10MB méretű PDF fájlok tölthetők fel." }
         },
         documents_section: {
             title: { text: "Feltöltött dokumentumok" },
             no_documents: { text: "Még nincs feltöltött dokumentum." },
         },
+        review_note: { text: "Értékelés megjegyzés" },
         upload_error: {
             error1: {
                 text: "Csak PDF fájlok tölthetők fel!"
@@ -1143,6 +1161,15 @@ export const hu: NestedI18n = {
         register: {
             success_register: { text: "Sikeres regisztráció." },
             error_register: { text: "Hiba a regisztráció során. Kérjük, próbálja újra." }
-        }
+        },
+        csv_export: {
+            success_export: { text: "Adatok sikeresen exportálva CSV formátumban." },
+            error_export: { text: "Hiba az adatok exportálása során. Kérjük, próbálja újra." },
+            no_data_error: { text: "Nincs elérhető adat az exportáláshoz." }
+         },
+        document_upload: {
+            success_upload: { text: "Dokumentum sikeresen feltöltve." },
+            error_upload: { text: "Hiba a dokumentum feltöltése során. Kérjük, próbálja újra." }
+         }
     }
 }

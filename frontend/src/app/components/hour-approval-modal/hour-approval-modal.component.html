@@ -1,0 +1,109 @@
+@if (show) {
+  <div class="modal fade show d-block" tabindex="-1" style="background-color: rgba(0,0,0,0.5);">
+    <div class="modal-dialog modal-xl modal-dialog-scrollable">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">{{ 'dashboard.mentor.approve_pending_hours' | translate }}</h5>
+          <button type="button" class="btn-close" (click)="close()"></button>
+        </div>
+        <div class="modal-body">
+          @if (isLoadingPendingHours) {
+            <div class="d-flex justify-content-center my-5">
+              <div class="spinner-border" role="status">
+                <span class="visually-hidden">{{ 'dashboard.loading' | translate }}</span>
+              </div>
+            </div>
+          } @else if (studentsWithPendingHours.length === 0) {
+            <div class="text-center text-muted py-4">
+              <i class="bi bi-check-circle fs-1 d-block mb-3"></i>
+              <p>{{ 'dashboard.mentor.no_pending_hours' | translate }}</p>
+            </div>
+          } @else {
+            @for (item of studentsWithPendingHours; track item.student.id) {
+              <div class="card mb-3">
+                <div class="card-header bg-light">
+                  <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="mb-0">
+                      <i class="bi bi-person-fill me-2"></i>
+                      {{ item.student.firstname }} {{ item.student.lastname }}
+                    </h6>
+                    <div>
+                      <button 
+                        class="btn btn-sm btn-outline-primary me-2"
+                        (click)="selectAllHoursForStudent(item.student.id, item.pendingHours)">
+                        <i class="bi bi-check-all me-1"></i>{{ 'dashboard.mentor.select_all' | translate }}
+                      </button>
+                      <button 
+                        class="btn btn-sm btn-outline-secondary"
+                        (click)="deselectAllHoursForStudent(item.student.id)">
+                        <i class="bi bi-x me-1"></i>{{ 'dashboard.mentor.deselect_all' | translate }}
+                      </button>
+                    </div>
+                  </div>
+                </div>
+                <div class="card-body">
+                  <div class="table-responsive">
+                    <table class="table table-hover">
+                      <thead>
+                        <tr>
+                          <th style="width: 50px;">
+                            <input 
+                              type="checkbox" 
+                              class="form-check-input"
+                              [checked]="selectedStudentHours[item.student.id]?.length === item.pendingHours.length"
+                              (change)="selectedStudentHours[item.student.id]?.length === item.pendingHours.length ? deselectAllHoursForStudent(item.student.id) : selectAllHoursForStudent(item.student.id, item.pendingHours)">
+                          </th>
+                          <th>{{ 'dashboard.mentor.date' | translate }}</th>
+                          <th>{{ 'dashboard.mentor.start_time' | translate }}</th>
+                          <th>{{ 'dashboard.mentor.end_time' | translate }}</th>
+                          <th>{{ 'dashboard.mentor.duration' | translate }}</th>
+                          <th>{{ 'dashboard.mentor.description' | translate }}</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (hour of item.pendingHours; track hour.id) {
+                          <tr [class.table-active]="isHourSelected(item.student.id, hour.id)">
+                            <td>
+                              <input 
+                                type="checkbox" 
+                                class="form-check-input"
+                                [checked]="isHourSelected(item.student.id, hour.id)"
+                                (change)="toggleHourSelection(item.student.id, hour.id)">
+                            </td>
+                            <td>{{ hour.date | date:'yyyy.MM.dd' }}</td>
+                            <td>{{ hour.startTime }}</td>
+                            <td>{{ hour.endTime }}</td>
+                            <td>
+                              <span class="badge bg-info">
+                                {{ hour.startTime }} - {{ hour.endTime }}
+                              </span>
+                            </td>
+                            <td>
+                              <small class="text-muted">{{ hour.description || '-' }}</small>
+                            </td>
+                          </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+            }
+          }
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" (click)="close()">
+            {{ 'dashboard.mentor.close' | translate }}
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-success"
+            [disabled]="isLoadingPendingHours || studentsWithPendingHours.length === 0"
+            (click)="approveSelectedHours()">
+            <i class="bi bi-check-circle me-2"></i>{{ 'dashboard.mentor.approve_selected' | translate }}
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+}

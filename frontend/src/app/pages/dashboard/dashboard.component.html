@@ -210,7 +210,8 @@
             
             <div class="col-md-6 col-lg-3 mb-3">
               <button 
-                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                class="btn btn-outline-primary w-100 h-100 position-relative"
+                (click)="openApprovalModal()">
                 <i class="fs-4 d-block mb-2"></i>
                 <span class="d-block">{{ 'dashboard.mentor.approve_hour' | translate }}</span>
                 <i class="bi bi-hourglass me-2"></i>
@@ -219,7 +220,8 @@
 
             <div class="col-md-6 col-lg-3 mb-3">
               <button 
-                class="btn btn-outline-primary w-100 h-100 position-relative" >
+                class="btn btn-outline-primary w-100 h-100 position-relative"
+                (click)="openDocumentUploadModal()">
                 <i class="fs-4 d-block mb-2"></i>
                 <span class="d-block">{{ 'dashboard.mentor.upload_documents' | translate }}</span>
                 <i class="bi bi-upload me-2"></i>
@@ -284,5 +286,20 @@
     <app-student-list></app-student-list>
   }
 </div>
+
+<!-- Hour Approval Modal Component -->
+<app-hour-approval-modal
+  [show]="showApprovalModal"
+  [students]="mentorStudents"
+  (closeModal)="closeApprovalModal()"
+  (approvalComplete)="onApprovalComplete()">
+</app-hour-approval-modal>
+
+<!-- Document Upload Modal Component -->
+<app-document-upload-modal
+  [show]="showDocumentUploadModal"
+  (closeModal)="closeDocumentUploadModal()"
+  (uploadComplete)="onDocumentUploadComplete()">
+</app-document-upload-modal>
 
 

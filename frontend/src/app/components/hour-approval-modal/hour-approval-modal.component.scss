@@ -1,0 +1,17 @@
+.modal {
+  &.show {
+    display: block;
+  }
+}
+
+.table-active {
+  background-color: rgba(13, 110, 253, 0.1);
+}
+
+.card {
+  transition: box-shadow 0.3s ease;
+
+  &:hover {
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+}

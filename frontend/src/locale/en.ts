@@ -233,8 +233,22 @@ export const en: NestedI18n = {
             up_to_date: { text: "Up to date" },
             view_all_students: { text: "View all students" },
             no_students_assigned: { text: "No students assigned yet." },
-            approve_hour: { text: "Approve hour" },
+            approve_hour: { text: "Approve hours" },
             upload_documents: { text: "Upload documents" },
+            approve_pending_hours: { text: "Approve Pending Hours" },
+            no_pending_hours: { text: "No pending hours to approve." },
+            select_all: { text: "Select All" },
+            deselect_all: { text: "Deselect All" },
+            date: { text: "Date" },
+            start_time: { text: "Start Time" },
+            end_time: { text: "End Time" },
+            duration: { text: "Duration" },
+            description: { text: "Description" },
+            close: { text: "Close" },
+            approve_selected: { text: "Approve Selected" },
+            no_hours_selected: { text: "No hours selected." },
+            hours_approved_success: { text: "{{count}} hour(s) approved successfully!" },
+            hours_approved_error: { text: "Failed to approve {{count}} hour(s)." }
         }
     },
     profile: {
@@ -444,6 +458,8 @@ export const en: NestedI18n = {
         title: { text: "Document Upload (PDF)" },
         upload_section: {
             title: { text: "Upload Documents (PDF)" },
+            subtitle: { text: "Upload your internship documents" },
+            file_label: { text: "Choose PDF file" },
             select_file: { text: "Select File" },
             no_file: { text: "No file selected" },
             upload_button: { text: "Upload" },
@@ -451,12 +467,14 @@ export const en: NestedI18n = {
             success: { text: "File uploaded successfully!" },
             error: { text: "Error uploading file. Please try again." },
             invalid_file: { text: "Invalid file type. Please upload a PDF." },
-            empty: { text: "You haven't uploaded any files." }
+            empty: { text: "You haven't uploaded any files." },
+            info: { text: "Only PDF files up to 10MB are allowed." }
         },
         documents_section: {
             title: { text: "Uploaded Documents" },
             no_documents: { text: "No documents uploaded yet." },
         },
+        review_note: { text: "Review Note" },
         upload_error: {
             error1: {
                 text: "Only PDF files are allowed!"
@@ -1154,6 +1172,15 @@ export const en: NestedI18n = {
             register: {
                 success_register: { text: "Registration successful." },
                 error_register: { text: "Error during registration. Please try again." }
-            }
+            },
+        csv_export: {
+            success_export: { text: "Data successfully exported in CSV format." },
+            error_export: { text: "Error exporting data. Please try again." },
+            no_data_error: { text: "No data available for export." }
+        },
+        document_upload: {
+            success_upload: { text: "Document successfully uploaded." },
+            error_upload: { text: "Error uploading document. Please try again." }
+         }
     }
 }

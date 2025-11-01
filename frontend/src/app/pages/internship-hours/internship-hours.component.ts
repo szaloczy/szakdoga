@@ -111,10 +111,8 @@ export class InternshipHoursComponent implements OnInit {
     const currentLanguage = this.i18nService.getLanguage();
     
     if (currentLanguage === 'hu') {
-      // Hungarian format: 17ó 30p
       return `${wholeHours}ó ${minutes}p`;
     } else {
-      // English format: 17h 30m
       return `${wholeHours}h ${minutes}m`;
     }
   }
@@ -147,7 +145,7 @@ export class InternshipHoursComponent implements OnInit {
 
   exportToCSV(): void {
     if (this.filteredEntries.length === 0) {
-      this.toastService.showError('No data to export');
+      this.toastService.showError(this.i18nService.transform('common_response.csv_export.no_data_error'));
       return;
     }
 
@@ -172,13 +170,8 @@ export class InternshipHoursComponent implements OnInit {
     a.download = `internship-hours-${this.selectedTab}-${new Date().toISOString().split('T')[0]}.csv`;
     a.click();
     window.URL.revokeObjectURL(url);
-    
-    this.toastService.showSuccess('Data exported successfully');
-  }
 
-  editEntry(entry: InternshipHourDTO): void {
-    this.toastService.showSuccess(`Edit functionality for entry ${entry.id} will be implemented`);
-    console.log('Edit entry:', entry);
+    this.toastService.showSuccess(this.i18nService.transform('common_response.csv_export.success_export'));
   }
 
   getStatusIcon(status: string): string {

@@ -26,8 +26,10 @@ export class RegisterComponent implements OnInit {
   toastService = inject(ToastService);
   registerForm!: FormGroup;
   submitted = false;
+  currentLang: string = 'hu';
 
   ngOnInit(): void {
+    this.currentLang = this.i18nService.getLanguage();
     this.registerForm = this.fb.group({
       firstname: ['', [Validators.required]],
       lastname: ['', [Validators.required]],
@@ -35,6 +37,13 @@ export class RegisterComponent implements OnInit {
       password: ['', [Validators.required]],
       terms: [false, [Validators.requiredTrue]]
     });
+  }
+
+  openPrivacyPolicy(event: Event): void {
+    event.preventDefault();
+    const pdfFileName = this.currentLang === 'hu' ? 'adatvedelmi_tajekoztato.pdf' : 'privacy_policy.pdf';
+    const pdfPath = `documents/${pdfFileName}`;
+    window.open(pdfPath, '_blank');
   }
 
   onSubmit() {

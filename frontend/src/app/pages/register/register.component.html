@@ -42,7 +42,10 @@
       <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheck">
         <label class="form-check-label" for="termsCheck">
-          {{ 'register.form.terms.statements' | translate }} <a href="#">{{ 'register.form.terms.link' | translate }}</a>
+          {{ 'register.form.terms.statements' | translate }} 
+          <a href="#" (click)="openPrivacyPolicy($event)" class="text-primary text-decoration-underline">
+            {{ 'register.form.terms.link' | translate }}
+          </a>
         </label>
         @if(registerForm.get("terms")?.invalid && (registerForm.get("terms")?.touched || registerForm.get("terms")?.dirty)) {
           @if(registerForm.get("terms")?.errors?.["required"]) {

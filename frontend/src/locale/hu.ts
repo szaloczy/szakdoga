@@ -840,28 +840,47 @@ export const hu: NestedI18n = {
                 required_weeks: { text: "Szükséges hetek" },
                 start_date: { text: "Kezdési dátum" },
                 is_approved: { text: "Jóváhagyási státusz" },
+                status: { text: "Státusz" },
                 actions: { text: "Műveletek" }
             },
             form: {
                 title: { text: "Új gyakorlat hozzáadása" },
-                student: { text: "Hallgató kiválasztása" },
-                mentor: { text: "Mentor kiválasztása" },
-                company: { text: "Cég kiválasztása" },
+                student: { 
+                    text: "Hallgató kiválasztása",
+                    placeholder: { text: "Válasszon hallgatót" }
+                },
+                mentor: { 
+                    text: "Mentor kiválasztása",
+                    placeholder: { text: "Válasszon mentort" }
+                },
+                company: { 
+                    text: "Cég kiválasztása",
+                    placeholder: { text: "Válasszon céget" }
+                },
                 start_date: { text: "Kezdési dátum" },
                 end_date: { text: "Befejezési dátum" },
                 required_weeks: { text: "Szükséges hetek" },
-                is_approved: { text: "Jóváhagyási státusz" },
-                options: {
-                    approved: { text: "Jóváhagy" },
-                    not_approved: { text: "Elutasít" }
-                }
+                is_approved: { 
+                    text: "Jóváhagyási státusz",
+                    options: {
+                        approved: { text: "Jóváhagy" },
+                        not_approved: { text: "Elutasít" }
+                    }
+                },
+                status: { text: "Státusz" },
+                edit_title: { text: "Gyakorlat szerkesztése" },
+                add_title: { text: "Új gyakorlat hozzáadása" }
             },
-            edit_title: { text: "Gyakorlat szerkesztése" },
-            add_title: { text: "Új gyakorlat hozzáadása" }
+            status: {
+                pending: { text: "Függőben" },
+                active: { text: "Aktív" },
+                completed: { text: "Befejezett" },
+                cancelled: { text: "Törölve" }
+            }
         },
         document_management: {
             title: {
-                text: "Dokumentum kezelés"
+                text: "Dokumentumok"
             },
             table_headers: {
                 uploader: {

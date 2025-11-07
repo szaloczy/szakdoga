@@ -849,23 +849,45 @@ export const en: NestedI18n = {
                 required_weeks: { text: "Required Weeks" },
                 start_date: { text: "Start Date" },
                 is_approved: { text: "Approval Status" },
+                status: { text: "Status" },
                 actions: { text: "Actions" }
             },
             form: {
                 title: { text: "Add New Internship" },
-                student: { text: "Select Student" },
-                mentor: { text: "Select Mentor" },
-                company: { text: "Select Company" },
+                student: { 
+                    text: "Select Student",
+                    placeholder: { text: "Select a student" }
+                },
+                mentor: { 
+                    text: "Select Mentor",
+                    placeholder: { text: "Select a mentor" }
+                },
+                company: { 
+                    text: "Select Company",
+                    placeholder: { text: "Select a company" }
+                },
                 start_date: { text: "Start Date" },
                 end_date: { text: "End Date" },
                 required_weeks: { text: "Required Weeks" },
-                is_approved: { text: "Approval Status" },
-                options: {
-                    approved: { text: "Approved" },
-                    not_approved: { text: "Not Approved" }
+                is_approved: { 
+                    text: "Approval Status",
+                    options: {
+                        approved: { text: "Approved" },
+                        not_approved: { text: "Not Approved" }
+                    }
                 },
+                status: { text: "Status" },
                 edit_title: { text: "Edit Internship" },
                 add_title: { text: "Add New Internship" }
+            },
+            status: {
+                pending: { text: "Pending" },
+                active: { text: "Active" },
+                completed: { text: "Completed" },
+                cancelled: { text: "Cancelled" }
+            },
+            edit_title: {
+                
             }
         },
         document_management: {

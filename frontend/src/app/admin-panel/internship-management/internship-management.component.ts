@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { CompanyDTO, InternshipListDTO, MentorDTO, StudentDTO, CreateInternshipDTO } from '../../../types';
+import { CompanyDTO, InternshipListDTO, MentorDTO, StudentDTO, CreateInternshipDTO, InternshipStatus } from '../../../types';
 import { InternshipService } from '../../services/internship.service';
 import { RouterLink } from '@angular/router';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -8,13 +8,15 @@ import { CompanyService } from '../../services/company.service';
 import { MentorService } from '../../services/mentor.service';
 import { I18nService } from '../../shared/i18n.pipe';
 import { ToastService } from '../../services/toast.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-internship-management',
   imports: [
     RouterLink,
     ReactiveFormsModule,
-    I18nService
+    I18nService,
+    CommonModule
   ],
   templateUrl: './internship-management.component.html',
   styleUrl: './internship-management.component.scss'
@@ -51,7 +53,7 @@ export class InternshipManagementComponent implements OnInit{
       startDate: ['', [Validators.required]],
       endDate: ['', [Validators.required]],
       isApproved: [true, [Validators.required]],
-      requiredWeeks: [6, [Validators.required, Validators.min(1)]],
+      requiredWeeks: [6, [Validators.required, Validators.min(1)]]
     });
   }
 
@@ -86,7 +88,17 @@ export class InternshipManagementComponent implements OnInit{
   saveInternship() {
     if(this.isEdit) {
       if (this.editingInternship && this.editingInternship.id !== undefined) {
-        this.internshipService.update(this.editingInternship.id, this.internshipForm.value).subscribe({
+        const internshipData: CreateInternshipDTO = {
+          student: this.internshipForm.value.student,
+          mentor: this.internshipForm.value.mentor,
+          company: this.internshipForm.value.company,
+          startDate: this.internshipForm.value.startDate,
+          endDate: this.internshipForm.value.endDate,
+          isApproved: this.internshipForm.value.isApproved,
+          requiredWeeks: this.internshipForm.value.requiredWeeks
+        };
+        
+        this.internshipService.update(this.editingInternship.id, internshipData).subscribe({
           next: (response) => {
             this.toastService.showSuccess(this.i18nService.transform("common_response.admin_panel.internship.success_edit"));
             this.loadInternships();
@@ -102,7 +114,17 @@ export class InternshipManagementComponent implements OnInit{
         this.toastService.showError("No internship selected for editing or missing id.");
       }
     } else {
-      this.internshipService.create(this.internshipForm.value).subscribe({
+      const internshipData: CreateInternshipDTO = {
+        student: this.internshipForm.value.student,
+        mentor: this.internshipForm.value.mentor,
+        company: this.internshipForm.value.company,
+        startDate: this.internshipForm.value.startDate,
+        endDate: this.internshipForm.value.endDate,
+        isApproved: this.internshipForm.value.isApproved,
+        requiredWeeks: this.internshipForm.value.requiredWeeks
+      };
+      
+      this.internshipService.create(internshipData).subscribe({
         next: (response) => {
           this.toastService.showSuccess(this.i18nService.transform("common_response.admin_panel.internship.success_add"));
           this.loadInternships();
@@ -152,5 +174,25 @@ export class InternshipManagementComponent implements OnInit{
       isApproved: internship.isApproved,
       requiredWeeks: internship.requiredWeeks || 6
     });
+  }
+
+  getStatusBadgeClass(status?: InternshipStatus): string {
+    switch (status) {
+      case 'active': return 'bg-success';
+      case 'pending': return 'bg-warning text-dark';
+      case 'completed': return 'bg-primary';
+      case 'cancelled': return 'bg-danger';
+      default: return 'bg-secondary';
+    }
+  }
+
+  getStatusIcon(status?: InternshipStatus): string {
+    switch (status) {
+      case 'active': return 'bi-play-circle-fill';
+      case 'pending': return 'bi-hourglass-split';
+      case 'completed': return 'bi-check-circle-fill';
+      case 'cancelled': return 'bi-x-circle-fill';
+      default: return 'bi-question-circle';
+    }
   }
 }

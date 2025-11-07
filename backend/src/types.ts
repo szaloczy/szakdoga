@@ -65,6 +65,7 @@ export interface InternshipDTO {
   startDate: string;
   endDate: string;
   isApproved: boolean;
+  status: "pending" | "active" | "completed" | "cancelled";
   studentName: string;
   studentNeptun: string | null;
   mentorName: string;
@@ -77,6 +78,7 @@ export interface profileInternshipDTO {
   startDate: string;
   endDate: string;
   isApproved: boolean;
+  status: "pending" | "active" | "completed" | "cancelled";
   mentorName: string;
   companyName: string;
   mentorEmail: string;
@@ -93,10 +95,10 @@ export interface StudentWithHoursDto {
   profilePicture?: string;
   major?: string | null;
   university?: string | null;
-  hours: number;                    // Jóváhagyott órák összesen
-  pendingHours: number;             // Jóváhagyásra váró órák
-  rejectedHours: number;            // Elutasított órák
-  totalSubmittedHours: number;      // Összes beküldött óra
+  hours: number;                   
+  pendingHours: number;             
+  rejectedHours: number;            
+  totalSubmittedHours: number;      
 }
 
 export interface ApproveAllHoursResponse {
@@ -119,14 +121,14 @@ export interface StudentHourDetailsResponse {
 
 export interface HourEntryDTO {
   id: number;
-  date: string;                     // ISO date string
-  hours: number;                    // Órák száma (pl. 8, 4.5)
-  description: string;              // Munka leírása
+  date: string;                     
+  hours: number;                    
+  description: string;             
   status: 'pending' | 'approved' | 'rejected';
-  submittedAt: string;              // ISO datetime
-  reviewedAt?: string;              // ISO datetime (ha reviewed)
-  reviewedBy?: string;              // Mentor email/név
-  rejectionReason?: string;         // Ha rejected
+  submittedAt: string;              
+  reviewedAt?: string;              
+  reviewedBy?: string;              
+  rejectionReason?: string;      
 }
 
 export interface BulkApproveResponse {
@@ -146,9 +148,6 @@ export interface createMentorDTO {
 }
 
 
-/* 
-============================================New DTOs=============================================
-*/ 
 
 export interface UpdateProfileDTO {
   id?: number; // User ID

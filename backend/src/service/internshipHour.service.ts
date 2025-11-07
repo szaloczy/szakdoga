@@ -42,6 +42,38 @@ export class InternshipHourService {
       throw new Error("be_response.create_hour.no_approved_internship");
     }
 
+    // Ellenőrizzük, hogy a gyakorlat státusza lehetővé teszi-e új órák felvételét
+    if (internship.status === "completed") {
+      throw new Error("be_response.create_hour.internship_already_completed");
+    }
+
+    if (internship.status === "cancelled") {
+      throw new Error("be_response.create_hour.internship_cancelled");
+    }
+
+    // Számítsuk ki a szükséges összes óraszámot
+    const requiredHours = internship.requiredWeeks ? internship.requiredWeeks * 40 : 180;
+
+    // Számítsuk ki az eddig jóváhagyott órákat
+    const approvedHours = await this.hourRepo.find({
+      where: {
+        internship: { id: internship.id },
+        status: "approved"
+      }
+    });
+
+    let totalApprovedHours = 0;
+    for (const hour of approvedHours) {
+      const start = new Date(`2000-01-01T${hour.startTime}`);
+      const end = new Date(`2000-01-01T${hour.endTime}`);
+      totalApprovedHours += (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+    }
+
+    // Ellenőrizzük, hogy már elérte-e a kötelező óraszámot
+    if (totalApprovedHours >= requiredHours) {
+      throw new Error("be_response.create_hour.required_hours_already_completed");
+    }
+
     const currentDate = new Date();
     const workDate = new Date(data.date);
 
@@ -90,7 +122,15 @@ export class InternshipHourService {
       status: "pending"
     });
 
-    return await this.hourRepo.save(hour);
+    const savedHour = await this.hourRepo.save(hour);
+
+    // Ha ez az első óra és az internship még pending státuszú, állítsuk active-re
+    if (internship.status === "pending") {
+      internship.status = "active";
+      await this.internshipRepo.save(internship);
+    }
+
+    return savedHour;
   }
 
 
@@ -247,7 +287,12 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
     hour.status = "approved";
     hour.approvedBy = mentor;
 
-    return await this.hourRepo.save(hour);
+    const savedHour = await this.hourRepo.save(hour);
+
+    // Ellenőrizzük, hogy elérte-e a kötelező óraszámot
+    await this.checkAndUpdateInternshipStatus(hour.internship.id);
+
+    return savedHour;
   }
 
   async rejectHour(hourId: number, mentorUserId: number): Promise<InternshipHour> {
@@ -389,7 +434,15 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
       throw new Error("be_response.bulk_approve.no_pending_hours");
     }
 
-    return await this.hourRepo.save(approvedHours);
+    const savedHours = await this.hourRepo.save(approvedHours);
+
+    // Ellenőrizzük minden érintett internship státuszát
+    const internshipIds = [...new Set(savedHours.map(h => h.internship.id))];
+    for (const internshipId of internshipIds) {
+      await this.checkAndUpdateInternshipStatus(internshipId);
+    }
+
+    return savedHours;
   }
 
   async approveAllStudentPendingHours(studentUserId: number, mentorUserId: number): Promise<InternshipHour[]> {
@@ -444,7 +497,12 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
       hour.approvedBy = mentor;
     }
 
-    return await this.hourRepo.save(pendingHours);
+    const savedHours = await this.hourRepo.save(pendingHours);
+
+    // Ellenőrizzük az internship státuszát
+    await this.checkAndUpdateInternshipStatus(internship.id);
+
+    return savedHours;
   }
   
   async rejectAllStudentPendingHours(studentUserId: number, mentorUserId: number): Promise<InternshipHour[]> {
@@ -598,5 +656,41 @@ async getHoursForStudent(userId: number, status?: string): Promise<any[]> {
         } : null
       }))
     };
+  }
+
+  /**
+   * Ellenőrzi, hogy a hallgató elérte-e a kötelező óraszámot,
+   * és ha igen, frissíti az internship státuszát "completed"-re
+   */
+  private async checkAndUpdateInternshipStatus(internshipId: number): Promise<void> {
+    const internship = await this.internshipRepo.findOne({
+      where: { id: internshipId }
+    });
+
+    if (!internship || internship.status === "completed") {
+      return;
+    }
+
+    const requiredHours = internship.requiredWeeks ? internship.requiredWeeks * 40 : 180;
+
+    const approvedHours = await this.hourRepo.find({
+      where: {
+        internship: { id: internshipId },
+        status: "approved"
+      }
+    });
+
+    let totalApprovedHours = 0;
+    for (const hour of approvedHours) {
+      const start = new Date(`2000-01-01 ${hour.startTime}`);
+      const end = new Date(`2000-01-01 ${hour.endTime}`);
+      const diffMs = end.getTime() - start.getTime();
+      totalApprovedHours += diffMs / (1000 * 60 * 60);
+    }
+
+    if (totalApprovedHours >= requiredHours) {
+      internship.status = "completed";
+      await this.internshipRepo.save(internship);
+    }
   }
 }

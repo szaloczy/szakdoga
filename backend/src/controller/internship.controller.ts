@@ -129,7 +129,7 @@ export class InternshipController extends Controller {
     try {
       const user = (req as any).user;
       const internshipId = Number(req.params["id"]);
-      const { startDate, endDate, mentor, company, mentorId, companyId, isApproved, requiredWeeks } = req.body;
+      const { startDate, endDate, mentor, company, mentorId, companyId, isApproved, requiredWeeks, status } = req.body;
 
       if (!user?.id) {
         return this.handleError(res, null, 401, "User not authenticated");
@@ -154,6 +154,7 @@ export class InternshipController extends Controller {
           companyId: finalCompanyId ? Number(finalCompanyId) : undefined,
           isApproved: isApproved !== undefined ? Boolean(isApproved) : undefined,
           requiredWeeks: requiredWeeks ? Number(requiredWeeks) : undefined,
+          status: status,
         },
         isAdmin
       );

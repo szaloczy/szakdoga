@@ -141,12 +141,15 @@ export interface CreateStudentDTO {
     role: UserRole;
 }
 
+export type InternshipStatus = 'pending' | 'active' | 'completed' | 'cancelled';
+
 export interface InternshipDTO {
     id: number;
     startDate: Date;
     endDate: Date;
     isApproved: boolean;
     requiredWeeks: number;
+    status?: InternshipStatus;
     student: StudentDTO;
     mentor: MentorDTO;
     company: CompanyDTO;
@@ -158,6 +161,7 @@ export interface InternshipListDTO {
     endDate: Date;
     isApproved: boolean;
     requiredWeeks: number;
+    status?: InternshipStatus;
     studentName: string;
     studentNeptun: string;
     mentorName: string;
@@ -172,6 +176,7 @@ export interface CreateInternshipDTO {
     endDate: string;
     isApproved: boolean;
     requiredWeeks: number;
+    status?: InternshipStatus;
 }
 
 export interface ProfileInternshipDTO {

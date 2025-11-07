@@ -17,6 +17,7 @@ export function mapInternshipToDTO(internship: Internship): InternshipDTO {
     startDate: formatDate(internship.startDate),
     endDate: formatDate(internship.endDate),
     isApproved: internship.isApproved,
+    status: internship.status,
     studentName: studentUser
       ? `${studentUser.firstname} ${studentUser.lastname}`
       : "N/A",
@@ -36,6 +37,7 @@ export const mapProfileInternshipToDTO = (
   startDate: new Date(internship.startDate).toISOString().split("T")[0],
   endDate: new Date(internship.endDate).toISOString().split("T")[0],
   isApproved: internship.isApproved,
+  status: internship.status,
   mentorName:
     internship.mentor?.user?.firstname +
     " " +

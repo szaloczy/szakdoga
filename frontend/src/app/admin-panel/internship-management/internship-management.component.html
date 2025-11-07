@@ -2,22 +2,22 @@
    <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap gap-2">
     <h2 class="m-0">{{ 'admin_panel.internship_management.title.text' | translate }}</h2>
     <button class="btn btn-primary" (click)="addInternship()">
-      <i class="bi bi-plus-lg me-1"></i> {{ 'admin_panel.internship_management.buttons.add_internship' | translate }}
+      <i class="bi bi-plus-lg me-1"></i> {{ 'admin_panel.internship_management.buttons.add_internship.text' | translate }}
     </button>
     <button class="btn btn-secondary" routerLink="/admin">
-      <i class="bi bi-arrow"></i> {{ 'admin_panel.internship_management.buttons.back_to_dashboard' | translate }}
+      <i class="bi bi-arrow"></i> {{ 'admin_panel.internship_management.buttons.back_to_dashboard.text' | translate }}
     </button>
   </div>
 
   @if(showInternshipForm) {
   <form [formGroup]="internshipForm" (ngSubmit)="saveInternship()" class="card p-3 mb-4">
-    <h5>{{ isEdit ? ('admin_panel.internship_management.edit_title' | translate) : ('admin_panel.internship_management.add_title' | translate) }}</h5>
+    <h5>{{ isEdit ? ('admin_panel.internship_management.form.edit_title.text' | translate) : ('admin_panel.internship_management.form.add_title.text' | translate) }}</h5>
     <div class="row g-2">
 
       <div class="col-md-6">
         <label for="student" class="form-label">{{ 'admin_panel.internship_management.form.student.text' | translate }}</label>
         <select class="form-select" formControlName="student" required>
-          <option value="">{{ 'admin_panel.internship_management.form.student.placeholder' | translate }}</option>
+          <option value="">{{ 'admin_panel.internship_management.form.student.placeholder.text' | translate }}</option>
           @for (student of students; track student) {
             <option [value]="student.id">{{ student.user?.firstname }}  {{ student.user?.lastname }}</option>
           }
@@ -27,7 +27,7 @@
       <div class="col-md-6">
         <label for="mentor" class="form-label">{{ 'admin_panel.internship_management.form.mentor.text' | translate }}</label>
         <select class="form-select" formControlName="mentor">
-          <option value="">{{ 'admin_panel.internship_management.form.mentor.placeholder' | translate }}</option>
+          <option value="">{{ 'admin_panel.internship_management.form.mentor.placeholder.text' | translate }}</option>
           @for (mentor of mentors; track mentor) {
             <option [value]="mentor.id">{{ mentor.user?.firstname }}  {{ mentor.user?.lastname }}</option>
           }
@@ -37,7 +37,7 @@
       <div class="col-md-6">
         <label for="company" class="form-label">{{ 'admin_panel.internship_management.form.company.text' | translate }}</label>
         <select class="form-select" formControlName="company" required>
-          <option value="">{{ 'admin_panel.internship_management.form.company.placeholder' | translate }}</option>
+          <option value="">{{ 'admin_panel.internship_management.form.company.placeholder.text' | translate }}</option>
           @for (company of companies; track company) {
             <option [value]="company.id">{{ company.name }}</option>
           }
@@ -45,30 +45,30 @@
       </div>
 
       <div class="col-md-6">
-        <label for="startDate" class="form-label">{{ 'admin_panel.internship_management.form.start_date' | translate }}</label>
+        <label for="startDate" class="form-label">{{ 'admin_panel.internship_management.form.start_date.text' | translate }}</label>
         <input type="date" class="form-control" formControlName="startDate" required />
       </div>
 
       <div class="col-md-6">
-        <label for="endDate" class="form-label">{{ 'admin_panel.internship_management.form.end_date' | translate }}</label>
+        <label for="endDate" class="form-label">{{ 'admin_panel.internship_management.form.end_date.text' | translate }}</label>
         <input type="date" class="form-control" formControlName="endDate" required />
       </div>
 
       <div class="col-md-6">
-        <label for="isApproved" class="form-label">{{ 'admin_panel.internship_management.form.is_approved' | translate }}</label>
+        <label for="isApproved" class="form-label">{{ 'admin_panel.internship_management.form.is_approved.text' | translate }}</label>
         <select class="form-select" formControlName="isApproved" required>
-          <option [ngValue]="true">{{ 'admin_panel.internship_management.form.is_approved.options.approved' | translate }}</option>
-          <option [ngValue]="false">{{ 'admin_panel.internship_management.form.is_approved.options.not_approved' | translate }}</option>
+          <option [ngValue]="true">{{ 'common.yes.text' | translate }}</option>
+          <option [ngValue]="false">{{ 'common.no.text' | translate }}</option>
         </select>
       </div>
 
       <div class="col-md-6">
-        <label for="requiredWeeks" class="form-label">{{ 'admin_panel.internship_management.form.required_weeks' | translate }}</label>
+        <label for="requiredWeeks" class="form-label">{{ 'admin_panel.internship_management.form.required_weeks.text' | translate }}</label>
         <input type="number" class="form-control" formControlName="requiredWeeks" min="1" max="52" required />
       </div>
 
       <div class="col-12">
-        <button type="submit" class="btn btn-success mt-2">{{ 'buttons.forms.save' | translate }}</button>
+        <button type="submit" class="btn btn-success mt-2">{{ 'buttons.forms.save.text' | translate }}</button>
       </div>
     </div>
   </form>
@@ -78,13 +78,14 @@
     <table class="table table-striped table-bordered align-middle">
       <thead class="table-dark">
         <tr>
-          <th>{{ 'admin_panel.internship_management.table_headers.student' | translate }}</th>
-          <th>{{ 'admin_panel.internship_management.table_headers.mentor' | translate }}</th>
-          <th>{{ 'admin_panel.internship_management.table_headers.company' | translate }}</th>
-          <th>{{ 'admin_panel.internship_management.table_headers.required_weeks' | translate }}</th>
-          <th>{{ 'admin_panel.internship_management.table_headers.is_approved' | translate }}</th>
-          <th>{{ 'admin_panel.internship_management.table_headers.start_date' | translate }}</th>
-          <th class="text-center">{{ 'admin_panel.internship_management.table_headers.actions' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.student.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.mentor.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.company.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.required_weeks.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.status.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.is_approved.text' | translate }}</th>
+          <th>{{ 'admin_panel.internship_management.table_headers.start_date.text' | translate }}</th>
+          <th class="text-center">{{ 'admin_panel.internship_management.table_headers.actions.text' | translate }}</th>
         </tr>
       </thead>
       <tbody>
@@ -94,7 +95,13 @@
           <td>{{ intern.mentorName}}</td>
           <td>{{ intern.companyName }}</td>
           <td>{{ intern.requiredWeeks }}</td>
-          <td>{{ intern.isApproved ? 'Yes' : 'No' }}</td>
+          <td>
+            <span [ngClass]="getStatusBadgeClass(intern.status)" class="badge">
+              <i [ngClass]="getStatusIcon(intern.status)" class="me-1"></i>
+              {{ 'admin_panel.internship_management.status.' + (intern.status || 'pending') | translate }}
+            </span>
+          </td>
+          <td>{{ intern.isApproved ? ('common.yes.text' | translate) : ('common.no.text' | translate) }}</td>
           <td>{{ intern.startDate }}</td>
           <td class="text-center">
             <button class="btn btn-sm btn-outline-primary me-1" (click)="editInternship(intern)">

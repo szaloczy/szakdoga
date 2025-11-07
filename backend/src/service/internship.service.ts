@@ -88,19 +88,21 @@ export class InternshipService {
     return company;
   }
 
-  private validateDates(startDate: string, endDate: string): void {
+  private validateDates(startDate: string, endDate: string, isUpdate: boolean = false): void {
     const start = new Date(startDate);
     const end = new Date(endDate);
-    const today = new Date();
     
-    const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
-    const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
-    
-    const oneDayAgo = new Date(todayDateOnly);
-    oneDayAgo.setDate(oneDayAgo.getDate() - 1);
+    if (!isUpdate) {
+      const today = new Date();
+      const startDateOnly = new Date(start.getFullYear(), start.getMonth(), start.getDate());
+      const todayDateOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+      
+      const oneDayAgo = new Date(todayDateOnly);
+      oneDayAgo.setDate(oneDayAgo.getDate() - 1);
 
-    if (startDateOnly < oneDayAgo) {
-      throw new Error("Start date cannot be more than 1 day in the past");
+      if (startDateOnly < oneDayAgo) {
+        throw new Error("Start date cannot be more than 1 day in the past");
+      }
     }
 
     if (end <= start) {
@@ -216,6 +218,7 @@ export class InternshipService {
       companyId?: number;
       isApproved?: boolean;
       requiredWeeks?: number;
+      status?: "pending" | "active" | "completed" | "cancelled";
     },
     isAdmin: boolean = false
   ): Promise<Internship> {
@@ -253,10 +256,15 @@ export class InternshipService {
       internship.requiredWeeks = data.requiredWeeks;
     }
 
+    if (data.status !== undefined) {
+      internship.status = data.status;
+    }
+
     if (data.startDate || data.endDate) {
       this.validateDates(
         internship.startDate.toISOString(),
-        internship.endDate.toISOString()
+        internship.endDate.toISOString(),
+        true // isUpdate = true
       );
     }
 

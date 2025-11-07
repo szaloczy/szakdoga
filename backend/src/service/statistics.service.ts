@@ -172,7 +172,6 @@ export class StatisticsService {
     return { labels: weekLabels, data: weekData };
   }
 
-  // Hallgató előrehaladás statisztikája
   async getProgressStatistics(userId: number) {
     const hours = await this.hourRepo.find({ 
       where: { 
@@ -185,7 +184,7 @@ export class StatisticsService {
     if (hours.length === 0) {
       return {
         completedHours: 0,
-        requiredHours: 180, // Default 180 óra
+        requiredHours: 180,
         requiredWeeks: 0,
         progressPercentage: 0,
         remainingHours: 180,

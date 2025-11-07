@@ -29,6 +29,12 @@ export class Internship {
   @Column({ nullable: true })
   requiredWeeks: number;
 
+  @Column({ 
+    type: "varchar",
+    default: "pending"
+  })
+  status: "pending" | "active" | "completed" | "cancelled";
+
   @OneToOne(() => Student, (student) => student.internship, {
     onDelete: "CASCADE",
     cascade: false,

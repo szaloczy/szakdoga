@@ -194,6 +194,7 @@
             <div class="card-footer bg-transparent">
               <div class="d-flex flex-column gap-2">
                 @if (canFinalizeInternship(student)) {
+                  <!-- Véglegesítés gomb ha teljesítette az óraszámot (status = 'completed') -->
                   <button 
                     class="btn btn-success btn-lg fw-bold"
                     (click)="finalizeInternship(student)"
@@ -205,7 +206,8 @@
                     <i class="bi bi-info-circle me-1"></i>
                     {{ 'students.finalize.requirement_met' | translate }}
                   </small>
-                } @else if (student.internship?.finalizedAt) {
+                } @else if (student.internshipStatus === 'finalized' || student.internship?.finalizedAt) {
+                  <!-- Véglegesített állapot megjelenítése -->
                   <div class="alert alert-success mb-0">
                     <i class="bi bi-trophy-fill me-2"></i>
                     <strong>{{ 'students.finalize.finalized_label' | translate }}</strong>
@@ -220,46 +222,65 @@
                       </div>
                     }
                   </div>
+                  
+                  <!-- Órák megtekintése és exportálása véglegesítés után -->
+                  <button 
+                    class="btn btn-outline-info btn-sm"
+                    (click)="viewHoursDetails(student)"
+                  >
+                    <i class="bi bi-clock-history me-1"></i>
+                    {{  'mentor_students.actions.view_hours' | translate }}
+                  </button>
+                  <button 
+                    class="btn btn-outline-success btn-sm"
+                    (click)="exportSingleStudentHours(student)"
+                  >
+                    <i class="bi bi-download me-1"></i>
+                    {{ 'mentor_students.export.individual' | translate }}
+                  </button>
+                } @else {
+                  <!-- Függő órák jóváhagyása/elutasítása, ha még nem teljesítette az óraszámot -->
+                  @if (getPendingHours(student) > 0) {
+                    <div class="d-flex gap-2">
+                      <button 
+                        class="btn btn-warning"
+                        (click)="approveStudentHours(student.id)"
+                      >
+                        <i class="bi bi-check-circle me-1"></i>
+                        {{ 'mentor_students.actions.approve_hours' | translate }}
+                        <span class="badge bg-light text-dark ms-2"></span>
+                      </button>
+                      <button 
+                        class="btn btn-danger reject-button"
+                        (click)="rejectStudentHours(student.id)"
+                      >
+                        <i class="bi bi-x-circle me-1"></i>
+                        {{ 'mentor_students.actions.reject_hours' | translate }}
+                      </button>
+                    </div>
+                  } @else {
+                    <div class="text-center text-muted py-2">
+                      <i class="bi bi-check-circle-fill me-1 text-success"></i>
+                      {{ 'mentor_students.label.no_pending_hours' | translate }}
+                    </div>
+                  }
+                  
+                  <!-- Órák megtekintése és exportálása ha még nem teljesítette az óraszámot -->
+                  <button 
+                    class="btn btn-outline-info btn-sm"
+                    (click)="viewHoursDetails(student)"
+                  >
+                    <i class="bi bi-clock-history me-1"></i>
+                    {{  'mentor_students.actions.view_hours' | translate }}
+                  </button>
+                  <button 
+                    class="btn btn-outline-success btn-sm"
+                    (click)="exportSingleStudentHours(student)"
+                  >
+                    <i class="bi bi-download me-1"></i>
+                    {{ 'mentor_students.export.individual' | translate }}
+                  </button>
                 }
-                
-                @if (getPendingHours(student) > 0) {
-                  <div class="d-flex gap-2">
-                    <button 
-                      class="btn btn-warning"
-                      (click)="approveStudentHours(student.id)"
-                    >
-                      <i class="bi bi-check-circle me-1"></i>
-                      {{ 'mentor_students.actions.approve_hours' | translate }}
-                      <span class="badge bg-light text-dark ms-2"></span>
-                    </button>
-                    <button 
-                      class="btn btn-danger reject-button"
-                      (click)="rejectStudentHours(student.id)"
-                    >
-                      <i class="bi bi-x-circle me-1"></i>
-                      {{ 'mentor_students.actions.reject_hours' | translate }}
-                    </button>
-                  </div>
-                } @else if (!student.internship?.finalizedAt) {
-                  <div class="text-center text-muted py-2">
-                    <i class="bi bi-check-circle-fill me-1 text-success"></i>
-                    {{ 'mentor_students.label.no_pending_hours' | translate }}
-                  </div>
-                }
-                <button 
-                  class="btn btn-outline-info btn-sm"
-                  (click)="viewHoursDetails(student)"
-                >
-                  <i class="bi bi-clock-history me-1"></i>
-                  {{  'mentor_students.actions.view_hours' | translate }}
-                </button>
-                <button 
-                  class="btn btn-outline-success btn-sm"
-                  (click)="exportSingleStudentHours(student)"
-                >
-                  <i class="bi bi-download me-1"></i>
-                  {{ 'mentor_students.export.individual' | translate }}
-                </button>
               </div>
             </div>
           </div>

@@ -1005,6 +1005,9 @@ export const en: NestedI18n = {
             completed: {
                 text: "Completed"
             },
+            finalized: {
+                text: "Finalized"
+            },
             active: {
                 text: "Active"
             },

@@ -992,6 +992,9 @@ export const hu: NestedI18n = {
             completed: {
                 text: "Befejezett"
             },
+            finalized: {
+                text: "Véglegesítve"
+            },
             active: {
                 text: "Aktív"
             },

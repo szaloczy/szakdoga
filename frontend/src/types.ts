@@ -75,6 +75,8 @@ export interface extendedStudentDTO {
     totalSubmittedHours: number;
     university: string | null;
     profilePicture?: string;
+    requiredHours?: number;
+    internshipStatus?: 'active' | 'completed' | 'finalized' | 'pending';
     internship?: {
         id: number;
         requiredWeeks: number;

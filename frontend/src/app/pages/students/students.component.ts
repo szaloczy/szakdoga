@@ -145,6 +145,12 @@ export class StudentsComponent implements OnInit {
   }
 
   getStudentStatus(student: extendedStudentDTO): string {
+    // Ha van internshipStatus a backendtől, azt használjuk
+    if (student.internshipStatus) {
+      return student.internshipStatus;
+    }
+    
+    // Fallback a régi logikára, ha nincs internshipStatus
     const required = this.getRequiredHours(student);
     if (student.hours >= required) {
       return 'completed';
@@ -160,6 +166,8 @@ export class StudentsComponent implements OnInit {
       case 'pending':
         return 'bg-warning';
       case 'completed':
+        return 'bg-success';
+      case 'finalized':
         return 'bg-success';
       case 'active':
         return 'bg-info';
@@ -627,6 +635,17 @@ export class StudentsComponent implements OnInit {
   }
 
   canFinalizeInternship(student: extendedStudentDTO): boolean {
+    // Ha van internshipStatus és az 'completed', akkor lehet véglegesíteni
+    if (student.internshipStatus === 'completed') {
+      return true;
+    }
+    
+    // Ha már véglegesítve van, ne jelenjen meg a gomb
+    if (student.internshipStatus === 'finalized') {
+      return false;
+    }
+    
+    // Fallback: régi logika ha nincs internshipStatus
     if (!student.internship || student.internship.finalizedAt) {
       return false;
     }
@@ -638,9 +657,8 @@ export class StudentsComponent implements OnInit {
     // Prefer backend-provided requiredHours when available.
     // Fallback to internship.requiredWeeks * 40 when present.
     // Final fallback to historical default of 180.
-    const anyStudent: any = student as any;
-    if (anyStudent.requiredHours && typeof anyStudent.requiredHours === 'number') {
-      return anyStudent.requiredHours;
+    if (student.requiredHours && typeof student.requiredHours === 'number') {
+      return student.requiredHours;
     }
     if (student.internship && student.internship.requiredWeeks) {
       return student.internship.requiredWeeks * 40;
@@ -649,22 +667,21 @@ export class StudentsComponent implements OnInit {
   }
 
   finalizeInternship(student: extendedStudentDTO): void {
-    if (!student.internship) {
-      this.toastService.showError('A hallgatónak nincs aktív gyakorlata');
-      return;
-    }
-
     const requiredHours = this.getRequiredHours(student);
     const currentHours = student.hours;
+    const requiredWeeks = student.internship?.requiredWeeks || Math.ceil(requiredHours / 40);
 
     Swal.fire({
       title: this.i18nService.transform('students.finalize.title'),
       html: `
         <div class="text-start">
           <h5>${student.firstname} ${student.lastname}</h5>
+          <p class="text-muted mb-2"><i class="bi bi-envelope me-2"></i>${student.email}</p>
+          ${student.university ? `<p class="mb-1"><strong><i class="bi bi-building me-2"></i>${this.i18nService.transform('students.card.university')}:</strong> ${student.university}</p>` : ''}
+          ${student.major ? `<p class="mb-2"><strong><i class="bi bi-book me-2"></i>${this.i18nService.transform('students.card.major')}:</strong> ${student.major}</p>` : ''}
           <hr>
           <p><strong>${this.i18nService.transform('students.finalize.current_hours')}</strong> ${currentHours.toFixed(1)} / ${requiredHours} ${this.i18nService.transform('time.hour')}</p>
-          <p><strong>${this.i18nService.transform('students.finalize.required_weeks')}</strong> ${student.internship.requiredWeeks}</p>
+          <p><strong>${this.i18nService.transform('students.finalize.required_weeks')}</strong> ${requiredWeeks}</p>
           <hr>
           <div class="mb-3">
             <label for="gradeInput" class="form-label"><strong>${this.i18nService.transform('students.finalize.grade_label')}</strong></label>
@@ -711,7 +728,8 @@ export class StudentsComponent implements OnInit {
   }
 
   private performFinalization(student: extendedStudentDTO, grade: number): void {
-    if (!student.internship) return;
+    // Ha van internship objektum, használjuk annak ID-ját, különben a student ID-t
+    const internshipId = student.internship?.id || student.id;
 
     Swal.fire({
       title: this.i18nService.transform('students.finalize.processing_title'),
@@ -723,15 +741,21 @@ export class StudentsComponent implements OnInit {
       }
     });
 
-    this.internshipService.finalize(student.internship.id, grade).subscribe({
+    this.internshipService.finalize(internshipId, grade).subscribe({
       next: (response) => {
         console.log('Internship finalized successfully:', response);
         
         // Frissítjük a hallgató adatait a listában
         const studentIndex = this.students.findIndex(s => s.id === student.id);
-        if (studentIndex !== -1 && this.students[studentIndex].internship) {
-          this.students[studentIndex].internship!.grade = grade;
-          this.students[studentIndex].internship!.finalizedAt = new Date().toISOString();
+        if (studentIndex !== -1) {
+          // Frissítjük a státuszt 'finalized'-ra
+          this.students[studentIndex].internshipStatus = 'finalized';
+          
+          // Ha van internship objektum, frissítjük azt is
+          if (this.students[studentIndex].internship) {
+            this.students[studentIndex].internship!.grade = grade;
+            this.students[studentIndex].internship!.finalizedAt = new Date().toISOString();
+          }
         }
         
         Swal.fire({

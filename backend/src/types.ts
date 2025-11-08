@@ -106,6 +106,7 @@ export interface StudentWithHoursDto {
   rejectedHours: number;            
   totalSubmittedHours: number;
   requiredHours?: number | null;
+  internshipStatus?: "pending" | "active" | "completed" | "cancelled";
 }
 
 export interface ApproveAllHoursResponse {

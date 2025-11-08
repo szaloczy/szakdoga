@@ -25,7 +25,7 @@ export class InternshipService {
 
   reject(id: number) { return this.http.post<any>(`/api/internship/${id}/reject`, {}) };
 
-  finalize(id: number, grade: number) { 
-    return this.http.post<InternshipDTO>(`/api/internship/${id}/finalize`, { grade }) 
+  finalize(studentId: number, grade: number) { 
+    return this.http.post<InternshipDTO>(`/api/mentor/finalize-student/${studentId}`, { grade }) 
   };
 }

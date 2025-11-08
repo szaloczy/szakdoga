@@ -1,10 +1,13 @@
 import { MentorService } from "../service/mentor.service";
+import { InternshipService } from "../service/internship.service";
 import { createMentorDTO, GetProfileResponseDTO } from "../types";
 import { Controller } from "./base.controller";
 import { parse } from "json2csv";
+import { mapInternshipToDTO } from "../utils/mappers/internship.mapper";
 
 export class MentorController extends Controller {
   private service = new MentorService();
+  private internshipService = new InternshipService();
 
   getAll = async (req, res) => {
     try {
@@ -255,6 +258,39 @@ export class MentorController extends Controller {
       res.setHeader("Content-Type", "text/csv; charset=utf-8");
       res.setHeader("Content-Disposition", `attachment; filename="${fileName}"`);
       res.status(200).send(csvWithBOM);
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
+
+  finalizeStudentInternship = async (req, res) => {
+    try {
+      const mentorUserId = (req as any).user?.id;
+      const studentId = Number(req.params["studentId"]);
+      const { grade } = req.body;
+
+      if (!mentorUserId) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (isNaN(studentId)) {
+        return this.handleError(res, null, 400, "Invalid student ID");
+      }
+
+      if (!grade || grade < 1 || grade > 5) {
+        return this.handleError(res, null, 400, "Grade must be between 1 and 5");
+      }
+
+      const result = await this.internshipService.finalizeInternshipByStudent(
+        studentId,
+        mentorUserId,
+        grade
+      );
+
+      res.json({
+        message: "Internship finalized successfully",
+        internship: mapInternshipToDTO(result)
+      });
     } catch (error) {
       this.handleError(res, error);
     }

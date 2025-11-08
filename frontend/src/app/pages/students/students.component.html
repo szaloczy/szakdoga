@@ -208,8 +208,7 @@
                   </small>
                 } @else if (student.internshipStatus === 'finalized' || student.internship?.finalizedAt) {
                   <!-- Véglegesített állapot megjelenítése -->
-                  <div class="alert alert-success mb-0">
-                    <i class="bi bi-trophy-fill me-2"></i>
+                  <div class="alert alert-success mb-0 text-center">
                     <strong>{{ 'students.finalize.finalized_label' | translate }}</strong>
                     @if (student.internship && student.internship.grade) {
                       <div class="mt-2">

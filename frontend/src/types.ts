@@ -65,6 +65,7 @@ export interface StudentDTO {
 
 export interface extendedStudentDTO {
     id: number;
+    studentId: number;  // Student tábla ID-ja (internship-hez szükséges)
     firstname: string;
     lastname: string;
     email: string;

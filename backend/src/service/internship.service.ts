@@ -357,6 +357,54 @@ export class InternshipService {
     return await this.internshipRepo.save(internship);
   }
 
+  async finalizeInternshipByStudent(
+    studentId: number,
+    mentorUserId: number,
+    grade: number
+  ): Promise<Internship> {
+    // Internship lekérése hallgató alapján
+    const internship = await this.internshipRepo.findOne({
+      where: { 
+        student: { id: studentId }
+      },
+      relations: ["student", "student.user", "mentor", "mentor.user", "company"],
+    });
+
+    if (!internship) {
+      throw new Error("Internship not found for this student");
+    }
+
+    if (internship.finalizedAt) {
+      throw new Error("Internship is already finalized");
+    }
+
+    if (grade < 1 || grade > 5) {
+      throw new Error("Grade must be between 1 and 5");
+    }
+
+    // Jogosultság: csak a gyakorlat mentora véglegesíthet
+    if (internship.mentor.user.id !== mentorUserId) {
+      throw new Error("You can only finalize your own students' internships");
+    }
+
+    // Óraszám ellenőrzése
+    const approvedHours = await this.getApprovedHours(internship.id);
+    const requiredHours = this.calculateRequiredHours(internship.requiredWeeks || 6);
+
+    if (approvedHours < requiredHours) {
+      throw new Error(
+        `Not enough approved hours. Required: ${requiredHours}, Approved: ${approvedHours.toFixed(1)}`
+      );
+    }
+
+    // Véglegesítés
+    internship.grade = grade;
+    internship.finalizedAt = new Date();
+    internship.status = "completed";
+
+    return await this.internshipRepo.save(internship);
+  }
+
   private calculateRequiredHours(weeks: number): number {
     return weeks * 40;
   }

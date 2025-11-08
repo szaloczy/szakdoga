@@ -95,6 +95,7 @@ export interface profileInternshipDTO {
 }
 export interface StudentWithHoursDto {
   id: number;
+  studentId: number;  // ÚJ: Student tábla ID-ja
   firstname: string;
   lastname: string;
   email: string;

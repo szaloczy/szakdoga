@@ -88,6 +88,9 @@ router.get("/mentor/user/:userId", authMiddleware, mentorController.getByUserId)
 router.get("/mentor/export/all-students-hours", authMiddleware, mentorController.exportAllStudentsHours);
 router.get("/mentor/export/student/:studentId/hours", authMiddleware, mentorController.exportStudentHours);
 
+// Mentor véglegesíti a hallgató gyakorlatát
+router.post("/mentor/finalize-student/:studentId", authMiddleware, mentorController.finalizeStudentInternship);
+
 router.get("/mentor/:id", authMiddleware, mentorController.getById);
 router.post("/mentor", authMiddleware, mentorController.create);
 router.put("/mentor/:id", authMiddleware, mentorController.updateProfile);

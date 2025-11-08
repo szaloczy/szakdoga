@@ -240,6 +240,7 @@ export class MentorService {
 
       studentsWithHours.push({
         id: internship.student.user.id,
+        studentId: internship.student.id,
         firstname: internship.student.user.firstname,
         lastname: internship.student.user.lastname,
         email: internship.student.user.email,

@@ -728,9 +728,6 @@ export class StudentsComponent implements OnInit {
   }
 
   private performFinalization(student: extendedStudentDTO, grade: number): void {
-    // Ha van internship objektum, használjuk annak ID-ját, különben a student ID-t
-    const internshipId = student.internship?.id || student.id;
-
     Swal.fire({
       title: this.i18nService.transform('students.finalize.processing_title'),
       text: this.i18nService.transform('students.finalize.processing_desc'),
@@ -741,17 +738,14 @@ export class StudentsComponent implements OnInit {
       }
     });
 
-    this.internshipService.finalize(internshipId, grade).subscribe({
+    this.internshipService.finalize(student.studentId, grade).subscribe({
       next: (response) => {
         console.log('Internship finalized successfully:', response);
         
-        // Frissítjük a hallgató adatait a listában
         const studentIndex = this.students.findIndex(s => s.id === student.id);
         if (studentIndex !== -1) {
-          // Frissítjük a státuszt 'finalized'-ra
           this.students[studentIndex].internshipStatus = 'finalized';
-          
-          // Ha van internship objektum, frissítjük azt is
+
           if (this.students[studentIndex].internship) {
             this.students[studentIndex].internship!.grade = grade;
             this.students[studentIndex].internship!.finalizedAt = new Date().toISOString();

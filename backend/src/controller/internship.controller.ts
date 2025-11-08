@@ -253,4 +253,51 @@ export class InternshipController extends Controller {
       this.handleError(res, error);
     }
   };
+
+  finalize = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      const internshipId = Number(req.params["id"]);
+      const { grade } = req.body;
+
+      if (!user?.id) {
+        return this.handleError(res, null, 401, "User not authenticated");
+      }
+
+      if (user.role !== "admin" && user.role !== "mentor") {
+        return this.handleError(res, null, 403, "Only admins and mentors can finalize internships");
+      }
+
+      if (isNaN(internshipId)) {
+        return this.handleError(res, null, 400, "Invalid internship ID");
+      }
+
+      if (!grade || isNaN(grade)) {
+        return this.handleError(res, null, 400, "Valid grade is required (1-5)");
+      }
+
+      let mentorUserId = user.id;
+      if (user.role === "admin") {
+        const internship = await this.service.getInternshipById(internshipId);
+        if (!internship) {
+          return this.handleError(res, null, 404, "Internship not found");
+        }
+        mentorUserId = internship.mentor.user.id;
+      }
+
+      const internship = await this.service.finalizeInternship(
+        internshipId,
+        mentorUserId,
+        Number(grade)
+      );
+      
+      const result = mapInternshipToDTO(internship);
+      res.json({ 
+        message: "Internship finalized successfully", 
+        internship: result 
+      });
+    } catch (error) {
+      this.handleError(res, error);
+    }
+  };
 }

@@ -27,6 +27,9 @@ export function mapInternshipToDTO(internship: Internship): InternshipDTO {
       : "N/A",
     companyName: internship.company?.name ?? "N/A",
     requiredWeeks: internship.requiredWeeks ?? null,
+    requiredHours: internship.requiredWeeks ? internship.requiredWeeks * 40 : null,
+    grade: internship.grade ?? null,
+    finalizedAt: internship.finalizedAt ? formatDate(internship.finalizedAt) : null,
   };
 }
 
@@ -48,4 +51,9 @@ export const mapProfileInternshipToDTO = (
   companyAddress: internship.company?.address,
   companyCity: internship.company?.city,
   requiredWeeks: internship.requiredWeeks ?? null,
+  requiredHours: internship.requiredWeeks ? internship.requiredWeeks * 40 : null,
+  grade: internship.grade ?? null,
+  finalizedAt: internship.finalizedAt 
+    ? new Date(internship.finalizedAt).toISOString().split("T")[0]
+    : null,
 });

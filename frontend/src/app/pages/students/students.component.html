@@ -161,12 +161,12 @@
               <div class="row text-center mb-3">
                 <div class="col-6">
                   <div class="border-end">
-                    <div class="fs-5 fw-bold text-primary">{{ getTotalHours(student) | number:'1.1-1' }}h</div>
+                    <div class="fs-5 fw-bold text-primary">{{ getTotalHours(student) | number:'1.1-1' }} {{ 'time.hour' | translate }}</div>
                     <small class="text-muted">{{ 'students.card.completed_hours' | translate }}</small>
                   </div>
                 </div>
                 <div class="col-6">
-                  <div class="fs-5 fw-bold text-warning">{{ getPendingHours(student) | number:'1.1-1' }}h</div>
+                  <div class="fs-5 fw-bold text-warning">{{ getPendingHours(student) | number:'1.1-1' }} {{ 'time.hour' | translate }}</div>
                   <small class="text-muted">{{ 'students.card.pending_hours' | translate }}</small>
                 </div>
               </div>
@@ -174,17 +174,17 @@
               <div class="mb-3">
                 <div class="d-flex justify-content-between align-items-center mb-1">
                   <small class="text-muted">{{ 'students.card.progress' | translate }}</small>
-                  <small class="text-muted">{{ getTotalHours(student) | number:'1.0-0' }}/180h</small>
+                  <small class="text-muted">{{ getTotalHours(student) | number:'1.0-0' }}/{{ getRequiredHours(student) }} {{ 'time.hour' | translate }}</small>
                 </div>
                 <div class="progress" style="height: 8px;">
                   <div 
                     class="progress-bar" 
                     role="progressbar" 
-                    [style.width.%]="(getTotalHours(student) / 180) * 100"
+                    [style.width.%]="(getTotalHours(student) / getRequiredHours(student)) * 100"
                     [ngClass]="{
-                      'bg-success': getTotalHours(student) >= 180,
-                      'bg-warning': getTotalHours(student) >= 90 && getTotalHours(student) < 180,
-                      'bg-info': getTotalHours(student) < 90
+                      'bg-success': getTotalHours(student) >= getRequiredHours(student),
+                      'bg-warning': getTotalHours(student) >= (getRequiredHours(student) / 2) && getTotalHours(student) < getRequiredHours(student),
+                      'bg-info': getTotalHours(student) < (getRequiredHours(student) / 2)
                     }"
                   ></div>
                 </div>
@@ -193,6 +193,35 @@
             
             <div class="card-footer bg-transparent">
               <div class="d-flex flex-column gap-2">
+                @if (canFinalizeInternship(student)) {
+                  <button 
+                    class="btn btn-success btn-lg fw-bold"
+                    (click)="finalizeInternship(student)"
+                  >
+                    <i class="bi bi-check-circle-fill me-2"></i>
+                    {{ 'students.finalize.button' | translate }}
+                  </button>
+                  <small class="text-muted text-center">
+                    <i class="bi bi-info-circle me-1"></i>
+                    {{ 'students.finalize.requirement_met' | translate }}
+                  </small>
+                } @else if (student.internship?.finalizedAt) {
+                  <div class="alert alert-success mb-0">
+                    <i class="bi bi-trophy-fill me-2"></i>
+                    <strong>{{ 'students.finalize.finalized_label' | translate }}</strong>
+                    @if (student.internship && student.internship.grade) {
+                      <div class="mt-2">
+                        <small>{{ 'students.finalize.final_grade' | translate }}: <strong>{{ student.internship.grade }}</strong></small>
+                      </div>
+                    }
+                    @if (student.internship && student.internship.finalizedAt) {
+                      <div>
+                        <small>{{ 'students.finalize.finalized_at' | translate }}: {{ student.internship.finalizedAt | date:'short' }}</small>
+                      </div>
+                    }
+                  </div>
+                }
+                
                 @if (getPendingHours(student) > 0) {
                   <div class="d-flex gap-2">
                     <button 
@@ -211,7 +240,7 @@
                       {{ 'mentor_students.actions.reject_hours' | translate }}
                     </button>
                   </div>
-                } @else {
+                } @else if (!student.internship?.finalizedAt) {
                   <div class="text-center text-muted py-2">
                     <i class="bi bi-check-circle-fill me-1 text-success"></i>
                     {{ 'mentor_students.label.no_pending_hours' | translate }}

@@ -75,6 +75,12 @@ export interface extendedStudentDTO {
     totalSubmittedHours: number;
     university: string | null;
     profilePicture?: string;
+    internship?: {
+        id: number;
+        requiredWeeks: number;
+        grade?: number;
+        finalizedAt?: string;
+    };
 }
 
 export interface ProfileDTO {
@@ -150,6 +156,8 @@ export interface InternshipDTO {
     isApproved: boolean;
     requiredWeeks: number;
     status?: InternshipStatus;
+    grade?: number;
+    finalizedAt?: Date;
     student: StudentDTO;
     mentor: MentorDTO;
     company: CompanyDTO;
@@ -185,6 +193,8 @@ export interface ProfileInternshipDTO {
     endDate: string;
     isApproved: boolean;
     requiredWeeks: number;
+    grade?: number;
+    finalizedAt?: string;
     mentorName: string;
     companyName: string;
     mentorEmail: string;

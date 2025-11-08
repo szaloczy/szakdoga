@@ -1121,6 +1121,35 @@ export const hu: NestedI18n = {
                     text: "Kiváló!"
                 }
             }
+        },
+        finalize: {
+            button: { text: "Véglegesítés" },
+            title: { text: "Gyakorlat véglegesítése" },
+            current_hours: { text: "Teljesített órák" },
+            required_weeks: { text: "Szükséges hetek" },
+            grade_label: { text: "Jegy megadása (1-5)" },
+            select_grade: { text: "Válasszon jegyet" },
+            grades: {
+                excellent: { text: "Jeles" },
+                good: { text: "Jó" },
+                satisfactory: { text: "Közepes" },
+                pass: { text: "Elégséges" },
+                fail: { text: "Elégtelen" }
+            },
+            warning: { text: "Ez a művelet nem vonható vissza! A véglegesítés után a gyakorlat lezárul." },
+            confirm_button: { text: "Véglegesítés" },
+            error_no_grade: { text: "Kérjük, válasszon jegyet!" },
+            processing_title: { text: "Véglegesítés..." },
+            processing_desc: { text: "A gyakorlat véglegesítése folyamatban" },
+            success_title: { text: "Gyakorlat véglegesítve!" },
+            success_message: { text: "sikeresen teljesítette a gyakorlatot!" },
+            final_grade: { text: "Végső jegy" },
+            toast_success: { text: "Gyakorlat sikeresen véglegesítve!" },
+            error_title: { text: "Hiba történt" },
+            error_default: { text: "A véglegesítés során hiba történt. Próbálja újra!" },
+            requirement_met: { text: "Elérte a szükséges óraszámot" },
+            finalized_label: { text: "Véglegesítve" },
+            finalized_at: { text: "Véglegesítés dátuma" }
         }
     },
     statistics: {

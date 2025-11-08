@@ -249,7 +249,8 @@ export class MentorService {
         hours: Math.round(approvedHours * 100) / 100,                    
         pendingHours: Math.round(pendingHours * 100) / 100,              
         rejectedHours: Math.round(rejectedHours * 100) / 100,            
-        totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100
+        totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100,
+        requiredHours: internship.requiredWeeks ? internship.requiredWeeks * 40 : null
       });
     }
 

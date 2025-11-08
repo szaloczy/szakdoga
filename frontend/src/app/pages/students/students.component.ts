@@ -12,6 +12,7 @@ import { ToastService } from '../../services/toast.service';
 import { InternshipHourService } from '../../services/internship-hour.service';
 import { InternshipWithHours, StudentDTO, extendedStudentDTO } from '../../../types';
 import Swal from 'sweetalert2';
+import { InternshipService } from '../../services/internship.service';
 
 interface StudentResponseDTO {
   id: number;
@@ -47,6 +48,7 @@ export class StudentsComponent implements OnInit {
   private toastService = inject(ToastService);
   private router = inject(Router);
   private internshipHourService = inject(InternshipHourService);
+  private internshipService = inject(InternshipService);
 
   students: extendedStudentDTO[] = [];
   isLoading = false;
@@ -143,7 +145,8 @@ export class StudentsComponent implements OnInit {
   }
 
   getStudentStatus(student: extendedStudentDTO): string {
-    if (student.hours >= 180) {
+    const required = this.getRequiredHours(student);
+    if (student.hours >= required) {
       return 'completed';
     } else if (student.hours > 0) {
       return 'active';
@@ -200,9 +203,10 @@ export class StudentsComponent implements OnInit {
     const student = this.students.find(s => s.id === studentId);
     if (!student) return;
 
-    const pendingHours = this.getPendingHours(student);
-    const approvedHours = this.getApprovedHours(student);
-    const totalAfterApproval = approvedHours + pendingHours;
+  const pendingHours = this.getPendingHours(student);
+  const approvedHours = this.getApprovedHours(student);
+  const totalAfterApproval = approvedHours + pendingHours;
+  const required = this.getRequiredHours(student);
 
     Swal.fire({
       title: this.i18nService.transform('students.pop_ups.approval.title'),
@@ -259,7 +263,7 @@ export class StudentsComponent implements OnInit {
               }
             }
             
-            if (totalAfterApproval >= 180) {
+            if (totalAfterApproval >= required) {
               Swal.fire({
                 title: this.i18nService.transform('students.pop_ups.approval.success_title'),
                 html: `
@@ -620,5 +624,163 @@ export class StudentsComponent implements OnInit {
         this.toastService.showError('Az óra elfogadása nem sikerült');
       }
     });
+  }
+
+  canFinalizeInternship(student: extendedStudentDTO): boolean {
+    if (!student.internship || student.internship.finalizedAt) {
+      return false;
+    }
+    const requiredHours = this.getRequiredHours(student);
+    return student.hours >= requiredHours;
+  }
+
+  getRequiredHours(student: extendedStudentDTO): number {
+    // Prefer backend-provided requiredHours when available.
+    // Fallback to internship.requiredWeeks * 40 when present.
+    // Final fallback to historical default of 180.
+    const anyStudent: any = student as any;
+    if (anyStudent.requiredHours && typeof anyStudent.requiredHours === 'number') {
+      return anyStudent.requiredHours;
+    }
+    if (student.internship && student.internship.requiredWeeks) {
+      return student.internship.requiredWeeks * 40;
+    }
+    return 180;
+  }
+
+  finalizeInternship(student: extendedStudentDTO): void {
+    if (!student.internship) {
+      this.toastService.showError('A hallgatónak nincs aktív gyakorlata');
+      return;
+    }
+
+    const requiredHours = this.getRequiredHours(student);
+    const currentHours = student.hours;
+
+    Swal.fire({
+      title: this.i18nService.transform('students.finalize.title'),
+      html: `
+        <div class="text-start">
+          <h5>${student.firstname} ${student.lastname}</h5>
+          <hr>
+          <p><strong>${this.i18nService.transform('students.finalize.current_hours')}</strong> ${currentHours.toFixed(1)} / ${requiredHours} ${this.i18nService.transform('time.hour')}</p>
+          <p><strong>${this.i18nService.transform('students.finalize.required_weeks')}</strong> ${student.internship.requiredWeeks}</p>
+          <hr>
+          <div class="mb-3">
+            <label for="gradeInput" class="form-label"><strong>${this.i18nService.transform('students.finalize.grade_label')}</strong></label>
+            <select id="gradeInput" class="form-select" style="font-size: 1.1rem;">
+              <option value="">-- ${this.i18nService.transform('students.finalize.select_grade')} --</option>
+              <option value="5">5 - ${this.i18nService.transform('students.finalize.grades.excellent')}</option>
+              <option value="4">4 - ${this.i18nService.transform('students.finalize.grades.good')}</option>
+              <option value="3">3 - ${this.i18nService.transform('students.finalize.grades.satisfactory')}</option>
+              <option value="2">2 - ${this.i18nService.transform('students.finalize.grades.pass')}</option>
+              <option value="1">1 - ${this.i18nService.transform('students.finalize.grades.fail')}</option>
+            </select>
+          </div>
+          <div class="alert alert-warning mt-3">
+            <i class="bi bi-exclamation-triangle"></i>
+            ${this.i18nService.transform('students.finalize.warning')}
+          </div>
+        </div>
+      `,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#28a745',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: this.i18nService.transform('students.finalize.confirm_button'),
+      cancelButtonText: this.i18nService.transform('buttons.forms.cancel'),
+      customClass: {
+        popup: 'larger-swal'
+      },
+      preConfirm: () => {
+        const gradeSelect = document.getElementById('gradeInput') as HTMLSelectElement;
+        const grade = parseInt(gradeSelect.value);
+        
+        if (!grade || grade < 1 || grade > 5) {
+          Swal.showValidationMessage(this.i18nService.transform('students.finalize.error_no_grade'));
+          return false;
+        }
+        
+        return { grade };
+      }
+    }).then((result: any) => {
+      if (result.isConfirmed && result.value) {
+        this.performFinalization(student, result.value.grade);
+      }
+    });
+  }
+
+  private performFinalization(student: extendedStudentDTO, grade: number): void {
+    if (!student.internship) return;
+
+    Swal.fire({
+      title: this.i18nService.transform('students.finalize.processing_title'),
+      text: this.i18nService.transform('students.finalize.processing_desc'),
+      allowOutsideClick: false,
+      showConfirmButton: false,
+      didOpen: () => {
+        Swal.showLoading();
+      }
+    });
+
+    this.internshipService.finalize(student.internship.id, grade).subscribe({
+      next: (response) => {
+        console.log('Internship finalized successfully:', response);
+        
+        // Frissítjük a hallgató adatait a listában
+        const studentIndex = this.students.findIndex(s => s.id === student.id);
+        if (studentIndex !== -1 && this.students[studentIndex].internship) {
+          this.students[studentIndex].internship!.grade = grade;
+          this.students[studentIndex].internship!.finalizedAt = new Date().toISOString();
+        }
+        
+        Swal.fire({
+          title: this.i18nService.transform('students.finalize.success_title'),
+          html: `
+            <div class="text-center">
+              <i class="bi bi-trophy-fill" style="font-size: 4rem; color: #ffc107;"></i>
+              <h4 class="mt-3">${student.firstname} ${student.lastname}</h4>
+              <p class="mb-3">${this.i18nService.transform('students.finalize.success_message')}</p>
+              <div class="alert alert-success">
+                <strong>${this.i18nService.transform('students.finalize.final_grade')}</strong> ${grade} (${this.getGradeText(grade)})
+              </div>
+            </div>
+          `,
+          icon: 'success',
+          confirmButtonColor: '#28a745',
+          confirmButtonText: this.i18nService.transform('buttons.forms.exit')
+        });
+        
+        this.toastService.showSuccess(this.i18nService.transform('students.finalize.toast_success'));
+      },
+      error: (error) => {
+        console.error('Error finalizing internship:', error);
+        
+        let errorMessage = this.i18nService.transform('students.finalize.error_default');
+        if (error.error?.message) {
+          errorMessage = error.error.message;
+        }
+        
+        Swal.fire({
+          title: this.i18nService.transform('students.finalize.error_title'),
+          text: errorMessage,
+          icon: 'error',
+          confirmButtonColor: '#dc3545'
+        });
+        
+        this.toastService.showError(errorMessage);
+      }
+    });
+  }
+
+  private getGradeText(grade: number): string {
+    const gradeMap: { [key: number]: string } = {
+      5: this.i18nService.transform('students.finalize.grades.excellent'),
+      4: this.i18nService.transform('students.finalize.grades.good'),
+      3: this.i18nService.transform('students.finalize.grades.satisfactory'),
+      2: this.i18nService.transform('students.finalize.grades.pass'),
+      1: this.i18nService.transform('students.finalize.grades.fail')
+    };
+    return gradeMap[grade] || '';
   }
 }

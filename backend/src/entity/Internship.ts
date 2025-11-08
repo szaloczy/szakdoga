@@ -29,6 +29,12 @@ export class Internship {
   @Column({ nullable: true })
   requiredWeeks: number;
 
+  @Column({ nullable: true })
+  grade: number;
+
+  @Column({ type: "timestamp", nullable: true })
+  finalizedAt: Date;
+
   @Column({ 
     type: "varchar",
     default: "pending"

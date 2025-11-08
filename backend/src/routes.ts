@@ -71,6 +71,7 @@ router.put("/internship/:id", authMiddleware, internshipController.update);
 router.delete("/internship/:id", authMiddleware, internshipController.delete);
 router.post("/internship/:id/approve", authMiddleware, internshipController.approve);
 router.post("/internship/:id/reject", authMiddleware, internshipController.reject);
+router.post("/internship/:id/finalize", authMiddleware, internshipController.finalize);
 
 router.get("/profile/internship/:id", internshipController.getByUserId);
 

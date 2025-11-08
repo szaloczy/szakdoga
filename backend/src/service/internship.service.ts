@@ -1,6 +1,7 @@
 import { AppDataSource } from "../data-source";
 import { Company } from "../entity/Company";
 import { Internship } from "../entity/Internship";
+import { InternshipHour } from "../entity/InternshipHour";
 import { Mentor } from "../entity/Mentor";
 import { Student } from "../entity/Student";
 import { User } from "../entity/User";
@@ -11,6 +12,7 @@ export class InternshipService {
   private mentorRepo = AppDataSource.getRepository(Mentor);
   private companyRepo = AppDataSource.getRepository(Company);
   private userRepo = AppDataSource.getRepository(User);
+  private internshipHourRepo = AppDataSource.getRepository(InternshipHour);
 
   async createInternshipForStudent(
     userId: number,
@@ -314,5 +316,76 @@ export class InternshipService {
 
     internship.isApproved = false;
     return await this.internshipRepo.save(internship);
+  }
+
+  async finalizeInternship(
+    internshipId: number,
+    mentorUserId: number,
+    grade: number
+  ): Promise<Internship> {
+    const internship = await this.getInternshipById(internshipId);
+    if (!internship) {
+      throw new Error("Internship not found");
+    }
+
+    if (internship.mentor.user.id !== mentorUserId) {
+      throw new Error("You can only finalize your own students' internships");
+    }
+
+    if (internship.finalizedAt) {
+      throw new Error("Internship is already finalized");
+    }
+
+    if (grade < 1 || grade > 5) {
+      throw new Error("Grade must be between 1 and 5");
+    }
+
+    // Szükséges órák kiszámítása: requiredWeeks * 40 óra/hét
+    const requiredHours = this.calculateRequiredHours(internship.requiredWeeks || 6);
+    
+    // Jóváhagyott órák lekérése
+    const approvedHours = await this.getApprovedHours(internshipId);
+
+    if (approvedHours < requiredHours) {
+      throw new Error(
+        `Not enough approved hours. Required: ${requiredHours}, Approved: ${approvedHours.toFixed(1)}`
+      );
+    }
+
+    internship.grade = grade;
+    internship.finalizedAt = new Date();
+    return await this.internshipRepo.save(internship);
+  }
+
+  private calculateRequiredHours(weeks: number): number {
+    return weeks * 40;
+  }
+
+  async getApprovedHours(internshipId: number): Promise<number> {
+    const hours = await this.internshipHourRepo.find({
+      where: { 
+        internship: { id: internshipId },
+        status: "approved" 
+      }
+    });
+
+    // Órák számítása startTime és endTime alapján
+    let totalHours = 0;
+    for (const hour of hours) {
+      const hoursWorked = this.calculateHoursDifference(hour.startTime, hour.endTime);
+      totalHours += hoursWorked;
+    }
+
+    return totalHours;
+  }
+
+  private calculateHoursDifference(startTime: string, endTime: string): number {
+    const [startHours, startMinutes] = startTime.split(':').map(Number);
+    const [endHours, endMinutes] = endTime.split(':').map(Number);
+    
+    const startInHours = startHours + startMinutes / 60;
+    const endInHours = endHours + endMinutes / 60;
+    
+    return endInHours - startInHours;
   }
 }

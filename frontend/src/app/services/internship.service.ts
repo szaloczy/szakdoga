@@ -24,4 +24,8 @@ export class InternshipService {
   approve(id: number) { return this.http.post<any>(`/api/internship/${id}/approve`, {}) };
 
   reject(id: number) { return this.http.post<any>(`/api/internship/${id}/reject`, {}) };
+
+  finalize(id: number, grade: number) { 
+    return this.http.post<InternshipDTO>(`/api/internship/${id}/finalize`, { grade }) 
+  };
 }

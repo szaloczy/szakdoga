@@ -1134,6 +1134,35 @@ export const en: NestedI18n = {
                     text: "Excellent!"
                 }
             }
+        },
+        finalize: {
+            button: { text: "Finalize" },
+            title: { text: "Finalize Internship" },
+            current_hours: { text: "Completed Hours" },
+            required_weeks: { text: "Required Weeks" },
+            grade_label: { text: "Assign Grade (1-5)" },
+            select_grade: { text: "Select grade" },
+            grades: {
+                excellent: { text: "Excellent" },
+                good: { text: "Good" },
+                satisfactory: { text: "Satisfactory" },
+                pass: { text: "Pass" },
+                fail: { text: "Fail" }
+            },
+            warning: { text: "This action cannot be undone! The internship will be closed after finalization." },
+            confirm_button: { text: "Finalize" },
+            error_no_grade: { text: "Please select a grade!" },
+            processing_title: { text: "Finalizing..." },
+            processing_desc: { text: "Internship finalization in progress" },
+            success_title: { text: "Internship Finalized!" },
+            success_message: { text: "has successfully completed the internship!" },
+            final_grade: { text: "Final Grade" },
+            toast_success: { text: "Internship successfully finalized!" },
+            error_title: { text: "Error Occurred" },
+            error_default: { text: "An error occurred during finalization. Please try again!" },
+            requirement_met: { text: "Required hours achieved" },
+            finalized_label: { text: "Finalized" },
+            finalized_at: { text: "Finalization Date" }
         }
     },
     statistics: {

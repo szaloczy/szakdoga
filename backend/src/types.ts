@@ -71,6 +71,9 @@ export interface InternshipDTO {
   mentorName: string;
   companyName: string;
   requiredWeeks?: number | null;
+  requiredHours?: number | null;
+  grade?: number | null;
+  finalizedAt?: string | null;
 }
 
 export interface profileInternshipDTO {
@@ -86,6 +89,9 @@ export interface profileInternshipDTO {
   companyAddress: string;
   companyCity: string;
   requiredWeeks?: number | null;
+  requiredHours?: number | null;
+  grade?: number | null;
+  finalizedAt?: string | null;
 }
 export interface StudentWithHoursDto {
   id: number;
@@ -98,7 +104,8 @@ export interface StudentWithHoursDto {
   hours: number;                   
   pendingHours: number;             
   rejectedHours: number;            
-  totalSubmittedHours: number;      
+  totalSubmittedHours: number;
+  requiredHours?: number | null;
 }
 
 export interface ApproveAllHoursResponse {

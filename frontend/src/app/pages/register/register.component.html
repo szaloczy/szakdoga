@@ -1,66 +1,83 @@
 <div class="auth-wrapper d-flex align-items-center justify-content-center min-vh-100 bg-light bg-gradient">
-  <div class="auth-box bg-white p-4 shadow rounded-4">
-    <h4 class="text-center mb-4 fw-bold">{{ "register.form.title" | translate }}</h4>
+  <div class="card border-0 shadow-sm rounded-3 p-4" style="width: 100%; max-width: 420px;">
+    <!-- Title -->
+    <div class="text-center mb-4">
+      <h3 class="fw-bold mb-2">{{ "register.form.title" | translate }}</h3>
+    </div>
 
     <form [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+      <!-- Firstname -->
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.firstname' | translate }}" formControlName="firstname">
+        <label class="form-label small text-muted fw-semibold">{{ 'register.form.placeholder.firstname' | translate }}</label>
+        <input type="text" class="form-control form-control-lg" placeholder="{{ 'register.form.placeholder.firstname' | translate }}" formControlName="firstname">
         @if(registerForm.get("firstname")?.invalid && (registerForm.get("firstname")?.touched || registerForm.get("firstname")?.dirty)) {
           @if(registerForm.get("firstname")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.firstname_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.firstname_required' | translate }}</small>
           }
         }
       </div>
 
+      <!-- Lastname -->
       <div class="mb-3">
-        <input type="text" class="form-control" placeholder="{{ 'register.form.placeholder.lastname' | translate }}" formControlName="lastname">
+        <label class="form-label small text-muted fw-semibold">{{ 'register.form.placeholder.lastname' | translate }}</label>
+        <input type="text" class="form-control form-control-lg" placeholder="{{ 'register.form.placeholder.lastname' | translate }}" formControlName="lastname">
          @if(registerForm.get("lastname")?.invalid && (registerForm.get("lastname")?.touched || registerForm.get("lastname")?.dirty)) {
           @if(registerForm.get("lastname")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.lastname_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.lastname_required' | translate }}</small>
           }
         }
       </div>
 
+      <!-- Email -->
       <div class="mb-3">
-        <input type="email" class="form-control" placeholder="{{ 'register.form.placeholder.email' | translate }}" formControlName="email">
+        <label class="form-label small text-muted fw-semibold">{{ 'register.form.placeholder.email' | translate }}</label>
+        <input type="email" class="form-control form-control-lg" placeholder="{{ 'register.form.placeholder.email' | translate }}" formControlName="email">
         @if(registerForm.get("email")?.invalid && (registerForm.get("email")?.touched || registerForm.get("email")?.dirty)) {
           @if(registerForm.get("email")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.email_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.email_required' | translate }}</small>
           }
         }
       </div>
 
+      <!-- Password -->
       <div class="mb-3">
-        <input type="password" class="form-control" placeholder="{{ 'register.form.placeholder.password' | translate }}" formControlName="password">
+        <label class="form-label small text-muted fw-semibold">{{ 'register.form.placeholder.password' | translate }}</label>
+        <input type="password" class="form-control form-control-lg" placeholder="{{ 'register.form.placeholder.password' | translate }}" formControlName="password">
         @if(registerForm.get("password")?.invalid && (registerForm.get("password")?.touched || registerForm.get("password")?.dirty)) {
           @if(registerForm.get("password")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.password_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.password_required' | translate }}</small>
           }
         }
       </div>
 
+      <!-- Terms -->
       <div class="form-check mb-3">
         <input class="form-check-input" type="checkbox" formControlName="terms" id="termsCheck">
-        <label class="form-check-label" for="termsCheck">
+        <label class="form-check-label small" for="termsCheck">
           {{ 'register.form.terms.statements' | translate }} 
-          <a href="#" (click)="openPrivacyPolicy($event)" class="text-primary text-decoration-underline">
+          <a href="#" (click)="openPrivacyPolicy($event)" class="text-decoration-none">
             {{ 'register.form.terms.link' | translate }}
           </a>
         </label>
         @if(registerForm.get("terms")?.invalid && (registerForm.get("terms")?.touched || registerForm.get("terms")?.dirty)) {
           @if(registerForm.get("terms")?.errors?.["required"]) {
-            <small class="error-message d-block">{{ 'error_message.terms_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.terms_required' | translate }}</small>
           }
         }
       </div>
 
-      <button class="btn w-100 text-white" [disabled]="registerForm.invalid">
-        {{ 'register.form.button' | translate }}
-      </button>
-    </form>
+      <!-- Submit button -->
+      <div class="d-grid mb-3">
+        <button class="btn btn-primary btn-lg fw-semibold" type="submit" [disabled]="registerForm.invalid">
+          {{ 'register.form.button' | translate }}
+        </button>
+      </div>
 
-    <div class="text-center mt-3">
-      {{ 'register.form.registered.question' | translate }} <a routerLink="/login" href="#" class="fw-semibold">{{ 'register.form.registered.link' | translate }}</a>
-    </div>
+      <!-- Login link -->
+      <div class="text-center small">
+        <span class="text-muted">{{ 'register.form.registered.question' | translate }}</span>
+        <a routerLink="/login" class="text-decoration-none fw-semibold ms-1">{{ 'register.form.registered.link' | translate }}</a>
+      </div>
+    </form>
   </div>
 </div>

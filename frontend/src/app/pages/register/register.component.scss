@@ -1,13 +1,5 @@
-.auth-box {
-    width: 100%; 
-    max-width: 400px;
-
-    h4 {
-        text-transform: uppercase;
-    }
-
-    .btn {
-        background: linear-gradient(to right, #667eea, #56ab2f);
-        text-transform: uppercase;
-    }
+.form-control::placeholder {
+  font-size: 0.875rem;
+  color: #6c757d;
 }
+

@@ -1,5 +1,6 @@
 @if (message) {
     <div [ngClass]="toastClass" class="toast-container">
+        <i class="bi me-2" [ngClass]="toastClass === 'success' ? 'bi-check-circle-fill' : 'bi-exclamation-circle-fill'"></i>
         {{ message }}
     </div>
 }

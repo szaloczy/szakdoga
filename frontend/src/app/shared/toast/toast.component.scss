@@ -1,52 +1,54 @@
 .toast-container {
   position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
+  top: 80px;
+  right: 20px;
   z-index: 9999;
-  padding: 14px 24px;
-  border-radius: 12px;
+  padding: 12px 20px;
+  border-radius: 8px;
   color: white;
-  font-weight: 600;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-  animation: fadeInOut 3s ease-in-out forwards;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  animation: slideIn 0.3s ease-out, fadeOut 0.3s ease-in 2.7s forwards;
   font-family: 'Segoe UI', sans-serif;
-  font-size: 16px;
-  letter-spacing: 0.5px;
-  min-width: 260px;
-  text-align: center;
+  font-size: 14px;
+  min-width: 280px;
+  max-width: 400px;
+  display: flex;
+  align-items: center;
+  backdrop-filter: blur(10px);
 }
 
 .success {
-  background: linear-gradient(to right, #667eea, #56ab2f); // Zöldes gradiens
+  background: #198754;
+  border-left: 4px solid #0d6832;
 }
 
 .error {
-  background: linear-gradient(to right, #e52d27, #b31217); // Piros gradiens
+  background: #dc3545;
+  border-left: 4px solid #a02834;
 }
 
-// Optional: Hover effekt, ha interaktívvá akarod tenni
-.toast-container:hover {
-  opacity: 0.95;
-  cursor: pointer;
+.toast-container i {
+  font-size: 18px;
 }
 
-// Animáció – megjelenik, majd eltűnik
-@keyframes fadeInOut {
+@keyframes slideIn {
   0% {
     opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateX(100px);
   }
-  10% {
+  100% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
+    transform: translateX(0);
   }
-  90% {
+}
+
+@keyframes fadeOut {
+  0% {
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
   }
   100% {
     opacity: 0;
-    transform: translateX(-50%) translateY(-10px);
+    transform: translateX(50px);
   }
 }

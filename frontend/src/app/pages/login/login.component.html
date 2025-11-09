@@ -1,69 +1,81 @@
 <div class="d-flex justify-content-center align-items-center vh-100 bg-light login-background">
-  <div class="card shadow-lg p-4 rounded-4" style="width: 100%; max-width: 400px;">
-    <h3 class="text-center fw-bold mb-4 text-uppercase">{{ "login.form.title" | translate }}</h3>
+  <div class="card border-0 shadow-sm rounded-3 p-4" style="width: 100%; max-width: 420px;">
+    <!-- Title -->
+    <div class="text-center mb-4">
+      <h3 class="fw-bold mb-2">{{ "login.form.title" | translate }}</h3>
+    </div>
     
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+      <!-- Email -->
       <div class="mb-3">
+        <label class="form-label small text-muted fw-semibold">{{ 'login.form.placeholder.email' | translate }}</label>
         <input
           type="email"
-          class="form-control"
+          class="form-control form-control-lg"
           placeholder="{{'login.form.placeholder.email' | translate }}"
           formControlName="email"
         />
         @if(loginForm.get("email")?.invalid && (loginForm.get("email")?.touched || loginForm.get("email")?.dirty)) {
           @if(loginForm.get("email")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.email_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.email_required' | translate }}</small>
           }
         }
       </div>
 
+      <!-- Password -->
       <div class="mb-3 position-relative">
+        <label class="form-label small text-muted fw-semibold">{{ 'login.form.placeholder.password' | translate }}</label>
         <input
           [type]="showPassword ? 'text' : 'password'"
-          class="form-control"
+          class="form-control form-control-lg"
           placeholder="{{ 'login.form.placeholder.password' | translate }}"
           formControlName="password"
         />
         @if(loginForm.get("password")?.invalid && (loginForm.get("password")?.touched || loginForm.get("password")?.dirty)) {
           @if(loginForm.get("password")?.errors?.["required"]) {
-            <small class="error-message">{{ 'error_message.password_required' | translate }}</small>
+            <small class="text-danger d-block mt-1">{{ 'error_message.password_required' | translate }}</small>
           }
         }
         <button
           type="button"
-          class="btn btn-sm position-absolute top-50 end-0 translate-middle-y me-2"
+          class="btn btn-sm position-absolute end-0 text-muted"
+          style="top: 38px;"
           (click)="togglePasswordVisibility()"
         >
           <i class="bi" [ngClass]="showPassword ? 'bi-eye-slash' : 'bi-eye'"></i>
         </button>
       </div>
 
-      <div class="d-grid mt-4">
-        <button class="btn text-white fw-semibold" type="submit" [disabled]="loginForm.invalid"
-          style="background: linear-gradient(to right, #7f7fd5, #86a8e7, #91eae4)">
+      <!-- Forgot password -->
+      <div class="text-end mb-3">
+        <a href="#" class="text-decoration-none small" (click)="openForgotPasswordPopup($event)">
+          {{ 'login.form.forgot_password' | translate }}
+        </a>
+      </div>
+
+      <!-- Submit button -->
+      <div class="d-grid mb-3">
+        <button class="btn btn-primary btn-lg fw-semibold" type="submit" [disabled]="loginForm.invalid">
           {{ 'login.form.button' | translate }}
         </button>
       </div>
+
+      <!-- Register link -->
+      <div class="text-center small">
+        <span class="text-muted">{{ 'login.form.registered.question' | translate }}</span>
+        <a routerLink="/register" class="text-decoration-none fw-semibold ms-1">{{ 'login.form.registered.link' | translate }}</a>
+      </div>
     </form>
 
-    <p class="text-center mt-3 mb-1">
-      <a href="#" class="text-decoration-none fw-semibold" (click)="openForgotPasswordPopup($event)">
-        {{ 'login.form.forgot_password' | translate }}
-      </a>
-    </p>
-    <p class="text-center mt-2">
-      {{ 'login.form.registered.question' | translate }}
-      <a routerLink="/register" class="text-decoration-none fw-semibold">{{ 'login.form.registered.link' | translate }}</a>
-    </p>
-
     @if (isForgotPasswordPopupOpen) {
-    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background:rgba(0,0,0,0.3);z-index:1050;">
-      <div class="bg-white rounded-4 shadow-lg p-4" style="min-width:320px;max-width:90vw;">
-        <h5 class="mb-3 text-center">{{ 'login.forgot_password_form.title' | translate }}</h5>
-        <p class="text-center">{{ 'login.forgot_password_form.description' | translate }}</p>
+    <div class="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center" style="background:rgba(0,0,0,0.5);z-index:1050;">
+      <div class="card border-0 shadow-lg rounded-3 p-4" style="min-width:320px;max-width:500px;width:90vw;">
+        <h5 class="mb-3 fw-bold">{{ 'login.forgot_password_form.title' | translate }}</h5>
+        <p class="text-muted mb-4">{{ 'login.forgot_password_form.description' | translate }}</p>
         <form (ngSubmit)="onForgotPasswordSubmit()" [formGroup]="forgotPasswordForm">
-          <div class="mb-3">
-            <input type="email" class="form-control" placeholder="{{ 'login.forgot_password_form.placeholder' | translate }}" formControlName="email" required />
+          <div class="mb-4">
+            <label class="form-label small text-muted fw-semibold">{{ 'login.form.placeholder.email' | translate }}</label>
+            <input type="email" class="form-control form-control-lg" placeholder="{{ 'login.forgot_password_form.placeholder' | translate }}" formControlName="email" required />
           </div>
           <div class="d-flex justify-content-end gap-2">
             <button type="button" class="btn btn-outline-secondary" (click)="closeForgotPasswordPopup()">{{ 'buttons.forms.cancel' | translate }}</button>

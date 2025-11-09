@@ -60,6 +60,9 @@ export class DashboardComponent implements OnInit{
   mentorDocuments: UploadedDocument[] = [];
   mentorStats = { totalStudents: 0, activeStudents: 0, totalHours: 0, pendingHours: 0, documents: { pending: 0, approved: 0, rejected: 0 } };
   notifications: any[] = [];
+  isInternshipFinalized = false;
+  internshipGrade: number | null = null;
+  internshipFinalizedAt: string | null = null;
 
   summaryCards: any[] = [];
   nextDeadline: { label: string; date: string } | null = null;
@@ -67,19 +70,11 @@ export class DashboardComponent implements OnInit{
   mentorCards: any[] = [];
   isLoadingMentorData = false;
 
-  // Approval modal
+
   showApprovalModal = false;
-
-  // Document upload modal
   showDocumentUploadModal = false;
-
-  // Students list modal
   showStudentsListModal = false;
-
-  // Hour logging modal
   showHourLoggingModal = false;
-
-  // My hours modal
   showMyHoursModal = false;
 
   ngOnInit(): void {
@@ -104,7 +99,16 @@ export class DashboardComponent implements OnInit{
     this.studentService.getByUserId(userId).subscribe({
       next: (profile: StudentDTO) => {
         this.studentProfile = profile;
-        this.internshipInfo = (profile as any).internship || null;
+        this.internshipInfo = profile.internship || null;
+        
+        // Ellenőrizzük a véglegesítési státuszt az internship objektumból
+        if (profile.internship) {
+          if (profile.internship.grade !== null && profile.internship.grade !== undefined) {
+            this.isInternshipFinalized = true;
+            this.internshipGrade = profile.internship.grade;
+            this.internshipFinalizedAt = profile.internship.finalizedAt;
+          }
+        }
       }
     });
     this.internshipHourService.getMine().subscribe({
@@ -284,5 +288,23 @@ export class DashboardComponent implements OnInit{
 
   closeMyHoursModal() {
     this.showMyHoursModal = false;
+  }
+
+  exportInternshipSummary() {
+    this.studentService.exportInternshipSummary().subscribe({
+      next: (blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        const today = new Date().toISOString().split('T')[0].replace(/-/g, '');
+        a.download = `szakmai_gyakorlat_osszefoglalo_${today}.csv`;
+        a.click();
+        window.URL.revokeObjectURL(url);
+      },
+      error: (error) => {
+        console.error('Error exporting internship summary:', error);
+        alert('Hiba történt az exportálás során. Ellenőrizd, hogy a gyakorlatod véglegesítve lett-e!');
+      }
+    });
   }
 }

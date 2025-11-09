@@ -61,6 +61,24 @@ export interface StudentDTO {
     major: string;
     university: string;
     user: UserDTO | null;
+    internship?: {
+        id: number;
+        status: 'pending' | 'active' | 'completed' | 'cancelled';
+        requiredWeeks: number;
+        requiredHours: number;
+        approvedHours: number;
+        grade: number | null;
+        finalizedAt: string | null;
+        mentor: {
+            id: number;
+            name: string;
+            email: string;
+        } | null;
+        company: {
+            id: number;
+            name: string;
+        } | null;
+    } | null;
 }
 
 export interface extendedStudentDTO {
@@ -77,7 +95,9 @@ export interface extendedStudentDTO {
     university: string | null;
     profilePicture?: string;
     requiredHours?: number;
-    internshipStatus?: 'active' | 'completed' | 'finalized' | 'pending';
+    internshipStatus?: 'active' | 'completed' | 'finalized' | 'pending' | 'cancelled';
+    grade?: number | null;  // Véglegesítés során adott jegy (1-5)
+    finalizedAt?: string | null;  // Véglegesítés időpontja
     internship?: {
         id: number;
         requiredWeeks: number;

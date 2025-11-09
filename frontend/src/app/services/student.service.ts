@@ -14,4 +14,10 @@ export class StudentService {
   getById(id: number) { return this.http.get<StudentDTO>(`/api/student/${id}`)};
 
   getByUserId(userId: number) { return this.http.get<StudentDTO>(`/api/student/user/${userId}`); }
+
+  exportInternshipSummary() { 
+    return this.http.get(`/api/students/export-internship-summary`, { 
+      responseType: 'blob' 
+    }); 
+  }
 }

@@ -189,6 +189,7 @@ export const hu: NestedI18n = {
             previous_internships: { text: "Korábbi gyakorlatok" },
             log_hours: { text: "Órák rögzítése" },
             view_my_hours: { text: "Óráim" },
+            export_summary: { text: "Összefoglaló exportálása" },
             major: { text: "Szak" },
             personal_data: { text: "Személyes adatok" },
             name: { text: "Név" },
@@ -203,6 +204,7 @@ export const hu: NestedI18n = {
             approved: { text: "Jóváhagyva" },
             pending: { text: "Függőben" },
             rejected: { text: "Elutasítva" },
+            grade: { text: "Jegy" },
             hours_summary: { text: "Órák összesítése" },
             approved_hours: { text: "Jóváhagyott órák" },
             pending_hours: { text: "Függő órák" },
@@ -997,6 +999,9 @@ export const hu: NestedI18n = {
             },
             active: {
                 text: "Aktív"
+            },
+            cancelled: {
+                text: "Megszakítva"
             },
             unknown: {
                 text: "Ismeretlen"

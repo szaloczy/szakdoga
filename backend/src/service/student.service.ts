@@ -26,6 +26,60 @@ export class StudentService {
     }));
   }
 
+  async getInternshipSummaryForExport(userId: number) {
+    const student = await this.studentRepository.findOne({
+      where: { user: { id: userId } },
+      relations: ["user", "internship", "internship.mentor", "internship.mentor.user", "internship.company", "internship.hours"]
+    });
+
+    if (!student || !student.internship) {
+      throw new Error("Student or internship not found");
+    }
+
+    const internship = student.internship;
+
+    // Ellenőrizzük, hogy véglegesítve van-e
+    if (!internship.finalizedAt || internship.grade === null) {
+      throw new Error("Internship not finalized yet");
+    }
+
+    // Teljesített órák számítása
+    let totalApprovedHours = 0;
+    if (internship.hours) {
+      for (const hour of internship.hours) {
+        if (hour.status === 'approved') {
+          const start = new Date(`2000-01-01T${hour.startTime}`);
+          const end = new Date(`2000-01-01T${hour.endTime}`);
+          const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+          totalApprovedHours += diff;
+        }
+      }
+    }
+
+    const requiredHours = internship.requiredWeeks ? internship.requiredWeeks * 40 : 0;
+
+    return {
+      studentName: `${student.user.firstname} ${student.user.lastname}`,
+      studentEmail: student.user.email,
+      neptun: student.neptun,
+      major: student.major,
+      university: student.university,
+      companyName: internship.company?.name ?? "N/A",
+      mentorName: internship.mentor?.user 
+        ? `${internship.mentor.user.firstname} ${internship.mentor.user.lastname}`
+        : "N/A",
+      mentorEmail: internship.mentor?.user?.email ?? "N/A",
+      startDate: internship.startDate,
+      endDate: internship.endDate,
+      requiredWeeks: internship.requiredWeeks,
+      requiredHours: requiredHours,
+      completedHours: Math.round(totalApprovedHours * 100) / 100,
+      grade: internship.grade,
+      finalizedAt: internship.finalizedAt,
+      status: internship.status
+    };
+  }
+
   async getStudentsForExport(filters: { status?: string, university?: string, name?: string }) {
     const query = this.studentRepository.createQueryBuilder("student")
       .leftJoinAndSelect("student.user", "user")
@@ -100,7 +154,7 @@ export class StudentService {
   async getStudentByUserId(userId: number): Promise<Student | null> {
     return await this.studentRepository.findOne({
       where: { user: { id: userId } },
-      relations: ["user"],
+      relations: ["user", "internship", "internship.mentor", "internship.mentor.user", "internship.company", "internship.hours"],
     });
   }
 

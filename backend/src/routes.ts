@@ -46,6 +46,7 @@ router.get("/student/user/:userId", authMiddleware, studentController.getByUserI
 router.get("/students/export-csv", authMiddleware, studentController.exportCsv);
 
 router.get("/students/export-csv/mine", authMiddleware, studentController.exportMyCsv);
+router.get("/students/export-internship-summary", authMiddleware, studentController.exportInternshipSummary);
 
 
 const companyController = new CompanyController();

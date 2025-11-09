@@ -252,7 +252,11 @@ export class MentorService {
         rejectedHours: Math.round(rejectedHours * 100) / 100,            
         totalSubmittedHours: Math.round(totalSubmittedHours * 100) / 100,
         requiredHours: internship.requiredWeeks ? internship.requiredWeeks * 40 : null,
-        internshipStatus: internship.status
+        internshipStatus: internship.status,
+        grade: internship.grade ?? null,
+        finalizedAt: internship.finalizedAt 
+          ? new Date(internship.finalizedAt).toISOString().split("T")[0]
+          : null
       });
     }
 

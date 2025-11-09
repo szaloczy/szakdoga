@@ -40,6 +40,55 @@ export class StudentController extends Controller {
       }
     };
 
+  exportInternshipSummary = async (req, res) => {
+    try {
+      const user = (req as any).user;
+      if (!user) {
+        return res.status(401).json({ error: "Unauthorized" });
+      }
+
+      const summary = await this.service.getInternshipSummaryForExport(user.id);
+
+      const data = [
+        { field: "Hallgató neve", value: summary.studentName },
+        { field: "Email", value: summary.studentEmail },
+        { field: "Neptun kód", value: summary.neptun },
+        { field: "Szak", value: summary.major },
+        { field: "Egyetem", value: summary.university },
+        { field: "", value: "" },
+        { field: "Cég neve", value: summary.companyName },
+        { field: "Mentor neve", value: summary.mentorName },
+        { field: "Mentor email", value: summary.mentorEmail },
+        { field: "", value: "" },
+        { field: "Kezdési dátum", value: summary.startDate },
+        { field: "Befejezési dátum", value: summary.endDate },
+        { field: "Szükséges hetek", value: summary.requiredWeeks?.toString() ?? "N/A" },
+        { field: "Szükséges órák", value: summary.requiredHours?.toString() ?? "N/A" },
+        { field: "Teljesített órák", value: summary.completedHours.toString() },
+        { field: "", value: "" },
+        { field: "Jegy", value: summary.grade?.toString() ?? "N/A" },
+        { field: "Véglegesítés dátuma", value: summary.finalizedAt ? new Date(summary.finalizedAt).toISOString().split("T")[0] : "N/A" },
+        { field: "Státusz", value: summary.status }
+      ];
+
+      const fields = [
+        { label: "Mező", value: "field" },
+        { label: "Érték", value: "value" }
+      ];
+      const opts = { fields, delimiter: "," };
+      const csv = parse(data, opts);
+
+      const csvWithBOM = '\uFEFF' + csv;
+
+      const fileName = `szakmai_gyakorlat_osszefoglalo_${new Date().toISOString().slice(0,10).replace(/-/g,"")}.csv`;
+      res.setHeader("Content-Type", "text/csv; charset=utf-8");
+      res.setHeader("Content-Disposition", `attachment; filename=\"${fileName}\"`);
+      res.status(200).send(csvWithBOM);
+    } catch (err) {
+      res.status(500).json({ error: err.message });
+    }
+  };
+
   getAll = async (req, res) => {
     try {
       const students = await this.service.getAllActiveStudents();
@@ -117,7 +166,65 @@ export class StudentController extends Controller {
         return this.handleError(res, null, 404, "Student not found for this user");
       }
 
-      res.json(student);
+      // Internship adatok feldolgozása ha létezik
+      let internshipData = null;
+      if (student.internship) {
+        const requiredHours = student.internship.requiredWeeks 
+          ? student.internship.requiredWeeks * 40 
+          : null;
+        
+        let approvedHours = 0;
+        if (student.internship.hours) {
+          for (const hour of student.internship.hours) {
+            if (hour.status === 'approved') {
+              const start = new Date(`2000-01-01T${hour.startTime}`);
+              const end = new Date(`2000-01-01T${hour.endTime}`);
+              const diff = (end.getTime() - start.getTime()) / (1000 * 60 * 60);
+              approvedHours += diff;
+            }
+          }
+        }
+
+        internshipData = {
+          id: student.internship.id,
+          status: student.internship.status,
+          requiredWeeks: student.internship.requiredWeeks,
+          requiredHours: requiredHours,
+          approvedHours: Math.round(approvedHours * 100) / 100,
+          grade: student.internship.grade ?? null,
+          finalizedAt: student.internship.finalizedAt 
+            ? new Date(student.internship.finalizedAt).toISOString().split("T")[0] 
+            : null,
+          mentor: student.internship.mentor ? {
+            id: student.internship.mentor.id,
+            name: `${student.internship.mentor.user.firstname} ${student.internship.mentor.user.lastname}`,
+            email: student.internship.mentor.user.email
+          } : null,
+          company: student.internship.company ? {
+            id: student.internship.company.id,
+            name: student.internship.company.name
+          } : null
+        };
+      }
+
+      const response = {
+        id: student.id,
+        phone: student.phone,
+        neptun: student.neptun,
+        major: student.major,
+        university: student.university,
+        user: {
+          id: student.user.id,
+          email: student.user.email,
+          firstname: student.user.firstname,
+          lastname: student.user.lastname,
+          role: student.user.role,
+          active: student.user.active,
+        },
+        internship: internshipData
+      };
+
+      res.json(response);
     } catch (error) {
       this.handleError(res, error);
     }

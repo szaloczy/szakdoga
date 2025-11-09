@@ -192,6 +192,7 @@ export const en: NestedI18n = {
             previous_internships: { text: "Previous internships" },
             log_hours: { text: "Log Hours" },
             view_my_hours: { text: "My Hours" },
+            export_summary: { text: "Export Summary" },
             major: { text: "Major" },
             personal_data: { text: "Personal data" },
             name: { text: "Name" },
@@ -206,6 +207,7 @@ export const en: NestedI18n = {
             approved: { text: "Approved" },
             pending: { text: "Pending" },
             rejected: { text: "Rejected" },
+            grade: { text: "Grade" },
             hours_summary: { text: "Hours summary" },
             approved_hours: { text: "Approved hours" },
             pending_hours: { text: "Pending hours" },
@@ -1010,6 +1012,9 @@ export const en: NestedI18n = {
             },
             active: {
                 text: "Active"
+            },
+            cancelled: {
+                text: "Cancelled"
             },
             unknown: {
                 text: "Unknown"

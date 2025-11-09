@@ -83,11 +83,31 @@
           <div class="card-body">
             <ul class="list-group list-group-flush">
               <li class="list-group-item"><strong>{{ 'dashboard.student.company' | translate }}:</strong> {{ internshipInfo.company?.name }}</li>
-              <li class="list-group-item"><strong>{{ 'dashboard.student.mentor' | translate }}:</strong> {{ internshipInfo.mentor?.firstname }} {{ internshipInfo.mentor?.lastname }}</li>
-              <li class="list-group-item"><strong>{{ 'dashboard.student.period' | translate }}:</strong> {{ internshipInfo.startDate | date:'yyyy.MM.dd' }} - {{ internshipInfo.endDate | date:'yyyy.MM.dd' }}</li>
-              <li class="list-group-item"><strong>{{ 'dashboard.student.status' | translate }}:</strong> <span [ngClass]="internshipInfo.isApproved ? 'text-success' : 'text-warning'">{{ internshipInfo.isApproved ? ('dashboard.student.approved' | translate) : ('dashboard.student.pending' | translate) }}</span></li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.mentor' | translate }}:</strong> {{ internshipInfo.mentor?.name }}</li>
+              <li class="list-group-item"><strong>{{ 'dashboard.student.status' | translate }}:</strong> 
+                <span class="badge" [ngClass]="{
+                  'bg-success': internshipInfo.status === 'completed' || internshipInfo.status === 'active',
+                  'bg-warning': internshipInfo.status === 'pending',
+                  'bg-danger': internshipInfo.status === 'cancelled'
+                }">
+                  {{ internshipInfo.status }}
+                </span>
+              </li>
+              @if (isInternshipFinalized && internshipGrade !== null) {
+                <li class="list-group-item">
+                  <strong>{{ 'dashboard.student.grade' | translate }}:</strong> 
+                  <span class="badge bg-warning text-dark fs-6">{{ internshipGrade }}</span>
+                </li>
+              }
             </ul>
           </div>
+          @if (isInternshipFinalized) {
+            <div class="card-footer bg-light text-center">
+              <button class="btn btn-success w-100" (click)="exportInternshipSummary()">
+                <i class="bi bi-download me-2"></i>{{ 'dashboard.student.export_summary' | translate }}
+              </button>
+            </div>
+          }
         </div>
       </div>
       }

@@ -171,6 +171,8 @@ export class StudentsComponent implements OnInit {
         return 'bg-success';
       case 'active':
         return 'bg-info';
+      case 'cancelled':
+        return 'bg-danger';
       default:
         return 'bg-secondary';
     }
@@ -184,6 +186,10 @@ export class StudentsComponent implements OnInit {
         return 'students.status.completed';
       case 'active':
         return 'students.status.active';
+      case 'finalized':
+        return 'students.status.finalized';
+      case 'cancelled':
+        return 'students.status.cancelled';
       default:
         return 'students.status.unknown';
     }
@@ -635,14 +641,20 @@ export class StudentsComponent implements OnInit {
   }
 
   canFinalizeInternship(student: extendedStudentDTO): boolean {
-    // Ha van internshipStatus és az 'completed', akkor lehet véglegesíteni
-    if (student.internshipStatus === 'completed') {
-      return true;
+    // Ha már véglegesítve van (grade vagy finalizedAt létezik), ne jelenjen meg a gomb
+    if (student.grade !== null && student.grade !== undefined) {
+      return false;
     }
-    
-    // Ha már véglegesítve van, ne jelenjen meg a gomb
+    if (student.finalizedAt) {
+      return false;
+    }
     if (student.internshipStatus === 'finalized') {
       return false;
+    }
+    
+    // Ha 'completed' státuszú és nincs véglegesítve, akkor lehet véglegesíteni
+    if (student.internshipStatus === 'completed') {
+      return true;
     }
     
     // Fallback: régi logika ha nincs internshipStatus
@@ -745,6 +757,8 @@ export class StudentsComponent implements OnInit {
         const studentIndex = this.students.findIndex(s => s.id === student.id);
         if (studentIndex !== -1) {
           this.students[studentIndex].internshipStatus = 'finalized';
+          this.students[studentIndex].grade = grade;
+          this.students[studentIndex].finalizedAt = new Date().toISOString();
 
           if (this.students[studentIndex].internship) {
             this.students[studentIndex].internship!.grade = grade;

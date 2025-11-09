@@ -194,7 +194,6 @@
             <div class="card-footer bg-transparent">
               <div class="d-flex flex-column gap-2">
                 @if (canFinalizeInternship(student)) {
-                  <!-- Véglegesítés gomb ha teljesítette az óraszámot (status = 'completed') -->
                   <button 
                     class="btn btn-success btn-lg fw-bold"
                     (click)="finalizeInternship(student)"
@@ -206,23 +205,16 @@
                     <i class="bi bi-info-circle me-1"></i>
                     {{ 'students.finalize.requirement_met' | translate }}
                   </small>
-                } @else if (student.internshipStatus === 'finalized' || student.internship?.finalizedAt) {
-                  <!-- Véglegesített állapot megjelenítése -->
+                } @else if (student.internshipStatus === 'finalized' || student.finalizedAt || student.internship?.finalizedAt) {
                   <div class="alert alert-success mb-0 text-center">
                     <strong>{{ 'students.finalize.finalized_label' | translate }}</strong>
-                    @if (student.internship && student.internship.grade) {
+                    @if (student.grade || student.internship?.grade) {
                       <div class="mt-2">
-                        <small>{{ 'students.finalize.final_grade' | translate }}: <strong>{{ student.internship.grade }}</strong></small>
-                      </div>
-                    }
-                    @if (student.internship && student.internship.finalizedAt) {
-                      <div>
-                        <small>{{ 'students.finalize.finalized_at' | translate }}: {{ student.internship.finalizedAt | date:'short' }}</small>
+                        <small>{{ 'students.finalize.final_grade' | translate }}: <strong>{{ student.grade || student.internship?.grade }}</strong></small>
                       </div>
                     }
                   </div>
                   
-                  <!-- Órák megtekintése és exportálása véglegesítés után -->
                   <button 
                     class="btn btn-outline-info btn-sm"
                     (click)="viewHoursDetails(student)"

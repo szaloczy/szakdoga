@@ -26,7 +26,7 @@ describe('InternshipManagementComponent', () => {
             },
             paramMap: of(new Map().set('roomId', 'test-room-id'))
           }
-        }, // This is necessary for HTTP requests in tests
+        },
       ]
       
     })

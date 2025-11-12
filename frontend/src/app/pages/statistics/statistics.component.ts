@@ -64,7 +64,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   loadCumulativeHours() {
     this.statisticsService.getCumulativeHours().subscribe((res: Statistics) => {
-      // Translate the labels from backend
+
       this.cumulativeLabels = res.labels.map(label => this.translateTimeLabel(label));
       this.cumulativeData = res.data;
 
@@ -98,7 +98,7 @@ export class StatisticsComponent implements OnInit, OnDestroy {
 
   loadStatusDistribution() {
     this.statisticsService.getStatusDistribution().subscribe((res: Statistics) => {
-      // Translate the labels from backend
+ 
       this.chartLabels = res.labels.map(label => this.translateStatusLabel(label));
       this.chartData = res.data;
 
@@ -147,16 +147,16 @@ export class StatisticsComponent implements OnInit, OnDestroy {
       case 'rejected':
         return this.i18nService.transform('dashboard.student.rejected');
       default:
-        return label; // fallback to original label if no translation found
+        return label;
     }
   }
 
   private translateTimeLabel(label: string): string {
-    // Handle month translations based on current language
+    
     const currentLang = this.i18nService.getLanguage();
     
     if (currentLang === 'hu') {
-      // Hungarian month names
+     
       const monthTranslations: { [key: string]: string } = {
         'jan': 'Jan',
         'feb': 'Feb', 
@@ -249,7 +249,6 @@ export class StatisticsComponent implements OnInit, OnDestroy {
     });
   }
 
-  // Mentor-specific methods
   loadMentorHourPerMonth() {
     this.statisticsService.getMentorHoursPerMonth().subscribe((res: Statistics) => {
       this.Barlabels = res.labels.map(label => this.translateTimeLabel(label));

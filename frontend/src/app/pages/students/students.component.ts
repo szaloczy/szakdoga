@@ -125,7 +125,7 @@ export class StudentsComponent implements OnInit {
   get filteredStudents(): extendedStudentDTO[] {
     let filtered = this.students;
 
-    // Filter by status
+
     if (this.selectedFilter !== 'all') {
       filtered = filtered.filter(student => 
         this.getStudentStatus(student) === this.selectedFilter
@@ -145,12 +145,12 @@ export class StudentsComponent implements OnInit {
   }
 
   getStudentStatus(student: extendedStudentDTO): string {
-    // Ha van internshipStatus a backendtől, azt használjuk
+
     if (student.internshipStatus) {
       return student.internshipStatus;
     }
     
-    // Fallback a régi logikára, ha nincs internshipStatus
+    
     const required = this.getRequiredHours(student);
     if (student.hours >= required) {
       return 'completed';
@@ -627,11 +627,11 @@ export class StudentsComponent implements OnInit {
     this.internshipHourService.approveHour(event.hourId).subscribe({
       next: () => {
         this.toastService.showSuccess('Óra elfogadva!');
-        // Refresh the modal data by reloading hour details
+        
         if (this.modalStudent) {
           this.viewHoursDetails(this.modalStudent);
         }
-        // Also refresh the main students list
+        
         this.loadStudents();
       },
       error: (error: any) => {
@@ -641,7 +641,7 @@ export class StudentsComponent implements OnInit {
   }
 
   canFinalizeInternship(student: extendedStudentDTO): boolean {
-    // Ha már véglegesítve van (grade vagy finalizedAt létezik), ne jelenjen meg a gomb
+    
     if (student.grade !== null && student.grade !== undefined) {
       return false;
     }
@@ -652,12 +652,12 @@ export class StudentsComponent implements OnInit {
       return false;
     }
     
-    // Ha 'completed' státuszú és nincs véglegesítve, akkor lehet véglegesíteni
+    
     if (student.internshipStatus === 'completed') {
       return true;
     }
     
-    // Fallback: régi logika ha nincs internshipStatus
+
     if (!student.internship || student.internship.finalizedAt) {
       return false;
     }
@@ -666,9 +666,7 @@ export class StudentsComponent implements OnInit {
   }
 
   getRequiredHours(student: extendedStudentDTO): number {
-    // Prefer backend-provided requiredHours when available.
-    // Fallback to internship.requiredWeeks * 40 when present.
-    // Final fallback to historical default of 180.
+    
     if (student.requiredHours && typeof student.requiredHours === 'number') {
       return student.requiredHours;
     }

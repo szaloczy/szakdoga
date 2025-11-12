@@ -13,7 +13,6 @@ describe('HourDetailsModalComponent', () => {
     fixture = TestBed.createComponent(HourDetailsModalComponent);
     component = fixture.componentInstance;
     
-    // Initialize mock student data
     component.student = {
       id: 1,
       firstname: 'John',
@@ -76,8 +75,6 @@ describe('HourDetailsModalComponent', () => {
     component.show = true;
     fixture.detectChanges();
 
-    // In test environment, we just check if the component renders without errors
-    // The actual modal visibility would be controlled by CSS classes
     expect(component.show).toBeTrue();
   });
 

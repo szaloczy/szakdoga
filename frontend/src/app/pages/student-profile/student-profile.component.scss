@@ -114,7 +114,6 @@ input[type="file"] {
   color: #212529 !important;
 }
 
-// Responsive improvements
 @media (max-width: 768px) {
   .profile-container {
     padding: 0 15px;
@@ -129,7 +128,6 @@ input[type="file"] {
   }
 }
 
-// Mentor specific styles
 .mentor-actions {
   .btn {
     margin-right: 0.5rem;
@@ -172,7 +170,6 @@ input[type="file"] {
   }
 }
 
-// Additional responsive improvements for mentor section
 @media (max-width: 768px) {
   .company-contact {
     .d-flex {

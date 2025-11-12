@@ -29,7 +29,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserProfile();
     
-    // Subscribe to profile picture changes
     this.profilePictureSubscription = this.profilePictureService.profilePicture$.subscribe({
       next: (profilePicture) => {
         if (this.currentUser && profilePicture !== undefined) {

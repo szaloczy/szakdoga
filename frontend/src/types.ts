@@ -83,7 +83,7 @@ export interface StudentDTO {
 
 export interface extendedStudentDTO {
     id: number;
-    studentId: number;  // Student tábla ID-ja (internship-hez szükséges)
+    studentId: number;  
     firstname: string;
     lastname: string;
     email: string;
@@ -96,8 +96,8 @@ export interface extendedStudentDTO {
     profilePicture?: string;
     requiredHours?: number;
     internshipStatus?: 'active' | 'completed' | 'finalized' | 'pending' | 'cancelled';
-    grade?: number | null;  // Véglegesítés során adott jegy (1-5)
-    finalizedAt?: string | null;  // Véglegesítés időpontja
+    grade?: number | null;  
+    finalizedAt?: string | null;  
     internship?: {
         id: number;
         requiredWeeks: number;

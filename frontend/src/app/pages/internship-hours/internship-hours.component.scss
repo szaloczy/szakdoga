@@ -1,4 +1,3 @@
-// Statistics Cards
 .card {
   border: none;
   border-radius: 12px;
@@ -32,7 +31,6 @@
   }
 }
 
-// Navigation Tabs
 .nav-tabs {
   border: none;
   
@@ -59,7 +57,6 @@
   }
 }
 
-// Filters and Actions
 .input-group {
   border-radius: 8px;
   overflow: hidden;
@@ -93,7 +90,6 @@
   }
 }
 
-// List Items
 .list-group-item {
   border: 1px solid #e9ecef;
   border-radius: 8px !important;
@@ -120,7 +116,6 @@
   }
 }
 
-// Loading and Error States
 .spinner-border {
   &.spin {
     animation: spin 1s linear infinite;
@@ -155,7 +150,7 @@
   }
 }
 
-// Empty State
+
 .alert-light {
   .fs-1 {
     font-size: 4rem !important;
@@ -168,7 +163,7 @@
   }
 }
 
-// Responsive Design
+
 @media (max-width: 768px) {
   .container-fluid {
     padding: 0 10px;
@@ -222,7 +217,7 @@
   }
 }
 
-// Utilities
+
 .text-truncate-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -235,7 +230,7 @@
   transition: all 0.2s ease-in-out;
 }
 
-// Status specific colors
+
 .status-approved {
   color: #28a745 !important;
 }

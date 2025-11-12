@@ -45,7 +45,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.loadUserProfile();
     
-    // Subscribe to profile picture changes
     this.profilePictureSubscription = this.profilePictureService.profilePicture$.subscribe({
       next: (profilePicture) => {
         if (profilePicture !== undefined) {
@@ -63,7 +62,6 @@ export class SidebarComponent implements OnInit, OnDestroy {
     this.userService.getProfile(this.authService.getUserId()).subscribe({
       next: (userData) => {
         this.user = userData;
-        // Initialize the profile picture service with current value
         this.profilePictureService.updateProfilePicture(userData.profilePicture);
       },
       error: (err) => {

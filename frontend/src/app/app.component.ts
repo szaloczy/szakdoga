@@ -22,7 +22,7 @@ export class AppComponent {
   router = inject(Router);
 
   constructor() {
-    // Listen to route changes to determine if we're on admin routes
+    
     this.router.events.pipe(
       filter(event => event instanceof NavigationEnd)
     ).subscribe((event: NavigationEnd) => {

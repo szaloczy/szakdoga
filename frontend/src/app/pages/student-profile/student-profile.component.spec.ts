@@ -14,7 +14,7 @@ describe('StudentProfileComponent', () => {
       ],
       providers: [
         provideHttpClient(),
-        provideHttpClientTesting() // This is necessary for HTTP requests in tests
+        provideHttpClientTesting() 
       ]
     })
     .compileComponents();

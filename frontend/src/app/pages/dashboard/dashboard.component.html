@@ -180,7 +180,7 @@
     }
 
   } @else if (authService.getRole() === "mentor") {
-    <!-- Mentor Dashboard -->
+
     @if (isLoadingMentorData) {
       <div class="d-flex justify-content-center my-5">
         <div class="spinner-border" role="status">
@@ -188,7 +188,7 @@
         </div>
       </div>
     } @else {
-      <!-- Mentor Statistics Cards -->
+     
       <div class="row my-4">
         @for(card of mentorCards; track card) {
         <div class="col-md-3">
@@ -205,7 +205,7 @@
         }
       </div>
 
-      <!-- Mentor Company Info -->
+   
       @if (mentorProfile) {
         <div class="card mb-4">
           <div class="card-header bg-primary text-white">
@@ -226,7 +226,7 @@
         </div>
       }
 
-      <!-- Quick Actions -->
+     
       <div class="card mb-4">
         <div class="card-header bg-secondary text-white">
           <h5 class="mb-0"><i class="bi bi-lightning-fill me-2"></i>{{ 'dashboard.mentor.quick_actions' | translate }}</h5>
@@ -267,7 +267,7 @@
         </div>
       </div>
 
-      <!-- Recent Students Activity -->
+    
       <div class="card">
         <div class="card-header bg-info text-white">
           <h5 class="mb-0"><i class="bi bi-people-fill me-2"></i>{{ 'dashboard.mentor.recent_students_activity' | translate }}</h5>
@@ -309,12 +309,12 @@
     }
 
   } @else {
-    <!-- Admin Dashboard -->
+    
     <app-student-list></app-student-list>
   }
 </div>
 
-<!-- Hour Approval Modal Component -->
+
 <app-hour-approval-modal
   [show]="showApprovalModal"
   [students]="mentorStudents"
@@ -322,14 +322,13 @@
   (approvalComplete)="onApprovalComplete()">
 </app-hour-approval-modal>
 
-<!-- Document Upload Modal Component -->
+
 <app-document-upload-modal
   [show]="showDocumentUploadModal"
   (closeModal)="closeDocumentUploadModal()"
   (uploadComplete)="onDocumentUploadComplete()">
 </app-document-upload-modal>
 
-<!-- Students List Modal Component -->
 <app-students-list-modal
   [show]="showStudentsListModal"
   [students]="mentorStudents"
@@ -337,14 +336,13 @@
   (closeModal)="closeStudentsListModal()">
 </app-students-list-modal>
 
-<!-- Hour Logging Modal Component -->
+
 <app-hour-logging-modal
   [show]="showHourLoggingModal"
   (closeModal)="closeHourLoggingModal()"
   (hourLogged)="onHourLogged()">
 </app-hour-logging-modal>
 
-<!-- My Hours Modal Component -->
 <app-my-hours-modal
   [show]="showMyHoursModal"
   [hours]="studentHours"

@@ -55,7 +55,6 @@ export class HourLoggingModalComponent implements OnInit {
 
     const formValue = this.hourForm.value;
     
-    // Validate that end time is after start time
     if (formValue.startTime >= formValue.endTime) {
       this.toastService.showError(
         this.i18nService.transform('dashboard.student.hour_logging.error_invalid_time')

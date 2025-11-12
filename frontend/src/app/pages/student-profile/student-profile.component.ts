@@ -336,7 +336,7 @@ export class StudentProfileComponent implements OnInit{
     }
   }
 
-  // Password change methods
+
   openPasswordModal() {
     this.isPasswordModalOpen = true;
     this.passwordForm.reset();

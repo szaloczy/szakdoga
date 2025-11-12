@@ -1,4 +1,3 @@
-<!-- My Hours Modal -->
 @if (show) {
 <div class="modal fade show d-block" tabindex="-1" role="dialog" style="background-color: rgba(0,0,0,0.5);">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable" role="document">
@@ -11,7 +10,7 @@
         <button type="button" class="btn-close btn-close-white" (click)="close()"></button>
       </div>
       <div class="modal-body">
-        <!-- Filter Buttons -->
+        
         <div class="mb-3">
           <div class="btn-group w-100" role="group">
             <button 
@@ -55,7 +54,7 @@
             <p>{{ 'dashboard.student.my_hours.no_hours' | translate }}</p>
           </div>
         } @else {
-          <!-- Hours Table -->
+        
           <div class="table-responsive">
             <table class="table table-hover">
               <thead class="table-light">
@@ -101,7 +100,7 @@
             </table>
           </div>
 
-          <!-- Summary -->
+      
           <div class="alert alert-info mt-3">
             <div class="row text-center">
               <div class="col-md-3">

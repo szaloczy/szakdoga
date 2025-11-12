@@ -6,39 +6,24 @@ import { provideHttpClient } from '@angular/common/http';
 import { of, throwError } from 'rxjs';
 import { extendedStudentDTO } from '../../../types';
 
+const mockStudents: extendedStudentDTO[] = [
+  {
+    firstname: 'John',
+    hours: 120,
+    major: 'Computer Science'
+  } as unknown as extendedStudentDTO,
+  {
+    firstname: 'Jane',
+    hours: 80,
+    major: 'Engineering'
+  } as unknown as extendedStudentDTO
+];
+
 describe('StudentListComponent', () => {
   let component: StudentListComponent;
   let fixture: ComponentFixture<StudentListComponent>;
   let mentorService: jasmine.SpyObj<MentorService>;
 
-  const mockStudents: extendedStudentDTO[] = [
-    {
-      id: 1,
-      firstname: 'John',
-      lastname: 'Doe',
-      email: 'john.doe@example.com',
-      profilePicture: undefined,
-      hours: 120,
-      major: 'Computer Science',
-      pendingHours: 15,
-      rejectedHours: 5,
-      totalSubmittedHours: 140,
-      university: 'Test University'
-    },
-    {
-      id: 2,
-      firstname: 'Jane',
-      lastname: 'Smith',
-      email: 'jane.smith@example.com',
-      profilePicture: undefined,
-      hours: 80,
-      major: 'Engineering',
-      pendingHours: 10,
-      rejectedHours: 0,
-      totalSubmittedHours: 90,
-      university: 'Test University'
-    }
-  ];
 
   beforeEach(async () => {
     const mentorServiceSpy = jasmine.createSpyObj('MentorService', ['getStudents']);
@@ -64,7 +49,7 @@ describe('StudentListComponent', () => {
   });
 
   it('should load students on init', () => {
-    fixture.detectChanges(); // This calls ngOnInit
+    fixture.detectChanges();
 
     expect(mentorService.getStudents).toHaveBeenCalled();
     expect(component.students).toEqual(mockStudents);
